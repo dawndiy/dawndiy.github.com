@@ -1,0 +1,324 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>PyGtk学习笔记(3)–布局管理(VBox, HBox) - 一个人的世界</title>
+    <meta name="author" content="DawnDIY">
+    
+	<meta name="description" content="前面一次学习了一个很简单的Fixed布局方式，这次和DawnDIY来学习一下最常用的Box布局管理。Box布局管理分为VBox和HBox两种，在GTK 3中都把这两个合并为Box一个部件了，但是目前来说PyGtk还是GTK 2的，所以DawnDIY还是建议还是把VBox和HBox单独用， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="一个人的世界" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        DawnDIY
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/DawnDIY" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/DawnDIYSoft" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">PyGtk学习笔记(3)–布局管理(VBox, HBox)</h2>
+	<div class="entry-content"><h1></h1>
+
+<p>前面一次学习了一个很简单的Fixed布局方式，这次和DawnDIY来学习一下最常用的Box布局管理。Box布局管理分为VBox和HBox两种，在GTK 3中都把这两个合并为Box一个部件了，但是目前来说PyGtk还是GTK 2的，所以DawnDIY还是建议还是把VBox和HBox单独用，不用统一成Box，这样写出来的程序兼容性更好。GTK 3中的Box可以等到PyGObject比较普及、稳定的时候在用。毕竟还是那句话，用最稳定的，不用最新的。</p>
+
+<h2>1.介绍</h2>
+
+<p>下面我们先介绍一下VBox和HBox。</p>
+
+<p>VBox是一个垂直布局容器。这个容器里的部件都是以垂直排列的方式一个个竖直分布在容器中。<br/>
+HBox是一个水平布局容器。这个容器里的部件都是以水平排列的方式一个个横向分布在容器中。<br/>
+这两个布局容器是最常用的两个布局容器，我们可以配合使用他们来构建出你想要的UI。</p>
+
+<h2>2.VBox</h2>
+
+<p>先来看一个VBox的示例，上图先：</p>
+
+<p>[![][2]][2]</p>
+
+<p>从上面的图中可以看到，有两个按钮，一个大一个小，而且是竖直排列的。small和big按钮都是放在VBox中，然后在把VBox添加到主窗口中就行了，这个示例很简单，下面是完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# VBox layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class VBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("VBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(300,200)
+
+        vbox.add(btn1)
+        vbox.add(btn2)
+        self.window.add(vbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    vbox = VBoxLC()
+    vbox.main()
+</code></pre>
+
+<p>在分析代码之前我们先来看一下VBox类的概要：</p>
+
+<pre><code>class gtk.VBox(gtk.Box):
+    gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p>VBox的继承关系</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.VBox
+</code></pre>
+
+<p>构造函数：</p>
+
+<pre><code>gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p><strong><code>homogeneous</code></strong> :</p>
+
+<p>如果为 True 所有的子部件都会被分配均等的空间</p>
+
+<p><strong><code>spacing</code></strong> :</p>
+
+<p>垂直空间子部件之间的像素大小。</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 gtk.VBox</p>
+
+<p>如上面的例子来说，我们建立了一个 window ，然后建立了一个子部件空间分配不均等、子部件间隔5像素的VBox，然后建立两个Button，并且添加到VBox中，最后在把VBox添加到window中。最后就完成了一个简单的垂直排列的布局了。</p>
+
+<h2>3.HBox</h2>
+
+<p>接下来同样介绍一下HBox，它和VBox十分相似，不过它用来管理水平排列的布局，来看一个相同的示例，先上图：</p>
+
+<p>[![][3]][3]</p>
+
+<p>如上图，我们对比一下之前的图就很容易看出，HBox管理部件的水平排列布局，在很多应用程序的布局都是应用VBox和HBox配合使用来构建出丰富的UI来的。下面我们看一下完整代码，其实你很容易看出不同：</p>
+
+<pre><code>#!/usr/bin/env python
+
+# HBox layout container
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class HBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("HBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        hbox = gtk.HBox(False, 5)
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(200,150)
+
+        hbox.add(btn1)
+        hbox.add(btn2)
+        self.window.add(hbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    hbox = HBoxLC()
+    hbox.main()
+</code></pre>
+
+<p>下面同样是HBox类的概要和继承关系：</p>
+
+<pre><code>class gtk.HBox(gtk.Box):
+    gtk.HBox(homogeneous=False, spacing=0)
+
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.HBox
+</code></pre>
+
+<h2> 4.总结</h2>
+
+<p>学习了一下VBox和HBox，非茶有用的两个布局管理部件，而且配合使用可以构建出非常复杂的UI，其实DawnDIY觉得VBox和HBox很容易让人想到HTML中的和标签，它们可以自由的相互嵌套来构建UI。所以你有好的设计，可以尝试一下用VBox和HBox把它设计出来吧。</p>
+
+<p>今天学到这里，待续。。。</p>
+
+<p> </p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/archives/107#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    DawnDIY
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'DawnDIY';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

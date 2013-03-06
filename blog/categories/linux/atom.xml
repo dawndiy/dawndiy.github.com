@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Linux | 一个人的世界]]></title>
+  <link href="http://dawndiy.github.com/blog/categories/linux/atom.xml" rel="self"/>
+  <link href="http://dawndiy.github.com/"/>
+  <updated>2013-03-07T02:03:26+08:00</updated>
+  <id>http://dawndiy.github.com/</id>
+  <author>
+    <name><![CDATA[DawnDIY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下的 Chrome 中 Flash 中文显示方框解决办法]]></title>
+    <link href="http://dawndiy.github.com/archives/415"/>
+    <updated>2012-11-20T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/chinese-display-box-in-chrome-flash-solution</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>先强烈吐嘈一下：以后大家尽量用 Html5 来淘汰 Adobe Flash 吧，一直以来各种系统漏洞很多情况都是来自 Flash ，而且 Flash 也有着各种局限性，虽然现在 Html5 还不成熟，但它正走向成熟。尤其在 Linux 桌面系统中，Flash 也不进行更新了(只进行安全更新)，同时“号称”跨平台的 Adobe AIR 也不开发 Linux 版本了。我们只能用旧的…</p>
+
+<p>对于 Linux 用户来说，Adobe 已经不更新 Flash 了，最后一个版本是 11.2 。除非你使用 Google 的 Chrome 浏览器，Chrome 中内置了最新版本的 Flash ，最新版本是 11.5 。也就是说以后有人想在 Linux 下用最新的 Flash 那么就只能用 Chrome 了，不过我觉得这没必要， Flash 迟早也是会淘汰的，只是时间问题，就和 IE6 一样。但现在在国内的网络状况中，你真的不能不没有 Flash ~ 汗~~ 比如在线看个视频、听个音乐、等等，都需要 Flash 的支持。</p>
+
+<p>而对于 Linux 下的 Flash 来说，貌似它对本地中文字库支持的不够好，或者换句话说，目前很多 Linux 发行版中的中文字库不够全。这样以来有一些包含 Flash 的网站，中文字只能变身成为 “口口口”了！</p>
+
+<p>好了，前面说了一些废话，但这些都是一直我想说的。。。<strong>下面是正题：</strong></p>
+
+<p><strong>问题来源：</strong></p>
+
+<p>之前我都是主用 Firefox ，我的系统是已经安装了 Flash 的，即 11.2 版本。而且因为我用的是 Ubuntu ，系统中已经包含文泉驿、方正等中文字体。所以在 Firefox 中使用 Flash 是可以正常显示中文字的。今天，我安装了 Chrome ，接着刚好在 Chrome 中打开了 <a href="http://web.sanguosha.com" title="三国杀Online">三国杀Online</a> ，接着就开杀啦。。呵呵，玩着正欢的时候突然发现聊天的框中，中文字全变成“口口口”了，如图：</p>
+
+<p><img src="http://i.imgur.com/f96FE.png" title="sanguosha_1" alt="" /></p>
+
+<p>看到上面的图你什么感觉？唉~可能别人骂你你都不知道呢~</p>
+
+<p><strong>问题原因：</strong></p>
+
+<p>出现这样的情况，无非就是 Flash 找不到对应的字体，可能是你系统中没有安装这种字体，或者就是你安装了这种字体，Flash 没办法调用它。Linux 相关字体的配置，在这个地方 /etc/fonts/conf.d ，但是不建议修改，因为现在的情况不是配置的原因使得出现“口口口”的。因为此时，我的 Firefox 中能够正常显示 Flash 中的中文字，而 Chrome 中不能正常显示。到这里，原因很简单了，是 Chrome 中内置的 Flash 的问题。PS：我在网上搜索，有人说是 Chrome 内置的 Flash 没有修改字体的接口。</p>
+
+<p><strong>解决办法：</strong></p>
+
+<p>其实问题就是这样，知道原因了就好解决了。是 Chrome 内置 Flash 出现的问题，那么我们就不用它内置的就行咯~我们系统中本身自己就安装好了 11.2 版本的 Flash ，那么我们只要使 Chrome 能够调用系统中安装的 Flash 就行了。</p>
+
+<p>步骤如下：</p>
+
+<p>1.打开 Chrome ，在地址栏输入  进入插件页面，把详细信息展开 。</p>
+
+<p>2.找到 Adobe Flash Player  (2 files)，你此时会看到后面有个 (2 files)，这就对了，一个是内置的，一个是系统里安装的。从两个文件的路径也能看出来，一个是： /opt/google/chrome/PepperFlash/libpepflashplayer.so  ，即 Chrome 内置的；还一个是： /usr/lib/flashplugin-installer/libflashplayer.so  ，即我们系统里安装的。</p>
+
+<p>3.Chrome 里在有两个 Flash 的时候是优先使用内置的，所以这里只要 <strong>停用</strong> 内置的 Flash 就可以了~</p>
+
+<p>停用后你在打开 Flash 就能看到正常的中文字了，点击鼠标右键，你也会发现不是之前的 11.5 版本了，而是系统的 11.2 版本了~</p>
+
+<p>OK~问题解决，留下此文~</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下使用 fastboot 给手机刷机]]></title>
+    <link href="http://dawndiy.github.com/archives/389"/>
+    <updated>2012-10-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/use-fastboot-to-flash-phone-on-linux</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>近期一直都没电脑用，一直在用手机。今天看看手机的东西好杂好乱，想好好理理啦，所以准备刷下机。之前都是下好卡刷包然后卡刷的，想到之前我在电脑上配好了 Android 的开发环境，可以尝试一下在 Ubuntu 下线刷。应该很多人都是在 Windows 下线刷的吧，其实在 Linux 下一样非常简单，尤其是现在一些包还写好了脚本。</p>
+
+<p>在 Linux 下首先应该准备一下环境，也就是 Android 开发调试环境。可以参考我之前的文章：<a href="http://www.dawndiy.com/archives/153" title="Ubuntu 下搭建 Android 开发环境(图文)">《Ubuntu 下搭建 Android 开发环境(图文)》</a> 这里其实你只是想刷机的话，看完前4点就行了。老早就配置好了环境的朋友就跳过咯~</p>
+
+<p>接下来我们准备好你手机的线刷包，注意里面一定是解压后包含 images 文件夹的包，其余的就是一些脚本。</p>
+
+<p>剩下的就是我们开始连接手机咯。<strong>注意：</strong>要确定你的手机 <strong>设置 > 开发人员选项 > USB 调试</strong> 勾选上了。好的，接下来使用USB数据线连接你的手机到电脑。运行下面代码：</p>
+
+<pre><code>lsusb
+</code></pre>
+
+<p>这时候你会看到下面类似的结果：</p>
+
+<pre><code>Bus 001 Device 002: ID 064e:a111 Suyin Corp. 
+Bus 001 Device 003: ID 0bda:8189 Realtek Semiconductor Corp. RTL8187B Wireless 802.11g 54Mbps Network Adapter
+Bus 002 Device 003: ID 18d1:9025 Google Inc. 
+Bus 005 Device 002: ID 046d:c52b Logitech, Inc. Unifying Receiver
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 006 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 007 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+</code></pre>
+
+<p>其中 Google Inc 这一行现实的是我的设备。你可以更具自己的手机厂商来判断那个是你的设备，在这里我们需要记录下的是 ID  18d1:9025 这一串。接下来运行下面代码：</p>
+
+<pre><code>sudo gedit /etc/udev/rules.d/android.rules
+</code></pre>
+
+<p>在文件中添加如下信息：</p>
+
+<pre><code>SUBSYSTEMS=="usb", ATTRS{idVendor}="18d1", ATTRS{idProduct}="9025", MODE="0666"
+</code></pre>
+
+<p>注意上面的数字和前面我们获得的那一串的对应，而最后的 MODE 是不变的。好的，修改保存好以后，给这个文件添加读和执行权限：</p>
+
+<pre><code>sudo chmod  rx /etc/udev/rules.d/android.rules
+</code></pre>
+
+<p>接着我们就能够连接手机了，运行下来代码：</p>
+
+<pre><code>sudo adb devices
+</code></pre>
+
+<p>然后我们会看到如下信息，成功连接手机的话会显示 device 信息：</p>
+
+<pre><code>* daemon not running. starting it now on port 5037 *
+* daemon started successfully *
+List of devices attached 
+bc762e7c    device
+</code></pre>
+
+<p>如果你显示 ？？？？？ 或者 没权限，可能是前面的步骤没做好，或是环境变量没有配好。而且，这里 adb 记得用 root 权限来运行，即 sudo。</p>
+
+<p>好了，连接了，我们可以试一试，如果你动 shell 的话，你可以运行 sudo adb shell ，这样就直接在电脑上运行你 Android 手机上的 shell 命令了。</p>
+
+<p>好了，回到正题，我们是要刷机，而且是线刷。首先线刷不是在开机状态下执行的，所以运行下面代码使得你的手机进入 fastboot 模式 准备开始线刷：</p>
+
+<pre><code>sudo adb reboot-bootloader
+</code></pre>
+
+<p>稍等片刻手机就会重启至 Fastboot 模式，等待刷机的开始。如果你早就知道怎么进入你手机的 Fastboot 模式，你也可以省去上面的步骤直接进入 Fastboot 模式，进行下面的步骤：</p>
+
+<pre><code>sudo fastboot devices
+</code></pre>
+
+<p>如果能够现实如下信息，表示你的电脑此时能够连接到手机的 Fastboot 模式。</p>
+
+<pre><code>bc762e7c fastboot
+</code></pre>
+
+<p>这时候要通过 cd 命令来到你的线刷包的目录，一般线刷包里面会有 fash_all.sh这个刷机脚本，这是我们可能需要修改一下它的可执行权限：</p>
+
+<pre><code>sudo chmod  x flash_all.sh
+</code></pre>
+
+<p>修改好权限以后，我们执行它就行了：</p>
+
+<pre><code>sudo ./flash_all.sh
+</code></pre>
+
+<p>接下来我们看到的就是正在刷机了，等几分钟就OK了~下面是我的刷机显示时长：</p>
+
+<pre><code>sending 'tz' (102 KB)...
+OKAY [ 0.010s]
+writing 'tz'...
+OKAY [ 0.209s]
+finished. total time: 0.219s
+sending 'sbl2' (106 KB)...
+OKAY [ 0.009s]
+writing 'sbl2'...
+OKAY [ 0.226s]
+finished. total time: 0.235s
+sending 'rpm' (112 KB)...
+OKAY [ 0.011s]
+writing 'rpm'...
+OKAY [ 0.238s]
+finished. total time: 0.248s
+sending 'sbl3' (596 KB)...
+OKAY [ 0.046s]
+writing 'sbl3'...
+OKAY [ 0.227s]
+finished. total time: 0.274s
+sending 'sbl1' (82 KB)...
+OKAY [ 0.009s]
+writing 'sbl1'...
+OKAY [ 0.050s]
+finished. total time: 0.059s
+sending 'aboot' (575 KB)...
+OKAY [ 0.044s]
+writing 'aboot'...
+OKAY [ 0.401s]
+finished. total time: 0.445s
+erasing 'boot'...
+OKAY [ 0.009s]
+finished. total time: 0.009s
+sending 'misc' (8 KB)...
+OKAY [ 0.003s]
+writing 'misc'...
+OKAY [ 0.008s]
+finished. total time: 0.011s
+sending 'modem' (28780 KB)...
+OKAY [ 2.160s]
+writing 'modem'...
+OKAY [ 6.352s]
+finished. total time: 8.513s
+sending 'cache' (1024 KB)...
+OKAY [ 0.083s]
+writing 'cache'...
+OKAY [ 0.352s]
+finished. total time: 0.435s
+sending 'system' (219136 KB)...
+OKAY [ 16.157s]
+writing 'system'...
+OKAY [ 35.635s]
+finished. total time: 51.793s
+sending 'system1' (219136 KB)...
+OKAY [ 15.927s]
+writing 'system1'...
+OKAY [ 35.692s]
+finished. total time: 51.619s
+sending 'recovery' (5592 KB)...
+OKAY [ 0.405s]
+writing 'recovery'...
+OKAY [ 0.785s]
+finished. total time: 1.190s
+sending 'userdata' (204800 KB)...
+OKAY [ 14.776s]
+writing 'userdata'...
+OKAY [ 31.363s]
+finished. total time: 46.139s
+sending 'boot1' (4430 KB)...
+OKAY [ 0.328s]
+writing 'boot1'...
+OKAY [ 0.733s]
+finished. total time: 1.061s
+sending 'boot' (4430 KB)...
+OKAY [ 0.320s]
+writing 'boot'...
+OKAY [ 1.028s]
+finished. total time: 1.349s
+</code></pre>
+
+<p>OK，最后用下面代码重启一下手机你就能看到系统刷机成功了~ ^.^</p>
+
+<pre><code>sudo fastboot reboot
+</code></pre>
+
+<p>附上我刷机的脚本：</p>
+
+<pre><code>fastboot flash tz images/tz.mbn
+fastboot flash sbl2 images/sbl2.mbn
+fastboot flash rpm images/rpm.mbn
+fastboot flash sbl3 images/sbl3.mbn
+fastboot flash sbl1 images/sbl1.mbn
+fastboot flash aboot images/emmc_appsboot.mbn
+fastboot erase boot
+fastboot flash misc images/misc.img
+fastboot flash modem images/NON-HLOS.bin
+fastboot flash cache images/cache.img.ext4
+fastboot flash system images/system.img.ext4
+fastboot flash system1 images/system.img.ext4
+fastboot flash recovery images/recovery.img
+fastboot flash userdata images/userdata.img.ext4
+fastboot flash boot1 images/boot.img
+fastboot flash boot images/boot.img
+</code></pre>
+
+<p>不过一般线刷包里面都会有脚本的，呵呵~ 也祝你刷机成功！！！</p>
+
+<p>over….</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GNOME 3.6 发布!]]></title>
+    <link href="http://dawndiy.github.com/archives/352"/>
+    <updated>2012-09-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/gnome-3-6-released</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p><img src="http://www.gnome.org/wp-content/uploads/2012/09/gnome-3-6.png" title="gnome-3-6" alt="GNOME 3.6" /></p>
+
+<p>GNOME 项目自豪地推出了 3.x 系列的第三次更新–GNOME 3.6。最新版本的 GNOME 3 包含了许多新特性和增进，如大量的 bug 修复和部分改善。同时，也给 GNOME 3 的用户体验带来了重大升级。</p>
+
+<p>GNOME基金会的总裁 Andreas Nilsson 说道：“GNOME 基金会很自豪的推出这次最新版的GNOME，而且我要祝贺 GNOME 社区的成就。” 他描述这次发布：“这是我们以把自由和开放的计算环境带给每一个人为我们任务的一次重要的里程碑。”</p>
+
+<p>这次发布的重要特性包括：</p>
+
+<ul>
+<li>通知系统的重大改进，包括消息托盘的重新设计，更智能的通知，以及其他优化。</li>
+<li>对“活动概览”进行了增强，着重改进了布局。</li>
+<li>增强“文件”应用，增强文件搜索功能，新的最近位置，重新设计界面以及修复大量 bug 和其他新特性。</li>
+<li>整合 Input Sources ，使得输入不同的字符集(如中文)简单而快速。</li>
+<li>辅助功能的需求，如 Orca 屏幕阅读器能通过按下按钮开启。</li>
+<li>新的锁定屏幕。在设备锁定时提供了一个有吸引力的视图，加上像媒体控制和通知等方便的功能。</li>
+</ul>
+
+
+<p>[![][3]][3] [![][4]][4] <a href="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes"><img src="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes" alt="" /></a></p>
+
+<p>GNOME 3.6 还包括很多增强，其中包括在线帐号支持Microsoft Exchange, Facebook 和 Windows Live，大量的系统设置和重新设计的用户菜单。许多 GNOME 应用也得到了改善，包括 Web，Empathy，磁盘使用分析，磁盘和字体查看器。这个版本也包含了第一个主要版本的 Boxes，这是一个使用远程系统和虚拟机的应用程序，还有开发预览的新时钟应用。</p>
+
+<p>你可以在<a href="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes">发行说明</a>中阅读到包括 GNOME 3.6 在内的所有变化。这个最新版是 GNOME 社区，一个开放、个人和组织的国际联合的社区，耗费6个月的辛苦工作完成的。GNOME 致力于基于自由软件提供高质量的用户体验。开发在开放中进行，任何人都可以参与。如果你希望支持我们，你也可以成为 <a href="http://www.gnome.org/friends/" title="Friends of GNOME">GNOME 的朋友</a>。</p>
+
+<p><a href="http://www.dawndiy.com">DawnDIY</a> 翻译至 http://www.gnome.org/news/2012/09/gnome-3-6-released/</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 12.10 默认新壁纸预览~]]></title>
+    <link href="http://dawndiy.github.com/archives/327"/>
+    <updated>2012-09-12T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/ubuntu-12-10-default-wallpaper-preview</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p> </p>
+
+<p>Ubuntu 12.10 越来越近了~近期 Ubuntu 12.10 默认壁纸也浮现出来了。</p>
+
+<p>上图，这就是 Ubuntu 12.10 的默认壁纸。</p>
+
+<p><img src="http://i.imgur.com/GD3w6.jpg" title="Ubuntu12.10-Default-Wallpaper" alt="" /></p>
+
+<p>延续着 Ubuntu 紫色和橙色的搭配，Ubuntu 12.10 继续使用名为“紫色沙拉”系列的壁纸，对比 Ubuntu 12.04 的壁纸，这张壁纸更显圆滑，色彩过度自然。</p>
+
+<p>下面是一张 Ubuntu 10.04 ~12.04 的壁纸动态图：</p>
+
+<p><img src="http://i.imgur.com/z1Eso.gif" title="Default-Wallpaper-From-Ubuntu10.04-12.04" alt="" /></p>
+
+<p><strong><a href="http://bazaar.launchpad.net/~ubuntu-art-pkg/ubuntu-wallpapers/ubuntu/download/head:/elephantskin.jpg-20070925092320-wp63xkqaf9y3tbmp-1/warty-final-ubuntu.png">下载 Ubuntu 12.10 默认壁纸</a></strong></p>
+
+<p><strong><a href="https://launchpad.net/ubuntu/quantal/">下载 Ubuntu 12.10 其他壁纸</a></strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下安装配置 JDK7]]></title>
+    <link href="http://dawndiy.github.com/archives/155"/>
+    <updated>2012-07-31T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/install-and-configurate-jdk7-in-linux</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>自从从Oracle收购Sun近三年来，已经有很多变化。早在8月，甲骨文将“Operating System Distributor License for Java”许可证终结，这意味着第三方将不可以依据这一许可分发他们的软件包。<br/>
+<strong>　　</strong>因此Ubuntu Linux已经开始禁用所有机器上的Oracle JDK浏览器插件，并很快会从档案中删除软件包。<br/>
+公司指出，禁用Oracle的插件将可以帮助提高安全性，因为这些插件已经被证实包含许多漏洞，虽然这是一个事实，但真正的原因恐怕是Sun的 JDK在升级时会清理掉用户机器上自认为不安全的软件，大多数PC用户认为这样很安全，但通常基于UNIX系统的用户并不这么认为。<br/>
+Oracle的JDK被废弃后，OpenJDK将取代它的位置在Ubuntu及其它Linux中默认安装。</p>
+
+<p>虽然很多Linux发行版现在已经自带OpenJDK，但是在开发过程中与Oracle-JDK(SUN-JDK)还是略有不同。通常，Java开发人员还是以Oracle-JDK为标准来进行开发。<br/>
+下面介绍一下Linux下的JDK安装与配置，这里使用的Linux发行版是Ubuntu 12.04。</p>
+
+<h2>1.下载JDK</h2>
+
+<p>目前最新的JDK版本是：Java SE Development Kit 7u5</p>
+
+<p>下载地址：</p>
+
+<p>查看最新：</p>
+
+<h2>2.解压安装</h2>
+
+<p>我们把JDK安装到这个路径：/usr/lib/jvm<br/>
+如果没有这个目录（第一次当然没有），我们就新建一个目录</p>
+
+<pre><code>cd /usr/lib
+sudo mkdir jvm
+</code></pre>
+
+<p>建立好了以后，我们来到刚才下载好的压缩包的目录，解压到我们刚才新建的文件夹里面去，并且修改好名字方便我们管理</p>
+
+<pre><code>sudo tar zxvf ./jdk-7-linux-i586.tar.gz  -C /usr/lib/jvm
+cd /usr/lib/jvm
+sudo mv jdk1.7.0_05/ jdk7
+</code></pre>
+
+<h2> 3.配置环境变量</h2>
+
+<pre><code>gedit ~/.bashrc
+</code></pre>
+
+<p>在打开的文件的末尾添加</p>
+
+<pre><code>export JAVA_HOME=/usr/lib/jvm/jdk7
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+</code></pre>
+
+<p>保存退出，然后输入下面的命令来使之生效</p>
+
+<pre><code>source ~/.bashrc
+</code></pre>
+
+<h2> 4.配置默认JDK</h2>
+
+<p>由于一些Linux的发行版中已经存在默认的JDK，如OpenJDK等。所以为了使得我们刚才安装好的JDK版本能成为默认的JDK版本，我们还要进行下面的配置。<br/>
+执行下面的命令：</p>
+
+<pre><code>sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk7/bin/java 300
+sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk7/bin/javac 300
+</code></pre>
+
+<p> 注意：如果以上两个命令出现找不到路径问题，只要重启一下计算机在重复上面两行代码就OK了。</p>
+
+<p>执行下面的代码可以看到当前各种JDK版本和配置：</p>
+
+<pre><code>sudo update-alternatives --config java
+</code></pre>
+
+<h2> 5.测试</h2>
+
+<p>打开一个终端，输入下面命令：</p>
+
+<pre><code>java -version
+</code></pre>
+
+<p>显示结果：</p>
+
+<pre><code>java version "1.7.0_05"
+Java(TM) SE Runtime Environment (build 1.7.0_05-b05)
+Java HotSpot(TM) Server VM (build 23.1-b03, mixed mode)
+</code></pre>
+
+<p>这表示java命令已经可以运行了。</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+</feed>

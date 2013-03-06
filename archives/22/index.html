@@ -1,0 +1,216 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ubuntu 12.04 安装 Gnome 3 桌面 - 一个人的世界</title>
+    <meta name="author" content="DawnDIY">
+    
+	<meta name="description" content="Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使用的是Unity桌面，Unity项目发起于2010年，第一次应用在Ubuntu 11.04 上面，起初这个桌面颇受争议，但是时隔一年，现在已经非常稳定了。但是萝卜青菜各有所爱， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="一个人的世界" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        DawnDIY
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/DawnDIY" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/DawnDIYSoft" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">Ubuntu 12.04 安装 Gnome 3 桌面</h2>
+	<div class="entry-content"><h1></h1>
+
+<p>Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使用的是Unity桌面，Unity项目发起于2010年，第一次应用在Ubuntu 11.04 上面，起初这个桌面颇受争议，但是时隔一年，现在已经非常稳定了。但是萝卜青菜各有所爱，对于热衷于Gnome的用户来说Ubuntu就不能使用Gnome吗？当然，Linux的世界里永远没有不能，而且说到底Unity也是基于Gnome的。现在Gnome3的时代，Gnome桌面也有了不一样的用户体验。</p>
+
+<p>下面DawnDIY来教大家如何安装Gnome桌面：</p>
+
+<p>首先说明的是，Ubuntu从11.10版本就已经在默认的软件源里面添加了Gnome3，这样一来使得我们安装变得非常方便了，直接apt-get。</p>
+
+<pre><code>sudo apt-get install gnome-shell
+</code></pre>
+
+<p>如图：<br/>
+<img src="http://i.imgur.com/0mpS3.png" title="安装Gnome3" alt="" /></p>
+
+<p> </p>
+
+<p>然后看到的就是安装的提示信息，选择Y进行安装。<br/>
+如图：<br/>
+<img src="http://i.imgur.com/0sdvH.png" title="安装Gnome3提示信息" alt="" /></p>
+
+<p>等待安装完成以后，可以输入</p>
+
+<pre><code>gnome-shell--version
+</code></pre>
+
+<p><strong> </strong>来察看你所安装的版本，如图：<strong><br/>
+<img src="http://i.imgur.com/tCRb1.png" title="安装Gnome3版本察看" alt="" /></strong></p>
+
+<p>随后你注销系统，重新登入选择Gnome3桌面就可以看到Gnome3桌面了，为了配合一下Gnome3，我换了一张经典的Gnome壁纸，如果：<br/>
+<img src="http://i.imgur.com/kECFx.jpg" title="Gnome3桌面1" alt="" /></p>
+
+<p><img src="http://i.imgur.com/eEruV.jpg" title="Gnome3桌面2" alt="" /></p>
+
+<p><img src="http://i.imgur.com/J9WJo.png" title="Gnome3桌面3" alt="" /></p>
+
+<p>到这里，Gnome3就算安装完了，但是你会发现你一时也不习惯，因为Gnome默认窗口只有关闭按钮，连最大化最小化都没有了。确实不方便，那么我们需要对Gnome3进行配置。没有一款很好的原生的桌面配置工具是各大桌面的通病，所以我们需要如Ubuntu-Tweak 之类的第三方软件来帮我们配置，当然你可以直接到Ubuntu-Tweak的官方网站去下载（<a href="http://ubuntu-tweak.com/" title="ubuntu-tweak">http://ubuntu-tweak.com/</a>）。这里的话，我们介绍一个Gnome3原生的一款简单的配置工具—- Gnome-Tweak-Tool。我们可以使用下面的命令直接安装。</p>
+
+<pre><code>sudo apt-get install gnome-tweak-tool
+</code></pre>
+
+<p>如图：<br/>
+<img src="http://i.imgur.com/hfuls.png" title="安装Gnome-tweak-tool" alt="" /></p>
+
+<p>安装完成后在菜单中找到 Advanced Settings（高级设置）如图：<br/>
+<img src="http://i.imgur.com/0EbN3.png" title="gnome-tweak-tool" alt="" /></p>
+
+<p>然后你就可以在里面设置一些基本功能了，例如在shell里面设置titlebar，显示<strong>最大最小化按钮</strong>，如图：<br/>
+<img src="http://i.imgur.com/H045V.png" title="gnome-tweak-tool设置" alt="" /></p>
+
+<p>这样设置，<strong>最大最小化按钮</strong>就出现了！之后你可以自己发现更多的设置！</p>
+
+<p>最后，可能还有很多人问Gnome3的<strong>关机按钮</strong>到哪里去了？只能找到<strong>注销按钮</strong>是吧？找到注销按钮，然后再按 <strong>ALT</strong> 键，<strong>关机按钮</strong> 就出现了。</p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/archives/22#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    DawnDIY
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'DawnDIY';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

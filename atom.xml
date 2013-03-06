@@ -1,0 +1,3197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[一个人的世界]]></title>
+  <link href="http://dawndiy.github.com/atom.xml" rel="self"/>
+  <link href="http://dawndiy.github.com/"/>
+  <updated>2013-03-07T02:03:26+08:00</updated>
+  <id>http://dawndiy.github.com/</id>
+  <author>
+    <name><![CDATA[DawnDIY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[你好，新版博客]]></title>
+    <link href="http://dawndiy.github.com/blog/2013/03/04/hello-new-blog/"/>
+    <updated>2013-03-04T04:02:00+08:00</updated>
+    <id>http://dawndiy.github.com/blog/2013/03/04/hello-new-blog</id>
+    <content type="html"><![CDATA[<h3>博客改版中&#8230;</h3>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGObject 学习笔记(10)-GMenu &#038; GSimpleAction]]></title>
+    <link href="http://dawndiy.github.com/archives/442"/>
+    <updated>2013-02-06T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygobject-study-notes-10-gmenu-gsimpleaction</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>有段时间没更新了，一直想着想重新改一下Bolg，所以没怎么写了。好~二话不说，现在继续。今天来讲一个新的控件，一看标题，对！又是菜单，但这次菜单和之前的<a href="http://www.dawndiy.com/archives/290" title="PyGtk学习笔记(6)–菜单">《PyGtk学习笔记(6)–菜单》</a>的菜单是不同，自从转向学习PyGObject了，会有很多GTK 3的特性，所以，这次的 GMenu 和以往的菜单不同。所以老规矩，看图吧。</p>
+
+<p><img src="http://i.imgur.com/sNe0XA5.jpg" title="GMenu" alt="" /></p>
+
+<p>上面的图就是 GMenu 在原生 Gnome3 桌面里面显示的效果。好了，开始介绍。</p>
+
+<h2>一. 介绍</h2>
+
+<p>Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可视空间。当然，在 Gnome3 里面同样可以省去传统的 MenuBar ，根据 Gnome3 的新特性，增加了 GMenu 。就像上面的图一样，将菜单功能集成在 Gnome 的任务栏中，同样为用户挤出了更多的空间，而且现在很多 Gnome3 的应用也开始使用这一特性了，如：Empathy。当然，刚开始很多童鞋找不到菜单在最顶上，呵呵，不过发现了以后还是会比较惊喜，这样会省出一个 Bar 的空间。</p>
+
+<h3>1.类结构</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GObject
+</span><span class='line'>    ----GMenuModel
+</span><span class='line'>          ----GMenu</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要注意的是，GMenu 是在 GIO 中，而不是在 GTK 中，所以应该导入 Gio 模块</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gio</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3> 2.常用方法</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">insert</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">detailed_action</span><span class="p">)</span>
+</span><span class='line'><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">detailed_action</span><span class="p">)</span>   <span class="c"># 加到最后</span>
+</span><span class='line'><span class="n">prepend</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">detailed_action</span><span class="p">)</span>  <span class="c"># 加到最前</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在菜单中插入一个选项<br/>
+<em>position: 位置</em><br/>
+<em>label: 显示标签</em><br/>
+<em>detailed_action: 动作名，以 app. 为前缀</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">insert_section</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span><span class='line'><span class="n">append_section</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span><span class='line'><span class="n">prepend_section</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在菜单中插入一个区域，上下会有分割线隔开<br/>
+<em>position: 位置</em><br/>
+<em>label: 区域名</em><br/>
+<em>section: 可以是一个 GMenu</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">insert_submenu</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span><span class='line'><span class="n">append_submenu</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span><span class='line'><span class="n">prepend_submenu</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在菜单中插入一个子菜单<br/>
+<em>position: 位置</em><br/>
+<em>label: 区域名</em><br/>
+<em>section: 可以是一个 GMenu</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">remove</span><span class="p">(</span><span class="n">postion</span><span class="p">)</span>    <span class="c"># 删除选项</span>
+</span><span class='line'><span class="n">set_label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>   <span class="c"># 设置显示标签</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3> 2.代码分析</h3>
+
+<p>以下是是想最上面图中的菜单的效果：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/env python</span>
+</span><span class='line'><span class="c"># -*- coding: utf-8 -*-</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># GMenu &amp; SimpleActions</span>
+</span><span class='line'><span class="c"># PyGObject Study Notes By DawnDIY</span>
+</span><span class='line'><span class="c"># http://dawndiy.com</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gtk</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gio</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyWindow</span><span class="p">(</span><span class="n">Gtk</span><span class="o">.</span><span class="n">ApplicationWindow</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;GMenu Example&quot;</span><span class="p">,</span> <span class="n">application</span><span class="o">=</span><span class="n">app</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyApplication</span><span class="p">(</span><span class="n">Gtk</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">Gtk</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">do_activate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">win</span> <span class="o">=</span> <span class="n">MyWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">win</span><span class="o">.</span><span class="n">show_all</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">do_startup</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="c"># 启动应用</span>
+</span><span class='line'>        <span class="n">Gtk</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">do_startup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 建立顶层菜单</span>
+</span><span class='line'>        <span class="n">menu</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">Menu</span><span class="p">()</span>
+</span><span class='line'>        <span class="c"># 新建三个菜单选项</span>
+</span><span class='line'>        <span class="n">item_new</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">MenuItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;New&quot;</span><span class="p">,</span> <span class="s">&quot;app.new&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">item_about</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">MenuItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;About&quot;</span><span class="p">,</span> <span class="s">&quot;app.about&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">item_quit</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">MenuItem</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;Quit&quot;</span><span class="p">,</span> <span class="s">&quot;app.quit&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 建立菜单，作为子菜单</span>
+</span><span class='line'>        <span class="n">submenu</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">Menu</span><span class="p">()</span>
+</span><span class='line'>        <span class="c"># 直接添加2个选项</span>
+</span><span class='line'>        <span class="n">submenu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;sub_New&quot;</span><span class="p">,</span> <span class="s">&quot;app.new&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">submenu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;sub_About&quot;</span><span class="p">,</span> <span class="s">&quot;app.about&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 建立菜单，作为父菜单</span>
+</span><span class='line'>        <span class="n">menu2</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">Menu</span><span class="p">()</span>
+</span><span class='line'>        <span class="c"># 将子菜单添加进来</span>
+</span><span class='line'>        <span class="n">menu2</span><span class="o">.</span><span class="n">append_submenu</span><span class="p">(</span><span class="s">&quot;Sub&quot;</span><span class="p">,</span> <span class="n">submenu</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">menu2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;exit&quot;</span><span class="p">,</span> <span class="s">&quot;app.quit&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 把选项、父菜单都加入到顶层菜单中</span>
+</span><span class='line'>        <span class="n">menu</span><span class="o">.</span><span class="n">append_item</span><span class="p">(</span><span class="n">item_new</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">menu</span><span class="o">.</span><span class="n">append_item</span><span class="p">(</span><span class="n">item_about</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">menu</span><span class="o">.</span><span class="n">append_section</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">menu2</span><span class="p">)</span>  <span class="c"># 父菜单添加为不同菜单区域</span>
+</span><span class='line'>        <span class="n">menu</span><span class="o">.</span><span class="n">append_item</span><span class="p">(</span><span class="n">item_quit</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 将顶层菜单作为应用程序的菜单</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">set_app_menu</span><span class="p">(</span><span class="n">menu</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># 为菜单 new 选项添加动作</span>
+</span><span class='line'>        <span class="n">new_action</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">SimpleAction</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>        <span class="c"># 连接到回调函数 new_cb</span>
+</span><span class='line'>        <span class="n">new_action</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_cb</span><span class="p">)</span>
+</span><span class='line'>        <span class="c"># 将动作添加到应用中 </span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">new_action</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># about 选项</span>
+</span><span class='line'>        <span class="n">about_action</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">SimpleAction</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;about&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">about_action</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">about_cb</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">about_action</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c"># quit 选项 </span>
+</span><span class='line'>        <span class="n">quit_action</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">SimpleAction</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;quit&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">quit_action</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;activate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit_cb</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">quit_action</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c"># new 的回调函数 </span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">new_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;This does nothing. It is only a demonstration.&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c"># about 的回调函数 </span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">about_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;No AboutDialog for you. This is only a demonstration.&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c"># about 的回调函数 </span>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">quit_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span><span class="p">(</span><span class="s">&quot;You have quit.&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">app</span> <span class="o">=</span> <span class="n">MyApplication</span><span class="p">()</span>
+</span><span class='line'><span class="n">exit_status</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</span><span class='line'><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exit_status</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码中我已经注释的很详细了，相信认真看都能看懂的！下面我就补充一下前面提到的 GSimpleAction 。</p>
+
+<p>GSimpleAction 继承自 GObject， 用于建立一个独立的动作，使用它可以连接你的回调函数。</p>
+
+<p>常用函数有：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">action</span> <span class="o">=</span> <span class="n">Gio</span><span class="o">.</span><span class="n">SimpleAction</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="n">parameter_type</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>新建一个动作</em><br/>
+<em>name: 动作名</em><br/>
+<em>parameter_type: 参数类型，可以为 None</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">set_enabled</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>设置是否启用</em></p>
+
+<h3>3.总结</h3>
+
+<p>好吧，又写了一篇。希望感兴趣的朋友们能一起来交流！我刚看到 GMenu 的时候是用 Empathy 的时候发现它的菜单变化了，不过第一次用确实没找到菜单，呵呵，最后才知道这样的设计其实挺好的，节省了可视空间，尤其是在你的应用有很复杂的UI的时候，最后还是谈到用户体验了。</p>
+
+<p>PS：这次我学 GMenu 的时候其实我也找了很多资料，不过 PyGObject 的资料不多，最后还是拿着 C 的 GTK 开发手册（就是那个devhelp）一个个函数看的。所以，还是要多看看 API 文档。</p>
+
+<p>待续。。。</p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下的 Chrome 中 Flash 中文显示方框解决办法]]></title>
+    <link href="http://dawndiy.github.com/archives/415"/>
+    <updated>2012-11-20T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/chinese-display-box-in-chrome-flash-solution</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>先强烈吐嘈一下：以后大家尽量用 Html5 来淘汰 Adobe Flash 吧，一直以来各种系统漏洞很多情况都是来自 Flash ，而且 Flash 也有着各种局限性，虽然现在 Html5 还不成熟，但它正走向成熟。尤其在 Linux 桌面系统中，Flash 也不进行更新了(只进行安全更新)，同时“号称”跨平台的 Adobe AIR 也不开发 Linux 版本了。我们只能用旧的…</p>
+
+<p>对于 Linux 用户来说，Adobe 已经不更新 Flash 了，最后一个版本是 11.2 。除非你使用 Google 的 Chrome 浏览器，Chrome 中内置了最新版本的 Flash ，最新版本是 11.5 。也就是说以后有人想在 Linux 下用最新的 Flash 那么就只能用 Chrome 了，不过我觉得这没必要， Flash 迟早也是会淘汰的，只是时间问题，就和 IE6 一样。但现在在国内的网络状况中，你真的不能不没有 Flash ~ 汗~~ 比如在线看个视频、听个音乐、等等，都需要 Flash 的支持。</p>
+
+<p>而对于 Linux 下的 Flash 来说，貌似它对本地中文字库支持的不够好，或者换句话说，目前很多 Linux 发行版中的中文字库不够全。这样以来有一些包含 Flash 的网站，中文字只能变身成为 “口口口”了！</p>
+
+<p>好了，前面说了一些废话，但这些都是一直我想说的。。。<strong>下面是正题：</strong></p>
+
+<p><strong>问题来源：</strong></p>
+
+<p>之前我都是主用 Firefox ，我的系统是已经安装了 Flash 的，即 11.2 版本。而且因为我用的是 Ubuntu ，系统中已经包含文泉驿、方正等中文字体。所以在 Firefox 中使用 Flash 是可以正常显示中文字的。今天，我安装了 Chrome ，接着刚好在 Chrome 中打开了 <a href="http://web.sanguosha.com" title="三国杀Online">三国杀Online</a> ，接着就开杀啦。。呵呵，玩着正欢的时候突然发现聊天的框中，中文字全变成“口口口”了，如图：</p>
+
+<p><img src="http://i.imgur.com/f96FE.png" title="sanguosha_1" alt="" /></p>
+
+<p>看到上面的图你什么感觉？唉~可能别人骂你你都不知道呢~</p>
+
+<p><strong>问题原因：</strong></p>
+
+<p>出现这样的情况，无非就是 Flash 找不到对应的字体，可能是你系统中没有安装这种字体，或者就是你安装了这种字体，Flash 没办法调用它。Linux 相关字体的配置，在这个地方 /etc/fonts/conf.d ，但是不建议修改，因为现在的情况不是配置的原因使得出现“口口口”的。因为此时，我的 Firefox 中能够正常显示 Flash 中的中文字，而 Chrome 中不能正常显示。到这里，原因很简单了，是 Chrome 中内置的 Flash 的问题。PS：我在网上搜索，有人说是 Chrome 内置的 Flash 没有修改字体的接口。</p>
+
+<p><strong>解决办法：</strong></p>
+
+<p>其实问题就是这样，知道原因了就好解决了。是 Chrome 内置 Flash 出现的问题，那么我们就不用它内置的就行咯~我们系统中本身自己就安装好了 11.2 版本的 Flash ，那么我们只要使 Chrome 能够调用系统中安装的 Flash 就行了。</p>
+
+<p>步骤如下：</p>
+
+<p>1.打开 Chrome ，在地址栏输入  进入插件页面，把详细信息展开 。</p>
+
+<p>2.找到 Adobe Flash Player  (2 files)，你此时会看到后面有个 (2 files)，这就对了，一个是内置的，一个是系统里安装的。从两个文件的路径也能看出来，一个是： /opt/google/chrome/PepperFlash/libpepflashplayer.so  ，即 Chrome 内置的；还一个是： /usr/lib/flashplugin-installer/libflashplayer.so  ，即我们系统里安装的。</p>
+
+<p>3.Chrome 里在有两个 Flash 的时候是优先使用内置的，所以这里只要 <strong>停用</strong> 内置的 Flash 就可以了~</p>
+
+<p>停用后你在打开 Flash 就能看到正常的中文字了，点击鼠标右键，你也会发现不是之前的 11.5 版本了，而是系统的 11.2 版本了~</p>
+
+<p>OK~问题解决，留下此文~</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGObject 学习笔记(9)-标签]]></title>
+    <link href="http://dawndiy.github.com/archives/399"/>
+    <updated>2012-11-15T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygobject-study-notes-9-label</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>Label (标签)可以说是任何应用中最常见的控件了，使用标签是在窗口中显示不可编辑的文字的最常用方法。简单讲就是用来显示信息的。我们从最简单的 Hello World 例子看一下，如图：</p>
+
+<p><img src="http://i.imgur.com/BmAKT.png" title="Label_hello_world" alt="" /></p>
+
+<p>就像上面的图一样，就是显示一个简单的信息，完整代码如下：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Label Example
+# PyGObject Study Notes By DawnDIY
+# http://dawndiy.com
+
+from gi.repository import Gtk
+
+class LabelWindow(Gtk.Window):
+
+    def __init__(self):
+        Gtk.Window.__init__(self, title="Label Example")
+
+        label = Gtk.Label("Hello World!")
+
+        self.add(label)
+
+win = LabelWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
+</code></pre>
+
+<p>是不是很简单，<strong>但是，不是仅仅如此哦。</strong>其实 Label 也有挺多显示方法的，如果选择合适的显示，会给你的窗口添加不少亮点，下面我们就详细看一下。</p>
+
+<p>先从 Label 对象看起：</p>
+
+<pre><code>class Gtk.Label([text ])
+</code></pre>
+
+<p>在新建一个 Label 时，可以直接附上 text 的内容即可，如果没有值即空。</p>
+
+<p>常用方法：</p>
+
+<pre><code>static new_with_mnemonic(text)
+</code></pre>
+
+<p>这是一个静态方法，返回的也是一个Label。但是有所不同的是，这个方法可以设置类似快捷键的事件，通过下划线(_)来指定快捷键字母，当然这个方法要配合 set_mnemonic_widget(widget) 来使用，通过键盘上按下 Alt [指定字母] 来激活 set_mnemonic_widget(widget) 绑定的控件的事件。详情看后面例子。</p>
+
+<pre><code>set_mnemonic_widget(widget)
+</code></pre>
+
+<p>设置前面指定快捷键激活的控件事件。如果为空或者没有使用该方法，则默认为 Label 本身。</p>
+
+<pre><code>set_justify(justification)
+</code></pre>
+
+<p>使用这个方法设置文字的对齐方式。</p>
+
+<p><strong><code>justification
+</code></strong></p>
+
+<p>可以是：Gtk.Justification.LEFT, Gtk.Justification.RIGHT, Gtk.Justification.CENTER,<br/>
+Gtk.Justification.FILL. 分别是左对齐，右对齐，居中和填充。不过这个方法对尽有一行文字的Label是无效的。</p>
+
+<pre><code>set_line_wrap(wrap)
+</code></pre>
+
+<p>这个是控制内容换行的。当 <em>wrap</em> 的值为 True ，如果一行内容超过了 Label 控件的大小，那么将内容换行显示。当 <em>wrap</em> 的值为 False ，如果一行内容超过了 Label 控件的大小，内容将被剪切掉。</p>
+
+<pre><code>set_markup(markup)
+</code></pre>
+
+<p>这个是好东西，可以让你的 Label 显示更加丰富，通过该方法让 Label 的内容支持标记输出，其中的标记必须符合 Pango 的文本标记语言，如, &amp; 字符都要用 &lt; > &amp;amp 来替换。下面的完整例子中会用到。</p>
+
+<pre><code>set_selectable(selectable)
+</code></pre>
+
+<p>这个方法设置文本内容是否可选择，<em>selectable </em>默认是 False，即不可选，为 Ture 时则可以供用户选择用户复制粘贴。</p>
+
+<pre><code>set_text(text)
+</code></pre>
+
+<p>这个就不用多说了，看它就知道是干嘛的啦，使用它可以随时更改 Label 的内容。</p>
+
+<p>好的，我们现在汇总一下看一个比较长的例子，上图先，呵呵：</p>
+
+<p><img src="http://i.imgur.com/4o88f.png" title="label_example" alt="" /></p>
+
+<p>这个例子包含了上面我讲到的常用方法，和一些 Label 的用法，看看完整的源代码和 Label 的内容你就懂啦~</p>
+
+<p>完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Label Example
+# PyGObject Study Notes By DawnDIY
+# http://dawndiy.com
+
+from gi.repository import Gtk
+
+class LabelWindow(Gtk.Window):
+
+    def __init__(self):
+        Gtk.Window.__init__(self, title="Label Example")
+        hbox = Gtk.Box(spacing=10)
+        hbox.set_homogeneous(False)
+        vbox_left = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox_left.set_homogeneous(False)
+        vbox_right = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox_right.set_homogeneous(False)
+        hbox.pack_start(vbox_left, True, True, 0)
+        hbox.pack_start(vbox_right, True, True, 0)
+        label = Gtk.Label("这是一个普通 label")
+        vbox_left.pack_start(label, True, True, 0)
+        label = Gtk.Label()
+        label.set_text("这是一个左对齐的 label。n包含多行。")
+        label.set_justify(Gtk.Justification.LEFT)
+        vbox_left.pack_start(label, True, True, 0)
+        label = Gtk.Label("这是一个右对齐的 label。n包含多行。")
+        label.set_justify(Gtk.Justification.RIGHT)
+        vbox_left.pack_start(label, True, True, 0)
+        label = Gtk.Label("这是一个多行显示的 label 示例。它"
+                            "不是占据所有能容纳下它的"
+                            "宽度，而是自动的换行调整适应。n"
+                            "并且它支持多段落正确的显示，"
+                            "正确的补充额外的空间。")
+        label.set_line_wrap(True)
+        vbox_right.pack_start(label, True, True, 0)
+        label = Gtk.Label("这是一个多行显示的 label 示例，填充式 label 。"
+                            "它会占据所有能容纳下它的宽度。 "
+                            "好，来几个句子证明我的说法。"
+                            "这又是一个句子。又来一个句子，巴拉巴拉巴拉。n"
+                            "这是一个新段落~n"
+                            "好吧，这又是一个扯淡的段落，扯点"
+                            "什么呢？元芳，你怎么看啊？呵呵~")
+        label.set_line_wrap(True)
+        label.set_justify(Gtk.Justification.FILL)
+        vbox_right.pack_start(label, True, True, 0)
+        label = Gtk.Label()
+        label.set_markup("文本内容可以 小, 大, "
+                            "粗体, 斜体 甚至可以是超链接 "
+                            " 网络.")
+        label.set_line_wrap(True)
+        vbox_left.pack_start(label, True, True, 0)
+        label = Gtk.Label.new_with_mnemonic("按下 Alt   P 来选择右边的按钮 (_P)")
+        vbox_left.pack_start(label, True, True, 0)
+        label.set_selectable(True)
+        button = Gtk.Button(label="点一下试一试")
+        label.set_mnemonic_widget(button)
+        vbox_right.pack_start(button, True, True, 0)
+        self.add(hbox)
+
+window = LabelWindow()
+window.connect("delete-event", Gtk.main_quit)
+window.show_all()
+Gtk.main()
+</code></pre>
+
+<p>好啦~ Label 挺简单的。。。 用好 mark 会表现的更出色的。 See you next time~</p>
+
+<p>现在开始，之前的代码都传到 github 上去了。<br/>
+文中的例子在这里：  </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下使用 fastboot 给手机刷机]]></title>
+    <link href="http://dawndiy.github.com/archives/389"/>
+    <updated>2012-10-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/use-fastboot-to-flash-phone-on-linux</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>近期一直都没电脑用，一直在用手机。今天看看手机的东西好杂好乱，想好好理理啦，所以准备刷下机。之前都是下好卡刷包然后卡刷的，想到之前我在电脑上配好了 Android 的开发环境，可以尝试一下在 Ubuntu 下线刷。应该很多人都是在 Windows 下线刷的吧，其实在 Linux 下一样非常简单，尤其是现在一些包还写好了脚本。</p>
+
+<p>在 Linux 下首先应该准备一下环境，也就是 Android 开发调试环境。可以参考我之前的文章：<a href="http://www.dawndiy.com/archives/153" title="Ubuntu 下搭建 Android 开发环境(图文)">《Ubuntu 下搭建 Android 开发环境(图文)》</a> 这里其实你只是想刷机的话，看完前4点就行了。老早就配置好了环境的朋友就跳过咯~</p>
+
+<p>接下来我们准备好你手机的线刷包，注意里面一定是解压后包含 images 文件夹的包，其余的就是一些脚本。</p>
+
+<p>剩下的就是我们开始连接手机咯。<strong>注意：</strong>要确定你的手机 <strong>设置 > 开发人员选项 > USB 调试</strong> 勾选上了。好的，接下来使用USB数据线连接你的手机到电脑。运行下面代码：</p>
+
+<pre><code>lsusb
+</code></pre>
+
+<p>这时候你会看到下面类似的结果：</p>
+
+<pre><code>Bus 001 Device 002: ID 064e:a111 Suyin Corp. 
+Bus 001 Device 003: ID 0bda:8189 Realtek Semiconductor Corp. RTL8187B Wireless 802.11g 54Mbps Network Adapter
+Bus 002 Device 003: ID 18d1:9025 Google Inc. 
+Bus 005 Device 002: ID 046d:c52b Logitech, Inc. Unifying Receiver
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 006 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 007 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+</code></pre>
+
+<p>其中 Google Inc 这一行现实的是我的设备。你可以更具自己的手机厂商来判断那个是你的设备，在这里我们需要记录下的是 ID  18d1:9025 这一串。接下来运行下面代码：</p>
+
+<pre><code>sudo gedit /etc/udev/rules.d/android.rules
+</code></pre>
+
+<p>在文件中添加如下信息：</p>
+
+<pre><code>SUBSYSTEMS=="usb", ATTRS{idVendor}="18d1", ATTRS{idProduct}="9025", MODE="0666"
+</code></pre>
+
+<p>注意上面的数字和前面我们获得的那一串的对应，而最后的 MODE 是不变的。好的，修改保存好以后，给这个文件添加读和执行权限：</p>
+
+<pre><code>sudo chmod  rx /etc/udev/rules.d/android.rules
+</code></pre>
+
+<p>接着我们就能够连接手机了，运行下来代码：</p>
+
+<pre><code>sudo adb devices
+</code></pre>
+
+<p>然后我们会看到如下信息，成功连接手机的话会显示 device 信息：</p>
+
+<pre><code>* daemon not running. starting it now on port 5037 *
+* daemon started successfully *
+List of devices attached 
+bc762e7c    device
+</code></pre>
+
+<p>如果你显示 ？？？？？ 或者 没权限，可能是前面的步骤没做好，或是环境变量没有配好。而且，这里 adb 记得用 root 权限来运行，即 sudo。</p>
+
+<p>好了，连接了，我们可以试一试，如果你动 shell 的话，你可以运行 sudo adb shell ，这样就直接在电脑上运行你 Android 手机上的 shell 命令了。</p>
+
+<p>好了，回到正题，我们是要刷机，而且是线刷。首先线刷不是在开机状态下执行的，所以运行下面代码使得你的手机进入 fastboot 模式 准备开始线刷：</p>
+
+<pre><code>sudo adb reboot-bootloader
+</code></pre>
+
+<p>稍等片刻手机就会重启至 Fastboot 模式，等待刷机的开始。如果你早就知道怎么进入你手机的 Fastboot 模式，你也可以省去上面的步骤直接进入 Fastboot 模式，进行下面的步骤：</p>
+
+<pre><code>sudo fastboot devices
+</code></pre>
+
+<p>如果能够现实如下信息，表示你的电脑此时能够连接到手机的 Fastboot 模式。</p>
+
+<pre><code>bc762e7c fastboot
+</code></pre>
+
+<p>这时候要通过 cd 命令来到你的线刷包的目录，一般线刷包里面会有 fash_all.sh这个刷机脚本，这是我们可能需要修改一下它的可执行权限：</p>
+
+<pre><code>sudo chmod  x flash_all.sh
+</code></pre>
+
+<p>修改好权限以后，我们执行它就行了：</p>
+
+<pre><code>sudo ./flash_all.sh
+</code></pre>
+
+<p>接下来我们看到的就是正在刷机了，等几分钟就OK了~下面是我的刷机显示时长：</p>
+
+<pre><code>sending 'tz' (102 KB)...
+OKAY [ 0.010s]
+writing 'tz'...
+OKAY [ 0.209s]
+finished. total time: 0.219s
+sending 'sbl2' (106 KB)...
+OKAY [ 0.009s]
+writing 'sbl2'...
+OKAY [ 0.226s]
+finished. total time: 0.235s
+sending 'rpm' (112 KB)...
+OKAY [ 0.011s]
+writing 'rpm'...
+OKAY [ 0.238s]
+finished. total time: 0.248s
+sending 'sbl3' (596 KB)...
+OKAY [ 0.046s]
+writing 'sbl3'...
+OKAY [ 0.227s]
+finished. total time: 0.274s
+sending 'sbl1' (82 KB)...
+OKAY [ 0.009s]
+writing 'sbl1'...
+OKAY [ 0.050s]
+finished. total time: 0.059s
+sending 'aboot' (575 KB)...
+OKAY [ 0.044s]
+writing 'aboot'...
+OKAY [ 0.401s]
+finished. total time: 0.445s
+erasing 'boot'...
+OKAY [ 0.009s]
+finished. total time: 0.009s
+sending 'misc' (8 KB)...
+OKAY [ 0.003s]
+writing 'misc'...
+OKAY [ 0.008s]
+finished. total time: 0.011s
+sending 'modem' (28780 KB)...
+OKAY [ 2.160s]
+writing 'modem'...
+OKAY [ 6.352s]
+finished. total time: 8.513s
+sending 'cache' (1024 KB)...
+OKAY [ 0.083s]
+writing 'cache'...
+OKAY [ 0.352s]
+finished. total time: 0.435s
+sending 'system' (219136 KB)...
+OKAY [ 16.157s]
+writing 'system'...
+OKAY [ 35.635s]
+finished. total time: 51.793s
+sending 'system1' (219136 KB)...
+OKAY [ 15.927s]
+writing 'system1'...
+OKAY [ 35.692s]
+finished. total time: 51.619s
+sending 'recovery' (5592 KB)...
+OKAY [ 0.405s]
+writing 'recovery'...
+OKAY [ 0.785s]
+finished. total time: 1.190s
+sending 'userdata' (204800 KB)...
+OKAY [ 14.776s]
+writing 'userdata'...
+OKAY [ 31.363s]
+finished. total time: 46.139s
+sending 'boot1' (4430 KB)...
+OKAY [ 0.328s]
+writing 'boot1'...
+OKAY [ 0.733s]
+finished. total time: 1.061s
+sending 'boot' (4430 KB)...
+OKAY [ 0.320s]
+writing 'boot'...
+OKAY [ 1.028s]
+finished. total time: 1.349s
+</code></pre>
+
+<p>OK，最后用下面代码重启一下手机你就能看到系统刷机成功了~ ^.^</p>
+
+<pre><code>sudo fastboot reboot
+</code></pre>
+
+<p>附上我刷机的脚本：</p>
+
+<pre><code>fastboot flash tz images/tz.mbn
+fastboot flash sbl2 images/sbl2.mbn
+fastboot flash rpm images/rpm.mbn
+fastboot flash sbl3 images/sbl3.mbn
+fastboot flash sbl1 images/sbl1.mbn
+fastboot flash aboot images/emmc_appsboot.mbn
+fastboot erase boot
+fastboot flash misc images/misc.img
+fastboot flash modem images/NON-HLOS.bin
+fastboot flash cache images/cache.img.ext4
+fastboot flash system images/system.img.ext4
+fastboot flash system1 images/system.img.ext4
+fastboot flash recovery images/recovery.img
+fastboot flash userdata images/userdata.img.ext4
+fastboot flash boot1 images/boot.img
+fastboot flash boot images/boot.img
+</code></pre>
+
+<p>不过一般线刷包里面都会有脚本的，呵呵~ 也祝你刷机成功！！！</p>
+
+<p>over….</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGObject 学习笔记(8)-消息对话框]]></title>
+    <link href="http://dawndiy.github.com/archives/378"/>
+    <updated>2012-10-19T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygobject-study-notes-8-message-dialog</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>写在前面，先扯点无聊的。这几天回家才有时间用电脑，刚好昨天升级了一下 Ubuntu 12.10 。然后当然也要更新一下学习笔记，学习在于坚持嘛~ 可能发现标题不同了，不错，我在前几天谈到我的学习心得和经历让我做出了选择，一定要向前，用GTK 3 所以选择PyGObject。可以看我写的<a href="http://www.dawndiy.com/archives/373" title="PyGTK or PyGObject">《PyGtk or PyGObject》</a>，也扯了一些有的没的。</p>
+
+<p>好了，正题开始，今天在一点点的码自己的项目的时候要用到一个很重要的东西，那就是“消息对话框”，即 Message Dialog 。这个是什么了，如果你不知道那就快回火星吧！上图！</p>
+
+<p><img src="http://i.imgur.com/u9Xjl.png" title="Info_message_dialog" alt="" /></p>
+
+<p>对，就是上面这个图，你见过吧。消息对话框在程序中随处可见，他的作用就是提示或弹出一个信息让用户得知，所以消息对话框在交互方面和用户体验方面也是挺重要的。</p>
+
+<p>在GTK 3中，构建消息对话框的类是<strong>MessageDialog</strong>。下面来看一下这个类：</p>
+
+<pre><code>class Gtk.MessageDialog(parent=None, flags=0, type=Gtk.MESSAGE_INFO, buttons=Gtk.BUTTONS_NONE, message_format=None)
+</code></pre>
+
+<p>  <strong><code>parent</code></strong> :</p>
+
+<p>父控件，一般是窗体</p>
+
+<p><strong><code>flags</code></strong> :</p>
+
+<p>对话框标识，可以是 Gtk.DialogFlags.MODAL，<code>Gtk.DIALOG_DESTROY_WITH_PARENT</code> 或 0</p>
+
+<p><strong><code>type</code></strong> :</p>
+
+<p>消息的类型，可以是 <code>Gtk.MESSAGE_INFO</code>, <code>Gtk.MESSAGE_WARNING</code>, <code>Gtk.MESSAGE_QUESTION</code> 或<code>Gtk.MESSAGE_ERROR</code>.</p>
+
+<p><strong><code>buttons</code></strong> :</p>
+
+<p>可以使用预定义的按钮： <code>Gtk.BUTTONS_NONE</code>, <code>Gtk.BUTTONS_OK</code>, <code>Gtk.BUTTONS_CLOSE</code>, <code>Gtk.BUTTONS_CANCEL</code>, <code>Gtk.BUTTONS_YES_NO</code>, <code>Gtk.BUTTONS_OK_CANCEL 等
+</code></p>
+
+<p><strong><code>message_format</code></strong> :</p>
+
+<p>消息的内容</p>
+
+<p><em>Returns</em> :</p>
+
+<p> <code>G``tk.MessageDialog</code></p>
+
+<p>上面就是构造消息对话框的 MessageDialog 类啦。</p>
+
+<p>现在看一下我们最上面那个图的代码是怎么样的：</p>
+
+<pre><code>dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,Gtk.ButtonsType.OK, "这是一个信息消息对话框")
+dialog.format_secondary_text("这里是副文本用于说明信息。")
+dialog.run()
+dialog.destroy()
+</code></pre>
+
+<p>这是一个消息对话框的部分代码。是不是很简单，然而上面多了几个函数下面解释：</p>
+
+<pre><code>dialog.format_secondary_text("这里是副文本用于说明信息。")
+</code></pre>
+
+<p>这个看图也知道啊，就是现实在下面的副文本，可以用来显示解释性文字。</p>
+
+<pre><code>dialog.run()
+dialog.destroy()
+</code></pre>
+
+<p>run执行后，对话框就会显示了，这时候对话框不会马上去执行后面的destroy来销毁，而是等待我们的一个按键响应再来销毁，所以这就是消息对话框有按钮的原因了。</p>
+
+<p>上面的例子我们没有或得到按键响应，其实我们的按键响应就是由 <strong>dialog.run()</strong> 来返回的，所以中断在它这里嘛~那我们再看一个能获取按键的例子，惯例，上图先：</p>
+
+<p><img src="http://i.imgur.com/0qnC7.png" title="question_message_dialog" alt="" /></p>
+
+<p>看吧，这样的消息对话框就有两个按钮分别让你选择。看下局部代码：</p>
+
+<pre><code>dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, "这是一个询问消息对话框")
+dialog.format_secondary_text("这里是副文本用于说明信息。")
+response = dialog.run()
+if response == Gtk.ResponseType.YES:
+    print("YES button is clicked")
+elif response == Gtk.ResponseType.NO:
+    print("NO button is clicked")
+dialog.destroy()
+</code></pre>
+
+<p>看到代码中我们定义了一个名为 response 的变量来接受 dialog.run() 的返回，然后再做出判断分别处理就OK啦。。。</p>
+
+<p>好了，差不多就这些吧~大家可以试一试，我把写好的一个完整的 Demo 贴出来：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+# MessageDialog
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com 
+
+from gi.repository import Gtk
+
+class MessageDialogWindow(Gtk.Window):
+
+    def __init__(self):
+        Gtk.Window.__init__(self, title="MessageDialog Example")
+
+        box = Gtk.Box(spacing=6)
+        self.add(box)
+
+        button1 = Gtk.Button("信息")
+        button1.connect("clicked", self.on_info_clicked)
+        box.add(button1)
+
+        button2 = Gtk.Button("错误")
+        button2.connect("clicked", self.on_error_clicked)
+        box.add(button2)
+
+        button3 = Gtk.Button("警告")
+        button3.connect("clicked", self.on_warn_clicked)
+        box.add(button3)
+
+        button4 = Gtk.Button("询问")
+        button4.connect("clicked", self.on_question_clicked)
+        box.add(button4)
+
+    def on_info_clicked(self, widget):
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO,
+        Gtk.ButtonsType.OK, "这是一个信息消息对话框")
+        dialog.format_secondary_text(
+        "这里是副文本用于说明信息。")
+        dialog.run()
+        print "INFO dialog closed"
+
+        dialog.destroy()
+
+    def on_error_clicked(self, widget):
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.ERROR,
+        Gtk.ButtonsType.CANCEL, "这是一个错误消息对话框")
+        dialog.format_secondary_text("这里是副文本用于说明信息。")
+        dialog.run()
+        print "ERROR dialog closed"
+
+        dialog.destroy()
+
+    def on_warn_clicked(self, widget):
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING,
+        Gtk.ButtonsType.OK_CANCEL, "这是一个警告消息对话框")
+        dialog.format_secondary_text(
+        "这里是副文本用于说明信息。")
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            print "OK button is clicked"
+        elif response == Gtk.ResponseType.CANCEL:
+            print "CANCEL button is clicked"
+
+        dialog.destroy()
+
+    def on_question_clicked(self, widget):
+        dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION,
+        Gtk.ButtonsType.YES_NO, "这是一个询问消息对话框")
+        dialog.format_secondary_text(
+        "这里是副文本用于说明信息。")
+        response = dialog.run()
+        if response == Gtk.ResponseType.YES:
+            print "YES button is clicked"
+        elif response == Gtk.ResponseType.NO:
+            print "NO button is clicked"
+
+        dialog.destroy()
+
+win = MessageDialogWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
+</code></pre>
+
+<p>效果自己去运行就知道了<del>OK~最近好忙啊，好不容易偷个懒上下网</del>下回继续…….</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGTK or PyGObject]]></title>
+    <link href="http://dawndiy.github.com/archives/373"/>
+    <updated>2012-10-13T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-or-pygobject</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>本来是写应该开始用PyGObject来代替PyGTK的，结果扯了很多自己的经历，呵呵，我的博客不能只有技术文章啊，也要点扯淡的东西！<br/>
+——————————–</p>
+
+<p>最初是在Linux的GNOME桌面下认识了GTK ，后来为了能在Linux桌面下开发桌面应用就一直在学习GTK ，起初我只会C/C 和Java。经过一番查阅对于GTK 的开发还是C的文献比较多，那就看吧、学吧。。。后来看的没心思啦，可能本来我C/C 用的就比较少，好多库不熟悉，后来就没看了。想在Linux桌面开发的愿望也就搁置在一旁啦。</p>
+
+<p>但是后来我发现了 Java-Gnome ，也就是GTK 的Java绑定版本，不过一样中文文献资料非常少，那就英文的吧，又不是啃啃看不懂。刚好那时候Java天天在手上用，非常习惯，在加上之前看过的GTK 的一些教程文章，我又燃起了当初开发桌面应用的热情，刚好那时候还自己学了一项新技术，就是面向对象的数据库–db4o，然后一起结合起来完成了我的第一个正式的Linux的桌面应用。</p>
+
+<p>在Linux下开发当然想做跨平台嘛，不过悲剧来了，我这才发现使用 Java-Gnome 开发的程序不能直接在 Windows 平台上使用。后来的后来越来越发现 Java-Gnome 的一些缺点。首先开源软件的通病–更新缓慢，官方现在 Java-Gnome 的最新版本是 4.1.2 。而且按照官方的说法要到 4.2 才算正式版。而且现在已经 GTK 3 了，Java-Gnome 还只是支持GTK 2 。我也一直没有看到有什么要更新的动静。所以我之前还在抱怨我用Glade3做的UI文件用Java-Gnome解析不了，非要用Glade2来做UI才能用。这一点也证实了 Java-Gnome不支持GTK 3 。所以我的桌面应用又搁浅啦~</p>
+
+<p>在大二的时候，老师出了一道有意思的ACM题目给我们做，当时记得我用C 写了几十行的代码才解决，结果老师介绍有一个叫Python的语言，5行搞定，我当时眼前就一亮，马上去找资料学习，发现 Python 真是方便，而且是解释型的语言，调试起来非常方便。对于我来说更重要的是学习这类语言让我想起来我学的第一门编程语言–QBasic。所以Python让我找到了当时最初学习编程的热情，后来就怀抱着这个热情学习Python到现在。</p>
+
+<p>当然，Python让我相见恨晚，非常喜欢这种风格和简洁的语言，后来同样学习了 PyGTK 。所以有了我的PyGTK学习笔记，我想认真学习一下，然后重写我那一波三折的项目，等到成熟了我就会正是发布。学习嘛，我当然是看官网资料咯，但是刚开始去了解 PyGTK的时候我也注意到了 PyGObject ，但是我当时没有放在心上，因为目前 PyGTK 的资料还是挺多的，所以让我忽视了 PyGObject 但是不断学习，就会不断发现。现在正的了解到确实向PyGObject会成为未来的替代品，官方就是这么说的，而且目前的PyGTK是只支持GTK 2的，想要用 Python 来写 GTK 3的应用应该用 PyGObject ，而且在 Gnome 上翻译的时候也发现所有的代码都是用”from gi.repository import Gtk”，而不是以前的”import gtk”了，看到这里我自己想想应该向前看看嘛~所以呢，以后，当然我的 <strong>学习笔记</strong> 会继续随笔写一写，以后的都会围绕 PyGObject 来写。而且看到 Fedora 早就说要在最新发行版里面默认Python3了，不仅如此，Ubuntu 也宣布在最新的发行版里会默认安装Python3 。 这样更说明我要多多向前看啊。所以以后的学习Python/PyGTK/PyGObject的笔记都会用python3 。</p>
+
+<p>在这里先写一个简单的使用Python开发GTK 3的示例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/python</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gtk</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyWindow</span><span class="p">(</span><span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Hello World&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Click Here&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;clicked&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_button_clicked</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">on_button_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Hello World&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">win</span> <span class="o">=</span> <span class="n">MyWindow</span><span class="p">()</span>
+</span><span class='line'><span class="n">win</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;delete-event&quot;</span><span class="p">,</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">main_quit</span><span class="p">)</span>
+</span><span class='line'><span class="n">win</span><span class="o">.</span><span class="n">show_all</span><span class="p">()</span>
+</span><span class='line'><span class="n">Gtk</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>图片这次不上了，因为自己试过一遍才是最好的体会！！！！</p>
+
+<p>More: https://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html (English)</p>
+
+<p>因为这段时间一直准备那个什么***|考试，每天也只能睡觉前看看自己感兴趣的东西，而且偷个懒上个网更新一下博客~呵呵~</p>
+
+<p>PS：本来就是要说一下以后用PyGObject和Python3的，结果扯了这么一大堆！！！ over~</p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Firefox 浏览器中体验 Firefox OS (多图)]]></title>
+    <link href="http://dawndiy.github.com/archives/360"/>
+    <updated>2012-10-08T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/experience-firefox-os-in-firefox-browser</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>Firefox OS （原名 Boot to Gecko，即B2G）是 Mozilla 公司以<a href="http://zh.wikipedia.org/wiki/Gecko" title="Gecko">Gecko</a>浏览器引擎为核心，采用<a href="http://zh.wikipedia.org/wiki/HTML5" title="HTML5">HTML5</a>来开发的一款移动操作系统。目前该项目还在开发完善中，但是网上已经有很多和它相关的视频、图片、ROM等等资源啦，继 <a href="http://zh.wikipedia.org/wiki/Android" title="Android">Android</a> 之后又一款重量级的移动操作系统即将诞生。</p>
+
+<p>Firefox OS 的消息不断，如此神秘当然勾起了不少朋友的好奇之心，但是目前开发阶段，能支持 Firefox OS 的设备非常少，不是每个人都能体验。但如今这个问题得到解决啦，Firefox OS 本来就是采用 HTML5 开发的，当然能运行在支持 HTML5 的设备上啦，如我们使用的 Firefox 浏览器。对，现在 Mozilla 提供了一个插件，无需编译、模拟等工具，直接安装 Firefox 浏览器的插件r2d2b2g即可完美运行 Firefox OS。</p>
+
+<p>插件地址（使用 Firefox 浏览器点击即可安装）：</p>
+
+<p>原地址： <a href="http://people.mozilla.com/~myk/r2d2b2g/" title="r2d2b2g/">http://people.mozilla.com/~myk/r2d2b2g/</a>           （请根据不同的操作系统选择）<br/>
+插件大小有 52.4M。</p>
+
+<p>安装好后会出现如下提示：</p>
+
+<p><img src="http://i.imgur.com/BZ4Hj.png" title="got r2d2b2g" alt="" /></p>
+
+<p>按照提示，我们找到 <strong>工具>B2G Desktop </strong>即可启动 Firefox OS ，如下图。(如果你的浏览器隐藏了菜单栏，显示菜单栏就可以看到工具选项了)</p>
+
+<p><img src="http://i.imgur.com/7PZEv.png" title="Firefox OS" alt="" /></p>
+
+<p>右边是 Firefox OS 的界面，可以通过鼠标来模拟触屏操作，Home 键返回主页，ESC 返回。 左边是控制台信息。</p>
+
+<p>下面你就可以在浏览器里面体验 Firefox OS 啦~</p>
+
+<p><strong>注意：</strong>目前该插件也是开发测试用，所以在你尝试的时候会非常不稳定或者一些功能不可用，毕竟就算体验一下吧。希望 Firefox OS 正式与大家见面的时候能够更加出色！该插件也是开源的，想了解该插件的详细信息可以看这里： <a href="https://github.com/mozilla/r2d2b2g" title="mozilla/r2d2b2g">https://github.com/mozilla/r2d2b2g</a></p>
+
+<p>下面附上一些 Firefox OS 的图片：</p>
+
+<p><img src="http://i.imgur.com/CKKeL.png" title="Firefox_OS_1" alt="" /></p>
+
+<p><img src="http://i.imgur.com/f71Kr.png" title="Firefox_OS_2" alt="" /></p>
+
+<p><img src="http://i.imgur.com/5eyla.png" title="Firefox_OS_3" alt="" /></p>
+
+<p><img src="http://i.imgur.com/9Unon.png" title="Firefox_OS_4" alt="" /></p>
+
+<p><img src="http://i.imgur.com/Q3C1C.png" title="Firefox_OS_5" alt="" /></p>
+
+<p><img src="http://i.imgur.com/PKvKQ.png" title="Firefox_OS_6" alt="" /></p>
+
+<p><img src="http://i.imgur.com/gRkiN.png" title="Firefox_OS_7" alt="" /></p>
+
+<p><img src="http://i.imgur.com/xl5Ef.png" title="Firefox_OS_8" alt="" /></p>
+
+<p><img src="http://i.imgur.com/LccLy.png" title="Firefox_OS_9" alt="" /></p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GNOME 3.6 发布!]]></title>
+    <link href="http://dawndiy.github.com/archives/352"/>
+    <updated>2012-09-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/gnome-3-6-released</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p><img src="http://www.gnome.org/wp-content/uploads/2012/09/gnome-3-6.png" title="gnome-3-6" alt="GNOME 3.6" /></p>
+
+<p>GNOME 项目自豪地推出了 3.x 系列的第三次更新–GNOME 3.6。最新版本的 GNOME 3 包含了许多新特性和增进，如大量的 bug 修复和部分改善。同时，也给 GNOME 3 的用户体验带来了重大升级。</p>
+
+<p>GNOME基金会的总裁 Andreas Nilsson 说道：“GNOME 基金会很自豪的推出这次最新版的GNOME，而且我要祝贺 GNOME 社区的成就。” 他描述这次发布：“这是我们以把自由和开放的计算环境带给每一个人为我们任务的一次重要的里程碑。”</p>
+
+<p>这次发布的重要特性包括：</p>
+
+<ul>
+<li>通知系统的重大改进，包括消息托盘的重新设计，更智能的通知，以及其他优化。</li>
+<li>对“活动概览”进行了增强，着重改进了布局。</li>
+<li>增强“文件”应用，增强文件搜索功能，新的最近位置，重新设计界面以及修复大量 bug 和其他新特性。</li>
+<li>整合 Input Sources ，使得输入不同的字符集(如中文)简单而快速。</li>
+<li>辅助功能的需求，如 Orca 屏幕阅读器能通过按下按钮开启。</li>
+<li>新的锁定屏幕。在设备锁定时提供了一个有吸引力的视图，加上像媒体控制和通知等方便的功能。</li>
+</ul>
+
+
+<p>[![][3]][3] [![][4]][4] <a href="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes"><img src="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes" alt="" /></a></p>
+
+<p>GNOME 3.6 还包括很多增强，其中包括在线帐号支持Microsoft Exchange, Facebook 和 Windows Live，大量的系统设置和重新设计的用户菜单。许多 GNOME 应用也得到了改善，包括 Web，Empathy，磁盘使用分析，磁盘和字体查看器。这个版本也包含了第一个主要版本的 Boxes，这是一个使用远程系统和虚拟机的应用程序，还有开发预览的新时钟应用。</p>
+
+<p>你可以在<a href="http://library.gnome.org/misc/release-notes/3.6/index.html.en" title="GNOME 3.6 Release Notes">发行说明</a>中阅读到包括 GNOME 3.6 在内的所有变化。这个最新版是 GNOME 社区，一个开放、个人和组织的国际联合的社区，耗费6个月的辛苦工作完成的。GNOME 致力于基于自由软件提供高质量的用户体验。开发在开放中进行，任何人都可以参与。如果你希望支持我们，你也可以成为 <a href="http://www.gnome.org/friends/" title="Friends of GNOME">GNOME 的朋友</a>。</p>
+
+<p><a href="http://www.dawndiy.com">DawnDIY</a> 翻译至 http://www.gnome.org/news/2012/09/gnome-3-6-released/</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(7)–工具栏]]></title>
+    <link href="http://dawndiy.github.com/archives/336"/>
+    <updated>2012-09-20T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-7-toolbar</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>在前面的Gtk学习中我们构造界面用到 Menu 菜单，菜单当然是让我们能方便的选择某一项功能，但是如果一个我们经常用到的菜单项在二级菜单下面，或者更深，这样一来就显得非常不方便啦。所以我们又有了更显而易见的控件– Toolbar （工具栏）。是的，工具栏通常把我们经常使用的按钮及其功能列出在一栏上面，这样就可以轻松通过鼠标的一次点击即可。就像IE、Firefox的前进和后退、地址栏、刷新等，这几个都是我们浏览网页最常用的几个功能，所以这写浏览器也会将这几个按钮列出在一栏里面供快捷使用。所以，如果你的软件功能繁多，但是想为用户提供几个常用到的快捷按钮，那就使用 Toolbar 吧。</p>
+
+<h2>一.介绍</h2>
+
+<p>一个简单的 Toolbar 就是这样的，如下图：[![][2]][2]</p>
+
+<p>上面的 <strong>工具栏</strong> 中包含了4个按钮和一个分隔符，并且倒数第二个按钮是灰色的，不可用状态。OK，了解了上面的 Toolbar 长什么样，接下来我们就来实现它。</p>
+
+<h2>二.Toolbar（工具栏）</h2>
+
+<h3>Toolbar的继承关系：</h3>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Toolbar
+</code></pre>
+
+<h3>Toolbar类的概要：</h3>
+
+<pre><code>class gtk.Toolbar(gtk.Container):
+    gtk.Toolbar()
+
+    def insert(item, pos)
+
+    def get_item_index(item)
+
+    def get_n_items()
+
+    def get_nth_item(n)
+
+    def get_drop_index(x, y)
+
+    def set_drop_highlight_item(tool_item, index)
+
+    def set_show_arrow(show_arrow)
+
+    def get_show_arrow()
+
+    def get_relief_style()
+
+    def append_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data=None)
+
+    def prepend_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def insert_stock(stock_id, tooltip_text, tooltip_private_text, callback, user_data, position)
+
+    def append_space()
+
+    def prepend_space()
+
+    def insert_space(position)
+
+    def remove_space(position)
+
+    def append_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def prepend_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def append_widget(widget, tooltip_text, tooltip_private_text)
+
+    def prepend_widget(widget, tooltip_text, tooltip_private_text)
+
+    def insert_widget(widget, tooltip_text, tooltip_private_text, position)
+
+    def set_orientation(orientation)
+
+    def set_style(style)
+
+    def set_icon_size(icon_size)
+
+    def set_tooltips(enable)
+
+    def unset_style()
+
+    def unset_icon_size()
+
+    def get_orientation()
+
+    def get_style()
+
+    def get_icon_size()
+
+    def get_tooltips()
+</code></pre>
+
+<h3> 构造方法：</h3>
+
+<pre><code>gtk.Toolbar()
+</code></pre>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 Toolbar （工具栏）对象</p>
+
+<h3>常用方法：</h3>
+
+<h3>gtk.Toolbar.insert</h3>
+
+<pre><code>def insert(item, pos)
+</code></pre>
+
+<p>  <strong><code>item</code></strong> :</p>
+
+<p>一个 <code>gtk.ToolItem</code> 对象</p>
+
+<p><strong><code>pos</code></strong> :</p>
+
+<p>新项目的位置（0，1，2 …）</p>
+
+<p><strong>注：</strong><br/>
+这个方法在PyGTK 2.4以及以上版本才可用。</p>
+
+<p>通过 insert() 方法可以在工具栏中添加 ToolItem ，用 pos 来确定其位置，如果 pos 为0，则表示该 Item 在工具栏的起始位置。</p>
+
+<h3>gtk.Toolbar.set_style&#8220;</h3>
+
+<pre><code>def set_style(style)
+</code></pre>
+
+<p><strong><code>style</code></strong> :</p>
+
+<p>样式，包括：  <code>gtk.TOOLBAR_ICONS</code> （仅图标）, <code>gtk.TOOLBAR_TEXT</code>（仅文字）, <code>gtk.TOOLBAR_BOTH（全部）</code> or <code>gtk.TOOLBAR_BOTH_HORIZ（水平全部）</code></p>
+
+<p>通过过 <code>set_style</code>() 方法，我们可以为 Toolbar 设置显示样式。</p>
+
+<h3>gtk.Toolbar.set_icon_size</h3>
+
+<pre><code>def set_icon_size(icon_size)
+</code></pre>
+
+<p>  <strong><code>icon_size</code></strong> :</p>
+
+<p>图标的尺寸。&#8220;</p>
+
+<p>通过 <code>set_icon_size</code>() 方法可以设置显示在 Toolbar 上的图标的尺寸。icon_size 的值如下：</p>
+
+<ul>
+<li><code>gtk.ICON_SIZE_MENU</code></li>
+<li><code>gtk.ICON_SIZE_SMALL_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_LARGE_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_BUTTON</code></li>
+<li><code>gtk.ICON_SIZE_DND</code>, or</li>
+<li><code>gtk.ICON_SIZE_DIALOG</code></li>
+</ul>
+
+
+<h2>三.完整代码</h2>
+
+<p>了解了上面的基本方法，我们就可以看实现前面的图的完整代码啦。</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Toolbar
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class Toolbar:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Toolbar")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        toolbar = gtk.Toolbar()
+        #工具栏仅显示图标
+        toolbar.set_style(gtk.TOOLBAR_ICONS)
+
+        #工具栏图标的尺寸
+        toolbar.set_icon_size(gtk.ICON_SIZE_LARGE_TOOLBAR) 
+
+        #新建工具栏按钮
+        newtb = gtk.ToolButton(gtk.STOCK_NEW)
+        opentb = gtk.ToolButton(gtk.STOCK_OPEN)
+        sep = gtk.SeparatorToolItem()  #工具栏的分隔符
+        closetb = gtk.ToolButton(gtk.STOCK_CLOSE)
+        exittb = gtk.ToolButton(gtk.STOCK_QUIT)
+
+        exittb.connect("clicked", gtk.main_quit)
+
+        #设置CLOSE按钮不可用
+        closetb.set_sensitive(False)
+
+        #添加工具栏按钮
+        toolbar.insert(newtb, 0)
+        toolbar.insert(opentb, 1)
+        toolbar.insert(sep, 2)
+        toolbar.insert(closetb, 3)
+        toolbar.insert(exittb, 4)
+
+        vbox = gtk.VBox()
+        vbox.pack_start(toolbar, False, False, 0)
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    toolbar = Toolbar()
+    gtk.main()
+</code></pre>
+
+<p>按照我在代码中给出的注释就很容易懂啦。然后动手改一改 icon_size 、style 等等，你会找到你想要的效果的！打完手工，待续。。。。。。</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 12.10 默认新壁纸预览~]]></title>
+    <link href="http://dawndiy.github.com/archives/327"/>
+    <updated>2012-09-12T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/ubuntu-12-10-default-wallpaper-preview</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p> </p>
+
+<p>Ubuntu 12.10 越来越近了~近期 Ubuntu 12.10 默认壁纸也浮现出来了。</p>
+
+<p>上图，这就是 Ubuntu 12.10 的默认壁纸。</p>
+
+<p><img src="http://i.imgur.com/GD3w6.jpg" title="Ubuntu12.10-Default-Wallpaper" alt="" /></p>
+
+<p>延续着 Ubuntu 紫色和橙色的搭配，Ubuntu 12.10 继续使用名为“紫色沙拉”系列的壁纸，对比 Ubuntu 12.04 的壁纸，这张壁纸更显圆滑，色彩过度自然。</p>
+
+<p>下面是一张 Ubuntu 10.04 ~12.04 的壁纸动态图：</p>
+
+<p><img src="http://i.imgur.com/z1Eso.gif" title="Default-Wallpaper-From-Ubuntu10.04-12.04" alt="" /></p>
+
+<p><strong><a href="http://bazaar.launchpad.net/~ubuntu-art-pkg/ubuntu-wallpapers/ubuntu/download/head:/elephantskin.jpg-20070925092320-wp63xkqaf9y3tbmp-1/warty-final-ubuntu.png">下载 Ubuntu 12.10 默认壁纸</a></strong></p>
+
+<p><strong><a href="https://launchpad.net/ubuntu/quantal/">下载 Ubuntu 12.10 其他壁纸</a></strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(6)–菜单]]></title>
+    <link href="http://dawndiy.github.com/archives/290"/>
+    <updated>2012-08-24T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-6-menu</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面一直都在讲布局，布局学的差不多了，使用前面讲的所有布局管理已经可以设计出复杂的UI了。那么接下来来学习一下GUI程序中最常用的控件之一——菜单。</p>
+
+<h2>1.介绍</h2>
+
+<p>菜单栏(Menubar)是GTK中使用最多的控件之一，在菜单栏上(Menubar)上我们可以添加各式各样的菜单(Menu)和菜单项(MenuItem)。其中菜单项大致分为这几种：普通菜单项(MenuItem)、带图标的菜单项(ImageMenuItem)、带复选框的菜单项(CheckMenuItem)、分级菜单项 和 分割线(SeparatorMenuItem)。</p>
+
+<p>先上一张图，看一看一个最普通的菜单栏：</p>
+
+<p>[![][2]][2]</p>
+
+<p>上面图就是一个普通的菜单栏，我们在菜单栏上面设置了四个菜单，接下来就分别详细介绍一下常用的几种菜单项。</p>
+
+<h2>2.普通菜单</h2>
+
+<p>普通菜单就是形式只有文字的最基本菜单，如图：</p>
+
+<p>[![][3]][3]</p>
+
+<p>如图，我们在菜单栏上设置了一个File1菜单，然后我们在File1下设置了3个菜单项和一个分割线。这就是一个最基本的菜单了。下面我们来看看它的代码。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+
+        # 普通菜单
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("File_1")
+        filem.set_submenu(filemenu)
+
+        new = gtk.MenuItem("New")
+        filemenu.append(new)
+
+        open = gtk.MenuItem("Open")
+        filemenu.append(open)
+
+        sep = gtk.SeparatorMenuItem()
+        filemenu.append(sep)
+
+        exit = gtk.MenuItem("Exit")
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        Mb.append(filem)
+</code></pre>
+
+<p>如上面代码 首先新建一个菜单栏(MenuBar)</p>
+
+<pre><code>filemenu = gtk.Menu()
+</code></pre>
+
+<p>接下来要设置一个显示在菜单栏上的菜单(Menu)和菜单项(MenuItem)</p>
+
+<pre><code>filemenu = gtk.Menu()  # 菜单
+filem = gtk.MenuItem("File_1")   # 菜单项，并添加快捷键(ALT 1)
+filem.set_submenu(filemenu)    # 将菜单项设置到菜单上，显示在菜单栏上
+</code></pre>
+
+<p>然后我们就要为这个菜单添加更多的菜单项了</p>
+
+<pre><code>new = gtk.MenuItem("New")
+filemenu.append(new)   # 把菜单项添加到菜单下
+
+open = gtk.MenuItem("Open")
+filemenu.append(open)
+</code></pre>
+
+<p>添加了菜单项，我们的目的当然是要使得点击菜单能够<strong>触发事件</strong>，那么我们就可以用connect</p>
+
+<pre><code>exit = gtk.MenuItem("Exit")
+exit.connect("activate", gtk.main_quit)   # 为exit菜单项添加事件
+filemenu.append(exit)
+</code></pre>
+
+<p>当然，为了很好的把菜单项分类，我们可以使用分割线</p>
+
+<pre><code>sep = gtk.SeparatorMenuItem()
+filemenu.append(sep)
+</code></pre>
+
+<p>一个最普通的菜单就是这样的~</p>
+
+<h2>3.带图标的菜单</h2>
+
+<p>在GUI程序里，图标往往给人带来请切感，也使得菜单更加美观。惯例，先上个图：</p>
+
+<p><a href="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items"><img src="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items" alt="" /></a></p>
+
+<p>这些丰富的图标都是GTK自带的，GTK为菜单、按钮、工具栏等等都提供了一套原生的图标，所以可以很方便的使用。下面我们来看一下带图标的菜单是如何用代码实现的。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+        # 带图标的菜单
+        imagemenu = gtk.Menu()
+        filei = gtk.MenuItem("File_2")
+        filei.set_submenu(imagemenu)
+
+        newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+        newi.set_label("New")
+        imagemenu.append(newi)
+
+        openi = gtk.ImageMenuItem(gtk.STOCK_OPEN)
+        openi.set_label("Open")
+        imagemenu.append(openi)
+
+        sep2 = gtk.SeparatorMenuItem()
+        imagemenu.append(sep2)
+
+        exiti = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+        exiti.set_label("Exit")
+        exiti.connect("activate", gtk.main_quit)
+        imagemenu.append(exiti)
+
+                Mb.append(filei)
+</code></pre>
+
+<p>看到代码，我们发现其实就是使用了 <strong>gtk.ImageMenuItem</strong> 这个函数。</p>
+
+<p>首先我们新建带图标的菜单项，并且给它设置图标</p>
+
+<pre><code>newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+</code></pre>
+
+<p>其中的 <strong>gtk.STOCK_NEW</strong> 是GTK预设的 NEW 图标。<strong>有关所有的GTK预设的 STOCK 请看这里：<a href="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items">Stock Items</a></strong></p>
+
+<p>然后是设置菜单项显示的文字(标签)，并添加至菜单中</p>
+
+<pre><code>newi.set_label("New")
+imagemenu.append(newi)
+</code></pre>
+
+<p>这就是带图标的菜单，让你的菜单更美观~</p>
+
+<h2>4.带复选框的菜单</h2>
+
+<p>在GUI程序中常常用菜单选项来对程序进行设置，那么带复选框的菜单就可以完成这样的功能，先上图：</p>
+
+<p>[![][6]][6]</p>
+
+<p>如图，New选项目前是勾选上的，其他的都没有勾选，这样的菜单我们就能够拿来当设置选项来用。下面看一下代码有什么不同。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+        # 带复选框的菜单项
+        checkmenu = gtk.Menu()
+        filec = gtk.MenuItem("File_3")
+        filec.set_submenu(checkmenu)
+
+        newc = gtk.CheckMenuItem("New")
+        newc.set_active(True)       # 激活复选框
+        checkmenu.append(newc)
+
+        openc = gtk.CheckMenuItem("Open")
+        openc.set_active(False) 
+        checkmenu.append(openc)
+
+        sep3 = gtk.SeparatorMenuItem()
+        checkmenu.append(sep3)
+
+        exitc = gtk.CheckMenuItem("Exit")
+        checkmenu.append(exitc)
+
+        Mb.append(filec)
+</code></pre>
+
+<p>如上面的代码，我们通过以下代码来新建菜单项，这就是和别的菜单项不同的地方</p>
+
+<pre><code>newc = gtk.CheckMenuItem("New")
+</code></pre>
+
+<p>接下来是设置<strong>复选框的状态</strong>，默认复选框是没有被选中的。</p>
+
+<pre><code>newc.set_active(True) # 激活复选框
+</code></pre>
+
+<p>同样，选中后触发的实际依然是用<strong>connect</strong>。</p>
+
+<h2>5.分级的菜单项</h2>
+
+<p>在菜单下的菜单项非常多的时候我们往往使用分割线来把不同类型的菜单项分隔开来，但是更多的菜单项的时候就会显得一个菜单下面老长一条的，显得没有调理，这时候我们可以使用分级菜单，按照菜单项分类，把同一类的归于一个菜单项的子项。这样就既有调理，又美观。看一个分级菜单的图先(图没截好，但你懂得~ ^.<sup>)。</sup></p>
+
+<p>[![][7]][7]</p>
+
+<p>其实分级的菜单也就是菜单一层套一层实现的。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code># 多级菜单
+        topmenu = gtk.Menu()    
+        files = gtk.MenuItem("File_4")
+        files.set_submenu(topmenu)
+
+        submenu = gtk.Menu()    # 上层
+
+        news = gtk.MenuItem("New")
+        news.set_submenu(submenu)
+
+        sub1 = gtk.MenuItem("Sub1")     # 子层
+        sub2 = gtk.MenuItem("Sub2")
+        sub3 = gtk.MenuItem("Sub3")
+
+        submenu.append(sub1)
+        submenu.append(sub2)
+        submenu.append(sub3)
+
+        topmenu.append(news)
+
+        self.append(filem)
+        self.append(filei)
+        self.append(filec)
+        self.append(files)
+</code></pre>
+
+<p>在代码中我们能够发现的是，其实就是在普通的菜单的基础上再套了一层菜单。通俗的讲，首先我们建立菜单，然后将菜单项添加至菜单，随后再一个个向其中添加菜单项(MenuItem)，然后分级菜单在这里不同的是，本要一个个添加菜单项(MenuItem)的时候这里添加的确实菜单(Menu)，然后在向这个子菜单(Menu)添加菜单项(MenuItem)，这样就达到了多级菜单的效果了。</p>
+
+<h2>6.菜单快捷键</h2>
+
+<p>在前面普通菜单的地方，我们提到了菜单的快捷键，在菜单项标签设置的时候，在字母或数字前加“_”即可，这样的话，在当前活动窗口按下 <strong>ALT</strong> 键不放，下划线就会出现，这时你再按下相应的字母和数字就能激活该菜单了。设置如下：</p>
+
+<pre><code>files = gtk.MenuItem("File_4")
+</code></pre>
+
+<p>值得注意的是，要是把这种下划线的快捷方式用在菜单里面的每个菜单项也能用吗？答案是当然能用，但是不同的是，你首先要使用 <strong>ALT 字母</strong> 先激活打开菜单，然后再 <strong>按下相应字母</strong> 才能选中该菜单项，<strong>而不能</strong>在当前窗口之间按 <strong>ALT 字母</strong> 来触发。</p>
+
+<p>那有什么方法能够是的在整个窗口全局的情况下，不用进入菜单直接按快捷方式就能完成点击某个菜单子项的功能吗？答案依然是可以的，使用<strong> add_accelerator</strong> 这个函数就能实现。</p>
+
+<p>先看效果图：</p>
+
+<p>[![][8]][8]</p>
+
+<p>如图我们设置的快捷键是 <strong>Ctrl Q</strong> ,同时Exit的标签我们也用“_Exit”设置过了，放在一起对比一下，下面是<strong>该例子的完整代码：</strong></p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Menu_accelerator
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class MenuTest(gtk.Window):
+    def __init__(self):
+        super(MenuTest, self).__init__()
+
+        self.set_title("Menu")
+        self.set_size_request(300,250)
+        self.set_position(gtk.WIN_POS_CENTER)
+
+        mb = gtk.MenuBar()
+
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("_File")
+        filem.set_submenu(filemenu)
+
+        agr = gtk.AccelGroup()
+        self.add_accel_group(agr)
+
+        exit = gtk.MenuItem("_Exit", agr)
+
+        key, mod = gtk.accelerator_parse("Q")
+        exit.add_accelerator("activate", agr, key, mod, gtk.ACCEL_VISIBLE)
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        mb.append(filem)
+
+        vbox = gtk.VBox(False, 2)
+        vbox.pack_start(mb, False, False, 0)
+
+        self.add(vbox)
+        self.connect("destroy", gtk.main_quit)
+        self.show_all()
+
+if __name__ == "__main__":
+    mt = MenuTest()
+    gtk.main()
+</code></pre>
+
+<p>看到代码中，比我们前面讲的多了一些东西。</p>
+
+<p>为了使用快捷键,我们先创建了一个全局的AccelGroup对象,它将在之后被使用</p>
+
+<pre><code>agr = gtk.AccelGroup()
+self.add_accel_group(agr)
+</code></pre>
+
+<p>在菜单项建立的时候，添加该菜单项的快捷方式属于那个AccelGroup对象</p>
+
+<pre><code>exit = gtk.MenuItem("_Exit", agr)
+</code></pre>
+
+<p>然后就是设置具体的快捷键了。</p>
+
+<pre><code>key, mod = gtk.accelerator_parse("Q")
+exit.add_accelerator("activate", agr, key, mod, gtk.ACCEL_VISIBLE)
+</code></pre>
+
+<p><strong>详细说一下几个函数:</strong></p>
+
+<h3>gtk.accelerator_parse</h3>
+
+<pre><code>def gtk.accelerator_parse(accelerator)
+</code></pre>
+
+<p>  <strong><code>accelerator</code></strong> :</p>
+
+<p>一个表示快捷键的字符串</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个包含快捷方式的 键值 和 修饰符 的 2元组</p>
+
+<h3>gtk.Widget.add_accelerator</h3>
+
+<pre><code>def add_accelerator(accel_signal, accel_group, accel_key, accel_mods, accel_flags)
+</code></pre>
+
+<p>  <strong><code>accel_signal</code></strong> :</p>
+
+<p>快捷键激活的控件信号</p>
+
+<p><strong><code>accel_group</code></strong> :</p>
+
+<p>控件快捷方式的组，加入它的顶层</p>
+
+<p><strong><code>accel_key</code></strong> :</p>
+
+<p>快捷方式的键值 如(‘q’)&#8220;</p>
+
+<p><strong><code>accel_mods</code></strong> :</p>
+
+<p>快捷键的修饰符</p>
+
+<p><strong><code>accel_flags</code></strong> :</p>
+
+<p>快捷键标识, 如 <code>gtk.ACCEL_VISIBLE</code></p>
+
+<p>运行上面的代码后你会发现，在当前活动的窗口下，直接按 ALT E 是没有效果的，窗口不会关闭，非要先按 Alt E 激活菜单再按E键就能关闭窗口，这是第一种快捷方式。然而我们加入了第二种后，不管有没有激活菜单，直接按下 Ctrl Q 即可关闭窗口，这就是两种不同的快捷方式的设置。</p>
+
+<h2>7.完整代码</h2>
+
+<p><strong>下面是前面讲到的四中菜单示例的完整代码：</strong></p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Menu
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+# 菜单条
+class Mb(gtk.MenuBar):
+    def __init__(self):
+        super(Mb,self).__init__()
+
+        # 普通菜单
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("File_1")
+        filem.set_submenu(filemenu)
+
+        new = gtk.MenuItem("New")
+        filemenu.append(new)
+
+        open = gtk.MenuItem("Open")
+        filemenu.append(open)
+
+        sep = gtk.SeparatorMenuItem()
+        filemenu.append(sep)
+
+        exit = gtk.MenuItem("Exit")
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        # 带图标的菜单
+        imagemenu = gtk.Menu()
+        filei = gtk.MenuItem("File_2")
+        filei.set_submenu(imagemenu)
+
+        newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+        newi.set_label("New")
+        imagemenu.append(newi)
+
+        openi = gtk.ImageMenuItem(gtk.STOCK_OPEN)
+        openi.set_label("Open")
+        imagemenu.append(openi)
+
+        sep2 = gtk.SeparatorMenuItem()
+        imagemenu.append(sep2)
+
+        exiti = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+        exiti.set_label("Exit")
+        exiti.connect("activate", gtk.main_quit)
+        imagemenu.append(exiti)
+
+        # 带复选框的菜单项
+        checkmenu = gtk.Menu()
+        filec = gtk.MenuItem("File_3")
+        filec.set_submenu(checkmenu)
+
+        newc = gtk.CheckMenuItem("New")
+        newc.set_active(True)       # 激活复选框
+        checkmenu.append(newc)
+
+        openc = gtk.CheckMenuItem("Open")
+        openc.set_active(False) 
+        checkmenu.append(openc)
+
+        sep3 = gtk.SeparatorMenuItem()
+        checkmenu.append(sep3)
+
+        exitc = gtk.CheckMenuItem("Exit")
+        checkmenu.append(exitc)
+
+        # 多级菜单
+        topmenu = gtk.Menu()    
+        files = gtk.MenuItem("File_4")
+        files.set_submenu(topmenu)
+
+        submenu = gtk.Menu()    # 上层
+
+        news = gtk.MenuItem("New")
+        news.set_submenu(submenu)
+
+        sub1 = gtk.MenuItem("Sub1")     # 子层
+        sub2 = gtk.MenuItem("Sub2")
+        sub3 = gtk.MenuItem("Sub3")
+
+        submenu.append(sub1)
+        submenu.append(sub2)
+        submenu.append(sub3)
+
+        topmenu.append(news)
+
+        self.append(filem)
+        self.append(filei)
+        self.append(filec)
+        self.append(files)
+class Win:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Menu")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        mb = Mb()
+        vbox = gtk.VBox(False, 2)       
+        vbox.pack_start(mb, False, False, 0)
+
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    win = Win()
+    gtk.main()
+</code></pre>
+
+<p>OK~菜单基本上就是这些了，今天学习到这里。。。待续。。。</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android 手机上安装并运行 Ubuntu 12.04]]></title>
+    <link href="http://dawndiy.github.com/archives/229"/>
+    <updated>2012-08-16T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/install-and-run-ubuntu-12-04-on-android-phone</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<ul>
+<li>ubuntu.sh脚本的原地址变动了，导致下载不了，现在更新了网盘地址。小技巧：遇到一些下载失效的时候可以试一试p2p下载工具（如 easyMule、迅雷等）试一试，说不定有人分享过~*<br/>
+————————————————————————————-</li>
+</ul>
+
+
+<p>Android 是基于Linux内核的开源操作系统，主要用在移动设备上。当然同样是基于Linux内核的操作系统，现在支持的Android的智能手机理论来说都能运行基于Linux的操作系统，比如现在流行的发行版：Ubuntu、Fedora 等等。不仅如此，现在的智能移动设备的硬件也越来越强，更为能运行Linux系统提供了良好的硬件支持。今天<a href="http://www.dawndiy.com">DawnDIY</a>就带大家来尝试一下在 Android 手机上安装 Ubuntu 12.04 操作系统。</p>
+
+<h2>一.效果预览</h2>
+
+<p>先上图，解个馋~这就是安装后的效果。</p>
+
+<p><img src="http://i.imgur.com/1O2xX.png" title="Screenshot_2012-08-16-00-50-44" alt="" /></p>
+
+<p><img src="http://i.imgur.com/8uj3J.png" title="Screenshot_2012-08-15-01-48-46" alt="" /></p>
+
+<p><img src="http://i.imgur.com/7PY2e.png" title="Screenshot_2012-08-16-02-13-20" alt="" /></p>
+
+<p><img src="http://i.imgur.com/Za4Rz.jpg" title="20120815004" alt="" /></p>
+
+<p>看到上面的图了吧，这就是安装最新的 Ubuntu 12.04 在 Android 智能机上的效果。同时因为 Unity 原生就是支持触屏设备的，所以操作方面还是可以的，只不过就是屏幕小了点而已~好了，下面我来介绍一下我的安装过程。</p>
+
+<h2>二.配置要求</h2>
+
+<ul>
+<li>设备需要root权限，并且安装了<a href="http://zh.wikipedia.org/wiki/Busybox">BusyBox</a></li>
+<li>最小 1GHz 处理器(推荐)</li>
+<li>Android 系统版本 2.1 或以上</li>
+<li>Android 设备需要自定义的ROM固件</li>
+<li>SD卡至2.5GB (安装大映像的需要3.5GB)</li>
+<li>设备需要支持WIFI (这个用于其他设备通过WIFI登录)</li>
+<li>支持 Ext2 文件系统(大部分 Android 设备应该都支持)</li>
+</ul>
+
+
+<p><strong>我的设备</strong></p>
+
+<ul>
+<li>手机型号：Mi-One Plus</li>
+<li>处理器主频：1.5GHz * 2</li>
+<li>SD卡：16G class 4</li>
+<li>系统ROM：MIUI_v4_2.8.10</li>
+<li>BusyBox版本：1.20.2</li>
+</ul>
+
+
+<h2>三.需要的软件</h2>
+
+<ul>
+<li>Android Terminal Emulator (终端模拟器) ：用于运行 <a href="http://zh.wikipedia.org/wiki/Shell">shell</a> 脚本     <a href="https://play.google.com/store/apps/details?id=jackpal.androidterm">Google Play</a></li>
+<li>BusyBox ：用于提供 shell 命令的支持   <a href="https://play.google.com/store/apps/details?id=stericson.busybox">Google Play</a></li>
+<li>Android VNC Viewer：用于 Android 设备的远程连接工具     <a href="https://play.google.com/store/apps/details?id=android.androidVNC">Google Play</a></li>
+<li>Ubuntu 12.04  的映像文件：用于安装 Ubuntu 的映像文件    选择下载： <a href="http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/12.04/full/ubuntu1204-v4-full.zip/download">Full</a>、<a href="http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/12.04/small/ubuntu1204-v4-small.zip/download">Small</a>、<a href="http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/12.04/core/ubuntu1204-v4-core.zip/download">Core</a></li>
+<li>ubuntu.sh ：Ubuntu 的安装脚本    <a href="http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/ubuntuV6-1-script.zip">点这里下载</a>(已失效，或用迅雷)    新地址-> <a href="http://pan.baidu.com/share/link?shareid=83492&amp;uk=2416019402" title="脚本下载">下载</a></li>
+<li>bootscript.sh：Ubuntu 的启动脚本     <a href="http://sourceforge.net/projects/linuxonandroid/files/bootscript.sh/download">点这里下载</a></li>
+<li>Linux Installer：Linux 安装向导(这个支持个帮助向导，可以不需要)     <a href="http://sourceforge.net/projects/linuxonandroid/files/App/Complete">点这里下载</a></li>
+</ul>
+
+
+<h2>四.开始安装</h2>
+
+<p>首先您的手机需要 <a href="http://zh.wikipedia.org/wiki/Chroot">chroot</a>，也就是能够获得root权限去操作，相当于越狱。不懂的可以去 Google 一下“<a href="https://www.google.com/search?hl=zh-CN&amp;newwindow=1&amp;client=ubuntu&amp;hs=YgZ&amp;channel=fs&amp;q=Android%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90&amp;oq=Android%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90&amp;gs_l=serp.12..0.22005.22005.0.22938.1.1.0.0.0.0.210.210.2-1.1.0...0.0...1c.OT_GdyR88Do">Android获取root权限</a>”。root是前提，所以先要把这个做好，不过现在很多ROM都做的很好，比如MIUI就有很好的权限管理。</p>
+
+<h3>1.安装文件下载</h3>
+
+<p>首先就是下载必要的文件，上面讲到的需要的 Ubuntu 12.04 的映像文件，这个是在 sourceforge.net 上的一个叫 Linux-on-Android 的项目。我上面给的地址中有三个包可供下载：</p>
+
+<p><img src="http://i.imgur.com/Z71id.png" title="2012-08-15 16:00:15的屏幕截图" alt="" /></p>
+
+<p>其实下面就有英文的介绍，我就在这里简单介绍一下：</p>
+
+<ul>
+<li>full 映像包含了完整的 Ubuntu 系统，其中包括 Unity 桌面，还有很多如GIMP等常用软件，非常齐全。需要 3.5G 以上空间。</li>
+<li>small 映像包含了的基本的 Ubuntu 系统，其中包括 LXDE 桌面，需要 2G 以上空间。</li>
+<li>core 映像包含了基础的 Ubuntu 系统，不过这个没有GUI的，也就是没有桌面只有命令行。</li>
+</ul>
+
+
+<p>上面下载的就是待安装的 Ubuntu 12.04 的映像文件，然后我们安装还需要安装脚本，也就是上面说的 ubuntu.sh ，还有安装后的启动脚本 bootscript.sh 。有了这些文件后我们在手机的SD卡的根目录，新建一个文件夹取名为 ubuntu ，然后把这里我们刚才下载好的文件放到这个文件夹里面，到这里 ubuntu 文件夹里就分别有 ubuntu.img、ubuntu.sh、bootcript.sh 这三个文件了。</p>
+
+<h3>2.安装软件</h3>
+
+<p>先展示一下我们需要的三个软件，如图：</p>
+
+<p><img src="http://i.imgur.com/dHA4h.png" title="Screenshot_2012-08-15-18-45-48" alt="" /></p>
+
+<p>首先需要的是 Terminal 这个软件，也就是一个终端，通过终端我们可以用来执行很多命令和脚本。上面我给出了Google Play的地址，这个在很多地方都有的下的，还有Android VNC Viewer也可以在 Google Play 里面找到安装。</p>
+
+<p>在这里我要说一下BusyBox，它使得你可以在 Terminal 中运行很多命令，现在很多 Android 的 Rom (我用的MIUI_v4_2.8.10也是) 的终端中很多命令都不能运行，比如 cp、mv、cut 等，但是这些都是我们脚本里面需要用到的，如果不能运行这些命令而执行脚本的话，会提示 **: not found 这样的提示。所以安装 BusyBox 可以使得这些命令都能够在终端里面执行。如果你的Rom本来够强大已经包含了BusyBox的新版本，能够运行基本的shell命令的话，那也可以不用装这个。</p>
+
+<p>当然安装BusyBox以及后面我们在Terminal中都需要 root 权限，如果是MIUI系统的话则可以直接在 <strong>授权管理 > ROOT权限管理</strong> 里面打开该选项，然后需要root权限的时候允许就可以了。其他的系统我没用过，不过可以直接用 <strong>一键ROOT工具</strong> 来操作。</p>
+
+<p>安装BusyBox，安装好后，打开BusyBox点击 <strong>Install</strong> 开始安装，如果弹出需要ROOT权限，点下一步允许就行，如图：</p>
+
+<p><img src="http://i.imgur.com/SCntt.png" title="Screenshot_2012-08-15-18-49-06" alt="" /></p>
+
+<h3>3.安装 ubuntu 12.04</h3>
+
+<p>首先，打开 <strong>终端模拟器(Terminal)</strong> ，在光标处输入 “<strong>cd /sdcard/ubuntu</strong>”(不包括引号，注意cd后有空格)然后回车，这样就来到了刚才我们在SD卡里面新建的目录了，如图：</p>
+
+<p><img src="http://i.imgur.com/Qlq0j.png" title="Screenshot_2012-08-16-00-18-55" alt="" /></p>
+
+<p>然后我们可以输入命令 “<strong>ls</strong>” 然后回车，我们就可以看到当前目录下的所有文件了，看一下里面是不是我们需要的三个文件，如图：</p>
+
+<p> <img src="http://i.imgur.com/Q2due.png" title="Screenshot_2012-08-16-00-19-15" alt="" /></p>
+
+<p> 接下来我们就要开始运行 ubuntu.sh 这个安装脚本了，但在这之前我们需要使用 root 用户来运行这个脚本，在终端中使用命令 “<strong>su</strong>” 来切换至 root 用户权限，如果弹出授权信息点击下一步允许就行了，或者直接用 一键ROOT 来开启终端重复上面操作，成功后如图之前的“<strong>$</strong>”变成了“<strong>#</strong>”，这就说明已经获得Root权限了，如图：</p>
+
+<p><img src="http://i.imgur.com/STeo5.png" title="Screenshot_2012-08-16-00-19-43" alt="" /></p>
+
+<p>然后运行安装脚本，输入命令 “<strong>sh ubuntu.sh</strong>”，进行安装，如图：</p>
+
+<p><img src="http://i.imgur.com/9hHAD.png" title="Screenshot_2012-08-16-00-41-42" alt="" /></p>
+
+<p>然后脚本为你建立了一个名字为“<strong>ubuntu</strong>”的帐号，这里提示你需要为你的帐号设置一个密码，这个密码会在以后你操作 Ubuntu 的时候一些授权应用到，比如我在这里设置密码为：“<strong>ubuntu</strong>”，这里<strong>注意</strong>的是在终端里面输入密码是不会显示出来的，你看见光标没有动静，但实际上你已经输入进去了。回车后提示再次输入密码以保证你两次密码一样，如图：</p>
+
+<p><img src="http://i.imgur.com/KAwLW.png" title="Screenshot_2012-08-16-00-42-01" alt="" /></p>
+
+<p>密码设置完成后，提示是否启动<a href="http://zh.wikipedia.org/wiki/VNC">VNC</a>服务和<a href="http://zh.wikipedia.org/wiki/SSH">SSH</a>服务，我们只要输入“<strong>y</strong>”然后回车，开启了这两个服务后我们才能通过远程连接来连上系统，如图：</p>
+
+<p><img src="http://i.imgur.com/zb3If.png" title="Screenshot_2012-08-16-00-45-39" alt="" /></p>
+
+<p>然后提示我们输入设备屏幕的尺寸，我的屏幕是854×480的，所以我输入“<strong>852×480</strong>”（<strong>小米手机注意</strong>：小米手机是854×480的，但是后面用Android VNC 连接的时候有问题，在右边会显示一条线，所以<strong>小米手机用户最好设置成“852×480”</strong>，其他手机没有测试过，在设置的时候请注意！）。<strong>注意：</strong>这里两个数字之间的<strong>不是乘号</strong>，而是<strong>字母“xyz”的“x”</strong>，输错了不能远程连接的，如图：</p>
+
+<p><img src="http://i.imgur.com/tNQsv.png" title="Screenshot_2012-08-16-00-46-10" alt="" /></p>
+
+<p>如图的提示已经启动了一个新的桌面，提示是否保存你刚才的设置为默认设置，只要输入“<strong>y</strong>”即可，如图：</p>
+
+<p><img src="http://i.imgur.com/j6jFo.png" title="Screenshot_2012-08-16-00-46-46" alt="" /></p>
+
+<p>然后你就可以看到操作完成后光标前的字符变成了“<strong>root@localhost:~</strong>#<strong><strong>”，有没有发现。其实到这里你已经进入了 Ubuntu 12.04 系统，已经完成安装配置并启动了 Ubuntu 12.04 系统，不信？你可以输入命令 “</strong>cat /etc/issue.net</strong>” 然后回车查看当前系统是不是Ubuntu 12.04，如图：</p>
+
+<p><img src="http://i.imgur.com/1421g.png" title="Screenshot_2012-08-16-00-46-54" alt="" /></p>
+
+<p><img src="http://i.imgur.com/B5lNa.png" title="Screenshot_2012-08-16-00-48-30" alt="" /></p>
+
+<h3>4.远程桌面连接</h3>
+
+<p>当然，光用命令行当然体验不到什么，我们这时候确实是已经启动了 Ubuntu12.04 ，现在只需要用远程连接工具来连接登录桌面就能看到完整的桌面系统了。这时候我们就要用到前面安装的 <strong>Android VNC Viewer</strong> 了。按手机的<strong> Home </strong>键回到手机桌面，保持<strong>终端</strong>还在后台运行。找到 <strong>Android VNC</strong> 并且打开，然后进行一些简单的配置。<strong>Nickname</strong>，为你的连接去一个名字如“<strong>ubuntu</strong>”。<strong>Password</strong> 为 “<strong>ubuntu</strong>” 。<strong>Address</strong>是ip地址，这里我们是在同一台手机上连，所以我们填写“<strong>localhost</strong>”，当然你想在别的设备上连接当前的设备那就要填写启动时提示的地址。<strong>Port</strong> 是段口号，默认<strong> 5900</strong>。还有这里比较重要的是 <strong>Color Format</strong>，这个是连接的色彩设置，建议设置成“<strong>24-bit color (4 bpp)</strong>”，要不然画质太低的话画面就惨不忍睹了。如图：</p>
+
+<p><img src="http://i.imgur.com/foYau.png" title="Screenshot_2012-08-16-01-38-07" alt="" /></p>
+
+<p><img src="http://i.imgur.com/avTxQ.png" title="Screenshot_2012-08-16-01-38-17" alt="" /></p>
+
+<p>全部设置好以后，点击 <strong>Connect</strong> 就可以连接上我们本地已经在运行的 Ubuntu 12.04 系统了，如图：</p>
+
+<p><img src="http://i.imgur.com/1O2xX.png" title="Screenshot_2012-08-16-00-50-44" alt="" /></p>
+
+<p>使用 <strong>LibreOffice Writer</strong> ，并且支持使用<strong>手机端输入法</strong>：</p>
+
+<p><img src="http://i.imgur.com/7PY2e.png" title="Screenshot_2012-08-16-02-13-20" alt="" /></p>
+
+<p>使用 <strong>LibreOffice Calc</strong>：</p>
+
+<p><img src="http://i.imgur.com/Y2kgH.png" title="Screenshot_2012-08-16-01-36-07" alt="" /></p>
+
+<p>使用 <strong>FireFox</strong> 打开 <strong>Google</strong>：</p>
+
+<p><img src="http://i.imgur.com/KwsUC.png" title="Screenshot_2012-08-15-12-05-53" alt="" /></p>
+
+<p>如果想要退出桌面连接，只需要点击手机的 <strong>菜单</strong> 键，然后选择 <strong>disconnect</strong> 就可以断开连接。</p>
+
+<h3>5.退出 Ubuntu 12.04 系统</h3>
+
+<p>退出 Ubuntu 系统，只需要回到刚才我们运行的终端，输入命令 “<strong>exit</strong>” 回车，等待片刻即可退出 Ubuntu 系统，再次输入 “<strong>exit</strong>” 回车 则是退出手机终端的 root 用户权限，然后再次 “<strong>exit</strong>” 回车后则是退出手机终端，这样就完全退出了，如图：</p>
+
+<p><img src="http://i.imgur.com/9TRbM.png" title="Screenshot_2012-08-16-01-39-13" alt="" /></p>
+
+<h3>6.下次启动</h3>
+
+<p>下次启动的时候只需要开启<strong> 终端</strong>，然后输入 “<strong>su</strong>” 获得 root 权限，再输入 “<strong>cd /sdcard/ubuntu</strong>” 来到ubuntu文件夹下，然后在输入 “<strong>sh bootscript.sh</strong>” 运行启动脚本就可以运行启动 Ubuntu 了，需要连接桌面的话按照上面说的用<strong> Android VNC</strong> 就可以了。</p>
+
+<h2>四.电脑端连接使用手机上的 Ubuntu 12.04</h2>
+
+<p>到这里你一定成功在手机上跑起 Ubuntu 12.04 了吧，感觉不一样吧！还没完呢！在这里因为我们在手机上的 Ubuntu 12.04 开启了 VNC 和 SSH 服务，当然在手机连上网（最好是WIFI或局域网）了以后，我们也可以用电脑去远程连接登录到手机上的 Ubuntu 12.04 ，这样的话，我们就可以通过电脑来操作手机上的 Ubuntu 了。</p>
+
+<p>VNC服务是与操作系统无关的，所以不管你电脑是什么系统都可以通过VNC来连接登录到手机上的 Ubuntu。在 Windows 操作系统上可以通过 <strong>VNC 客户端</strong> 来连接。因为我电脑的系统是Linux 所以我在这里只演示 Linux 下连接登录到手机的 Ubuntu。Windows的也大同小异，所以Google一下吧。</p>
+
+<p>在Linux下，使用 <strong>Remmina 远程桌面客户端</strong> 这款工具就可以连接到按照我们上面的方法启动了 Ubuntu 的手机，其中<strong>服务器地址</strong> 就是你在手机上启动 Ubuntu 的时候，提示的 VNC 地址 。配置如图：</p>
+
+<p><img src="http://i.imgur.com/7qtaz.png" title="2012-08-16 02:41:46的屏幕截图" alt="" /></p>
+
+<p>点击连接，就可以连接登录到手机上的 Ubuntu 12.04 了，这样你就可以在电脑上操作手机上的 ubuntu 系统了，如图：</p>
+
+<p><img src="http://i.imgur.com/GIUac.png" title="2012-08-16 02:47:29的屏幕截图" alt="" /></p>
+
+<h2>五.总结</h2>
+
+<p>Android 智能手机 装上了原生的 Ubuntu 12.04 ，这需要感谢 Zachary Powell 团队在 SourceForge 上提供的文件及脚本，不仅是 Ubuntu ，你也可以在 Android 手机上安装 Fedora、openSUSE、Debian、ArchLinux 等系统，这些系统的影响文件及脚本 Zachary Powell 团队在 SourceForge 上都有提供，感兴趣的朋友可以尝试一下！</p>
+
+<p>说到底装上的还是原生的 Ubuntu ，但是还是挺期待 Canonical 专门为 Android 设备定制的 Ubuntu 系统，现在 Canonical 公司也已经在为 Android 设备打造专属的 Ubuntu 系统了，期待它能早日面世。相关信息可以查阅：http://www.ubuntu.com/devices/android</p>
+
+<p><strong>作者：<a href="http://www.dawndiy.com">DawnDIY</a><br/>
+本文地址：</strong><br/>
+<strong>本文原创，如果转载请注明原文出处及原文地址，3Q</strong></p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(5)–布局管理(Table)]]></title>
+    <link href="http://dawndiy.github.com/archives/186"/>
+    <updated>2012-07-31T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk study-notes-5- layout-management-table</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>这次学习一下一个简单的布局管理–Table。Table我说他简单是因为是一个“方方正正”的容器，和HTML中的标签类似，它使用于一些平面需要行和列排列的UI中。</p>
+
+<h2>1.介绍</h2>
+
+<p>Table可以用来很好的管理行和列对齐和布局的UI中，比如《计算器》、《五子棋》、《扫雷》等，这些程序的主界面都是许许多多的子部件方方正正的行列对齐地排列在一起的。说道这几个程序，你应该对Table有一定的猜想了吧。下面开始介绍。</p>
+
+<h3>Table类的概要：</h3>
+
+<pre><code>class gtk.Table(gtk.Container):
+    gtk.Table(rows=1, columns=1, homogeneous=False)
+
+    def resize(rows, columns)
+
+    def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+
+    def set_row_spacing(row, spacing)
+
+    def get_row_spacing(row)
+
+    def set_col_spacing(column, spacing)
+
+    def get_col_spacing(column)
+
+    def set_row_spacings(spacing)
+
+    def get_default_row_spacing()
+
+    def set_col_spacings(spacing)
+
+    def get_default_col_spacing()
+
+    def set_homogeneous(homogeneous)
+
+    def get_homogeneous()
+</code></pre>
+
+<h3></h3>
+
+<h3>Table的继承关系：</h3>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Table
+</code></pre>
+
+<h3> 构造方法：</h3>
+
+<pre><code>gtk.Table(rows=1, columns=1, homogeneous=False)
+</code></pre>
+
+<p>参数：</p>
+
+<p><strong><code>rows</code></strong> :</p>
+
+<p>行数</p>
+
+<p><strong><code>columns</code></strong> :</p>
+
+<p>列数</p>
+
+<p><strong><code>homogeneous</code></strong> :</p>
+
+<p>如果为True，所有的单元格都与最大的单元格尺寸相同</p>
+
+<p><em>Returns</em> :</p>
+
+<p><code>一个新的 gtk.Table 对象</code></p>
+
+<p>如果 rows 和 columns 没有赋值，默认为 1 。</p>
+
+<p><strong>注意：</strong><br/>
+这里的rows和columns意思是行数和列数，但在布局的时候我们如果把它们理解成分割线的话这样更好理解。因为下面attach这个方法中的一些参数是通过起始和结束来确定一个子控件的位置的，所以我们把行列抽象理解成分割线的话更容易理解构建。比如 rows =2 , columns = 2 , 那么它的布局应该是这样的：</p>
+
+<p>0               1                 2<br/>
+0 ———- ———- <br/>
+|                  |                 |<br/>
+1 ———- ———- <br/>
+|                  |                 |<br/>
+2 ———- ———-</p>
+
+<h3>主要方法：</h3>
+
+<p><strong>gtk.Table.attach</strong></p>
+
+<pre><code>def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+</code></pre>
+
+<p><strong><code>child</code></strong> :</p>
+
+<p>需要添加的控件</p>
+
+<p><strong><code>left_attach</code></strong> :</p>
+
+<p>子控件左部起始列号。（<strong>可以用上面的分割线来理解</strong>）</p>
+
+<p><strong><code>right_attach</code></strong> :</p>
+
+<p>子控件右部结束列号。</p>
+
+<p><strong><code>top_attach</code></strong> :</p>
+
+<p>子控件顶部起始列号。</p>
+
+<p><strong><code>bottom_attach</code></strong> :</p>
+
+<p>子控件底部结束列号。</p>
+
+<p><strong><code>xoptions</code></strong> :</p>
+
+<p>当 table 水平调整大小时，用于指定子控件的属性。默认值 <code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p><strong><code>yoptions</code></strong> :</p>
+
+<p>当 table 垂直调整大小时，用于指定子控件的属性。默认值 <code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p><strong><code>xpadding</code></strong> :</p>
+
+<p>添加控件的左侧和右侧的填充量，默认值 0</p>
+
+<p><strong><code>ypadding</code></strong> :</p>
+
+<p>添加控件的上侧和下侧的填充量，默认值 0</p>
+
+<p><em><code>xoptions</code></em> 和 <em><code>yoptions</code></em> 确定控件在水平和垂直方向上的扩展属性，默认值是：<code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p>  <code>gtk.EXPAND</code></p>
+
+<p>table单元格将扩展占据分配的所有空闲空间。</p>
+
+<p><code>gtk.SHRINK</code></p>
+
+<p>控件随着table单元格收缩而收缩。</p>
+
+<p><code>gtk.FILL</code></p>
+
+<p>空间将会填充所有table单元格分配的空间。</p>
+
+<h2>2.示例</h2>
+
+<p>上面都是不实在的东西，下面来看一个例子，有图有真相，先上图：</p>
+
+<p>[![][2]][2]</p>
+
+<p>如图所示，你应该想到Table是怎么一个布局容器吧。接下来看一下完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Table layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class TableLC:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Table Layout Container")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        table = gtk.Table(4, 3, True)   # 4行3列
+        table.attach(gtk.Button("1"), 0, 1, 0, 1)
+        table.attach(gtk.Button("2"), 1, 2, 0, 1)
+        table.attach(gtk.Button("3"), 2, 3, 0, 1)
+        table.attach(gtk.Button("4"), 0, 1, 1, 2)
+        table.attach(gtk.Button("5"), 1, 2, 1, 2)
+        table.attach(gtk.Button("6"), 2, 3, 1, 2)
+        table.attach(gtk.Button("7"), 0, 1, 2, 3)
+        table.attach(gtk.Button("8"), 1, 2, 2, 3)
+        table.attach(gtk.Button("9"), 2, 3, 2, 3)
+        table.attach(gtk.Button("0"), 1, 2, 3, 4)
+
+        self.win.add(table)
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    tab = TableLC()
+    gtk.main()
+</code></pre>
+
+<p>在这个例子中，我们主要看的还是Table中子控件的布局方式，结合前面介绍的 table.attach 方法，我们首先通过 gtk.Table(4, 3, True)来建立了一个 4行 3列 的 table 。<br/>
+那么这些数字是怎么布局的呢？<br/>
+就添加数字“1”来说明，table.attach(gtk.Button(“1″), 0, 1, 0, 1) ，首先第一个参数就不说了；第二个参数 “0”表示控件从第0列起始；第三个参数“1”表示控件结束于第2列前；第四个参数“0”表示控件开始于第0行；第五个参数表示控件结束于第1行前。这样就确定了数字“1”的位置以及所占行列了。<br/>
+其他的也就都是一样的。</p>
+
+<p>那么我们多举些例子，改一下代码看看有什么效果。</p>
+
+<p>如果把数字“0”的布局改成：</p>
+
+<pre><code>table.attach(gtk.Button("0"), 1, 3, 3, 4)
+</code></pre>
+
+<p>效果如下：</p>
+
+<p>[![][3]][3]</p>
+
+<p>因为我将第二个参数和第三个参数改成了 1 , 3 。也就是说数字“0”是从第1列起始结束于第3列前。这样它就占据了2列的位置了。</p>
+
+<p>table.attach 还有四个参数没有讲到，下面我们继续修改一下代码。</p>
+
+<p>我们先说一下我们接下来要修改的目的：<br/>
+1.数字“1”上下分别设置边距为5，左右边距分别为10。<br/>
+2.数字“2”垂直方向设置为FILL，水平方向设置为EXPAND。<br/>
+3.数字“3”水平垂直方向均设置为<code>SHRINK</code>。</p>
+
+<p>那么我们修改的局部代码为：</p>
+
+<pre><code>table.attach(gtk.Button("1"), 0, 1, 0, 1, gtk.EXPAND|gtk.FILL, gtk.EXPAND|gtk.FILL, 10, 5)
+        table.attach(gtk.Button("2"), 1, 2, 0, 1, gtk.EXPAND, gtk.FILL)
+        table.attach(gtk.Button("3"), 2, 3, 0, 1, gtk.SHRINK, gtk.SHRINK)
+</code></pre>
+
+<p>效果：</p>
+
+<p>[![][4]][4]</p>
+
+<p>就是这样的。table.attach 后面几个参数，对于动态调整窗口时，控件的布局非常有用。认真参考上面我给出的 table.attach 的介绍，是能够理解的。</p>
+
+<p>OK，今天学到这里，使用这些布局已经能够构建很多UI了，下次学学别的，未完，待续…………..</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Linux 下安装配置 JDK7]]></title>
+    <link href="http://dawndiy.github.com/archives/155"/>
+    <updated>2012-07-31T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/install-and-configurate-jdk7-in-linux</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>自从从Oracle收购Sun近三年来，已经有很多变化。早在8月，甲骨文将“Operating System Distributor License for Java”许可证终结，这意味着第三方将不可以依据这一许可分发他们的软件包。<br/>
+<strong>　　</strong>因此Ubuntu Linux已经开始禁用所有机器上的Oracle JDK浏览器插件，并很快会从档案中删除软件包。<br/>
+公司指出，禁用Oracle的插件将可以帮助提高安全性，因为这些插件已经被证实包含许多漏洞，虽然这是一个事实，但真正的原因恐怕是Sun的 JDK在升级时会清理掉用户机器上自认为不安全的软件，大多数PC用户认为这样很安全，但通常基于UNIX系统的用户并不这么认为。<br/>
+Oracle的JDK被废弃后，OpenJDK将取代它的位置在Ubuntu及其它Linux中默认安装。</p>
+
+<p>虽然很多Linux发行版现在已经自带OpenJDK，但是在开发过程中与Oracle-JDK(SUN-JDK)还是略有不同。通常，Java开发人员还是以Oracle-JDK为标准来进行开发。<br/>
+下面介绍一下Linux下的JDK安装与配置，这里使用的Linux发行版是Ubuntu 12.04。</p>
+
+<h2>1.下载JDK</h2>
+
+<p>目前最新的JDK版本是：Java SE Development Kit 7u5</p>
+
+<p>下载地址：</p>
+
+<p>查看最新：</p>
+
+<h2>2.解压安装</h2>
+
+<p>我们把JDK安装到这个路径：/usr/lib/jvm<br/>
+如果没有这个目录（第一次当然没有），我们就新建一个目录</p>
+
+<pre><code>cd /usr/lib
+sudo mkdir jvm
+</code></pre>
+
+<p>建立好了以后，我们来到刚才下载好的压缩包的目录，解压到我们刚才新建的文件夹里面去，并且修改好名字方便我们管理</p>
+
+<pre><code>sudo tar zxvf ./jdk-7-linux-i586.tar.gz  -C /usr/lib/jvm
+cd /usr/lib/jvm
+sudo mv jdk1.7.0_05/ jdk7
+</code></pre>
+
+<h2> 3.配置环境变量</h2>
+
+<pre><code>gedit ~/.bashrc
+</code></pre>
+
+<p>在打开的文件的末尾添加</p>
+
+<pre><code>export JAVA_HOME=/usr/lib/jvm/jdk7
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+</code></pre>
+
+<p>保存退出，然后输入下面的命令来使之生效</p>
+
+<pre><code>source ~/.bashrc
+</code></pre>
+
+<h2> 4.配置默认JDK</h2>
+
+<p>由于一些Linux的发行版中已经存在默认的JDK，如OpenJDK等。所以为了使得我们刚才安装好的JDK版本能成为默认的JDK版本，我们还要进行下面的配置。<br/>
+执行下面的命令：</p>
+
+<pre><code>sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk7/bin/java 300
+sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk7/bin/javac 300
+</code></pre>
+
+<p> 注意：如果以上两个命令出现找不到路径问题，只要重启一下计算机在重复上面两行代码就OK了。</p>
+
+<p>执行下面的代码可以看到当前各种JDK版本和配置：</p>
+
+<pre><code>sudo update-alternatives --config java
+</code></pre>
+
+<h2> 5.测试</h2>
+
+<p>打开一个终端，输入下面命令：</p>
+
+<pre><code>java -version
+</code></pre>
+
+<p>显示结果：</p>
+
+<pre><code>java version "1.7.0_05"
+Java(TM) SE Runtime Environment (build 1.7.0_05-b05)
+Java HotSpot(TM) Server VM (build 23.1-b03, mixed mode)
+</code></pre>
+
+<p>这表示java命令已经可以运行了。</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu 下搭建 Android 开发环境(图文)]]></title>
+    <link href="http://dawndiy.github.com/archives/153"/>
+    <updated>2012-07-31T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/build-android-development-environment-in-ubuntu</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>随着智能手机、平板电脑等越来越普及，现在的移动平台开发越来越火，IOS、Android等等，以前一直没有开发过移动平台的应用，然而网上的N多教程全是Windows平台的，而我却坚持这Linux桌面，那么这么新鲜、这么火、这么有前景的开发，我也先起个头，把环境搭建起来先。</p>
+
+<h2>1.安装JDK</h2>
+
+<p>请看这里 > <a href="http://www.dawndiy.com/archives/155" title="Linux 下安装配置 JDK7">《Linux 下安装配置 JDK7》</a></p>
+
+<h2>2.安装Eclipse</h2>
+
+<p>现在Eclipse已经出4.2版本，并且官方也已经将4.x版作为默认的下载版本了，大家可以自己选择，下面给出4.x和3.7.x的下载链接：</p>
+
+<p><strong>Eclipse Juno (4.2)：</strong><br/>
+Windows    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32.zip">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32-x86_64.zip">64-bit</a><br/>
+Mac    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-macosx-cocoa.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-macosx-cocoa-x86_64.tar.gz">64-bit</a><br/>
+Linux    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk-x86_64.tar.gz">64-bit</a><strong><br/>
+</strong></p>
+
+<p><strong>Eclipse Indigo (3.7)：</strong><br/>
+Windows    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-win32.zip">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-win32-x86_64.zip">64-bit</a><br/>
+Mac    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-macosx-cocoa.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-macosx-cocoa-x86_64.tar.gz">64-bit</a><br/>
+Linux    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk-x86_64.tar.gz">64-bit</a></p>
+
+<p>下载后解压到本地直接都可以使用了（在配置好JDK的前提下）。</p>
+
+<h2>3.下载安装 Android SDK</h2>
+
+<p>先下载好最新的 Android SDK Package。这里我给出下载地址：</p>
+
+<p>Platform</p>
+
+<p>Package</p>
+
+<p>Size</p>
+
+<p>MD5 Checksum</p>
+
+<p>Windows</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-windows.zip">android-sdk_r20.0.1-windows.zip</a></p>
+
+<p>90370975 bytes</p>
+
+<p>5774f536892036f87d3bf6502862cea5</p>
+
+<p><a href="http://dl.google.com/android/installer_r20.0.1-windows.exe">installer_r20.0.1-windows.exe</a> (Recommended)</p>
+
+<p>70486979 bytes</p>
+
+<p>a8df28a29c7b8598e4c50f363692256d</p>
+
+<p>Mac OS X (intel)</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-macosx.zip">android-sdk_r20.0.1-macosx.zip</a></p>
+
+<p>58217336 bytes</p>
+
+<p>cc132d04bc551b23b0c507cf5943df57</p>
+
+<p>Linux (i386)</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-linux.tgz">android-sdk_r20.0.1-linux.tgz</a></p>
+
+<p>82607616 bytes</p>
+
+<p>cd7176831087f53e46123dd91551be32</p>
+
+<p>官网下载地址：</p>
+
+<p>下载好后当然是解压了，解压到您的工作目录，这个目录就是今后使用SDK的目录：</p>
+
+<pre><code>tar zvxf android-sdk_r20.0.1-linux.tgz
+</code></pre>
+
+<p>解压找到 tools 目录下的 android 后如图：</p>
+
+<p><img src="http://i.imgur.com/qtV6C.png" title="2012-07-31 10:08:30的屏幕截图" alt="" /></p>
+
+<p> </p>
+
+<p>这个就是 Android SDK Manager，你可以通过这个来配置、管理和下载最新的SDK。</p>
+
+<p>首先我们先通过 Android SDK Manager 来添加平台和包，打开 Android SDK Manager 后勾选你需要的工具和包，这里 Android SDK Manager 会默认为您勾选它所推荐的包，您只需要点击下载安装就可以了。如图：</p>
+
+<p><img src="http://i.imgur.com/kZRDG.png" title="2012-07-31 10:11:13的屏幕截图" alt="" /></p>
+
+<h2>4.配置 Android SDK 开发调试环境</h2>
+
+<p>在这里我们是要配置开发调试环境，以便我们在控制台能够很好的使用 SDK 。如果你只是希望使用 Eclipse 来做 Android 开发的话，这里也可以省略。不过我还是觉得控制台挺好的，虽然一片片的看着头晕，呵呵。</p>
+
+<p>首先配置环境变量，和配置 JDK 一样。运行一下代码来配置环境变量：</p>
+
+<pre><code>gedit ~/.bashrc
+</code></pre>
+
+<p>在文件的最末端添加下面内容：</p>
+
+<pre><code># Android SDK
+export ANDROID_SDK=/home/dawndiy/workspace/android/android-sdk-linux
+export PATH=$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH
+</code></pre>
+
+<p>当然， “ANDROID_SDK=” 后面的内容当然是你自己的 SDK 所在的目录啦，千万别照搬啊，上面的可是我电脑上的。修改好了以后记得保存，最后运行一下：</p>
+
+<pre><code>source ~/.bashrc
+</code></pre>
+
+<p> </p>
+
+<p>————更新————-</p>
+
+<p>==这里是后来添加上的==</p>
+
+<p>在之后的使用中我发现在控制台使用  adb 命令正常，但是有的时候需要 root 权限的时候我们再使用 sudo adb 的时候居然会提示 找不到 adb 命令。后来我找到了解决方法，这里说明一下：</p>
+
+<pre><code>cd /usr/bin
+rm -rf adb
+sudo ln -s /home/dawndiy/workspace/android/android-sdk-linux/platform-tools/adb
+</code></pre>
+
+<p>这样就可以解决在 sudo 下也可以使用 adb 了，如果 fastboot 也有这样的情况，一样解决！</p>
+
+<p>—————————–</p>
+
+<p> </p>
+
+<h2>5.安装 ADT(Android Development Tools) 插件</h2>
+
+<p>打开 Eclipse，选择 <strong>Help</strong> > <strong>Install New Software…</strong>.</p>
+
+<p>点击 <strong>Add</strong>，在 <strong>Name</strong> 输入 “ADT Plugin” 作为名字，在 <strong>Location</strong> 输入 “https://dl-ssl.google.com/android/eclipse/”(不要引号)，如图：</p>
+
+<p><img src="http://i.imgur.com/jPRY9.png" title="2012-07-31 12:50:46的屏幕截图" alt="" /></p>
+
+<p>添加好插件地址后，在 <strong>Work with</strong> 中选择刚才添加的插件地址，然后等待一会儿下面就会出现需要安装的插件。选择需要安装的插件后点击安装即可。如图：</p>
+
+<p><img src="http://i.imgur.com/7Moeo.png" title="2012-07-31 12:57:59的屏幕截图" alt="" /></p>
+
+<p>接下来就是等待下载安装，安装后了以后重启Eclipse即安装完成。</p>
+
+<h2>6.配置 ADT 插件</h2>
+
+<p>这里可能重启Eclipse后就会弹出ADT的配置对话框，如果没有弹出的话下面会介绍。</p>
+
+<p>弹出的对话框如图，只需要把前面安装好的 Android SDK 的目录填入 <strong>Location</strong> 中就可以了。</p>
+
+<p><img src="http://i.imgur.com/tssKQ.png" title="2012-07-31 13:15:48的屏幕截图" alt="" /></p>
+
+<p>然后弹出一个问你是否愿意想Google反馈使用信息的对话框，Yes or No 随便，然后 Finish。</p>
+
+<p><strong>如果没有弹出ADT配置对话框，那么我们如下操作来配置。</strong></p>
+
+<p>打开 Eclipse ，选择 <strong>Window</strong> > <strong>Preferences…</strong> 来打开选项面板。</p>
+
+<p>在左侧选择 <strong>Android</strong> ，在右侧面板中找到 <strong>SDK Location</strong> 点击 <strong>Browse…</strong> 来选择你前面安装的SDK目录，最后点击 <strong>Apply</strong> 即可。如图：</p>
+
+<p><img src="http://i.imgur.com/9zpfS.png" title="2012-07-31 13:27:51的屏幕截图" alt="" /></p>
+
+<p>这样您的ADT就基本配置完成了。最后为了保证您的插件是最新的，可以选择 <strong>Help</strong> > <strong>Check for Updates</strong> 让Eclipse自动检测需要更新的组件来更新。</p>
+
+<h2>7.新建 AVD(android vitural device)</h2>
+
+<p>开发的时候当然需要一台设备来做测试，Android SDK 的工具中提供了 Android 虚拟设备的功能，能够在本地虚拟一台 Android 设备。在正式开发之前，我们需要配置新建一个 AVD ，当然你可以使用前面安装好的 Android SDK Manager 来新建，这里我们也可以直接在已经配置好了的Eclipse里面进行添加。</p>
+
+<p>选择 <strong>Windows > AVD Manager</strong> 点击 <strong>New</strong> 来新建一台 AVD ，然后在里面配备相应的参数，如图：</p>
+
+<p><img src="http://i.imgur.com/3ypIG.png" title="2012-07-31 13:46:19的屏幕截图" alt="" /></p>
+
+<p>点击 <strong>Create AVD</strong> 完成。</p>
+
+<p>你可以在新建完成后在 AVD Manager 里面运行您刚才新建的虚拟设备，附上几幅图：</p>
+
+<p><img src="http://i.imgur.com/xpi9z.png" title="2012-07-31 14:07:46的屏幕截图" alt="" /></p>
+
+<p><img src="http://i.imgur.com/Hp9T3.png" title="2012-07-31 14:11:01的屏幕截图" alt="" /></p>
+
+<h2>8.新建 Android 项目</h2>
+
+<p>打开 Eclipse ， <strong>File > New > Other…</strong> 选择 Android Application Project 后，就会出现向导对话框，然后更具向导填好相关信息，最后就可以生成一个 Android 项目，如图：</p>
+
+<p><img src="http://i.imgur.com/ndSpv.png" title="2012-07-31 16:20:49的屏幕截图" alt="" /></p>
+
+<p>填写应用名、项目名、包名等信息，还有选择构建的SDK版本。</p>
+
+<p><img src="http://i.imgur.com/wZGpZ.png" title="2012-07-31 14:21:57的屏幕截图" alt="" /></p>
+
+<p>设置应用的图标：</p>
+
+<p><img src="http://i.imgur.com/HjUCR.png" title="2012-07-31 14:23:03的屏幕截图" alt="" /></p>
+
+<p><img src="http://i.imgur.com/2CK0b.png" title="2012-07-31 14:25:32的屏幕截图" alt="" /></p>
+
+<p>完成新建 Android 项目：</p>
+
+<p><img src="http://i.imgur.com/ISKJf.png" title="2012-07-31 16:14:08的屏幕截图" alt="" /></p>
+
+<p>项目建立好后，默认给出的是一个示例，我们直接运行一下看能否运行，点击工具栏的绿色运行按钮或者键盘 Ctrl F11 。运行效果如下：</p>
+
+<p><img src="http://i.imgur.com/fl8sA.png" title="2012-07-31 16:13:23的屏幕截图" alt="" /></p>
+
+<p>这样，我们的环境就配置完成了！</p>
+
+<h2>9.总结</h2>
+
+<p>一直都想去尝试开发一款自己的Android程序，但是一直都没有去学，趁今天下午有时间，参考了官方的文档，自己摸索的搭建了一下开发环境，算一个开头。接下来就慢慢的学习吧～ Over………………….</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(4)–布局管理(Alignment)]]></title>
+    <link href="http://dawndiy.github.com/archives/127"/>
+    <updated>2012-07-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-4- layout-management-alignment</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面我们学习了HBox和VBox这对灵活的布局器，今天再来学习一个非常灵活的布局管理器——Alignment 。Alignment名为对齐布局管理，顾名思义，它是主要是用来管理部件对齐和子部件大小的。Alignment在对于需要更具Window等部件大小变化而变化的子部件对齐来说，使用非常方面。所以对于制作一款体验较好的应用程序来说，值得学习使用Alignment来管理子部件的对齐和大小。</p>
+
+<h2>1.介绍</h2>
+
+<p>这次先不上图了，先来讲解一下Alignment的相关功能。<br/>
+使用Alignment的时候应该注意，Alignment只能为其添加一个子部件，也就是说只能add一个widget。那一个部件怎么对齐？所以，我们通常配合VBox和HBox（<a href="http://www.dawndiy.com/archives/107" title="PyGtk学习笔记(3)–布局管理(VBox, HBox)">PyGtk学习笔记(3)–布局管理(VBox, HBox)</a>）来使用。详细说，就是我们把需要的部件添加Box中后，再把Box交给Alignment来管理它的子部件的对齐和大小。这样就可以构建美观的UI了。</p>
+
+<p>Alignment类的概要：</p>
+
+<pre><code>class gtk.Alignment(gtk.Bin):
+    gtk.Alignment(xalign=0.0, yalign=0.0, xscale=0.0, yscale=0.0)
+
+    def set(xalign, yalign, xscale, yscale)
+
+    def set_padding(padding_top, padding_bottom, padding_left, padding_right)
+
+    def get_padding()
+</code></pre>
+
+<p> Alignment的继承关系：</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Bin
+           -- gtk.Alignment
+</code></pre>
+
+<p>构造函数：</p>
+
+<pre><code>gtk.Alignment(xalign=0.0, yalign=0.0, xscale=0.0, yscale=0.0)
+</code></pre>
+
+<p><strong><code>xalign</code></strong> :</p>
+
+<p>数值表示子部件左边的空闲位置占全部水平空闲位置的百分比。数值从0.0到1.0，0表示子部件左对齐，1表示子部件右对齐。默认0.0。</p>
+
+<p><strong><code>yalign</code></strong> :</p>
+
+<p>数值表示子部件上边的空闲位置占全部垂直空闲位置的百分比。数值从0.0到1.0，0表示子部件顶对齐，1表示子部件底对齐。默认0.0。</p>
+
+<p><strong><code>xscale</code></strong> :</p>
+
+<p>数值表示子部件占全部水平位置的百分比。数值从0.0到1.0，0表示子部件最小宽度，1表示子部件最大宽度。默认0.0。</p>
+
+<p><strong><code>yscale</code></strong> :</p>
+
+<p>数值表示子部件占全部垂直位置的百分比。数值从0.0到1.0，0表示子部件最小高度，1表示子部件最大高度。默认0.0。</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的Alignment对象。</p>
+
+<p>其他函数：</p>
+
+<pre><code>set_padding(padding_top, padding_bottom, padding_left, padding_right)
+</code></pre>
+
+<p>这个函数是用来设置边距的，也就是说Alignment管理的子部件和外出部件的上、下、左、右的边距。</p>
+
+<h2>2.实例详解</h2>
+
+<p>看实在的，来举一个例子看一看。先上图：</p>
+
+<p>[![][3]][3]如图所示，上面的按钮是使用了Alignment布局管理来控制其大小和对齐的。下面是完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Alignment layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class AlignLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("Alignment Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        btn1 = gtk.Button("btn1")
+        btn2 = gtk.Button("btn2")
+        btn3 = gtk.Button("btn3")
+
+        vbox = gtk.VBox(True,0)
+        vbox.add(btn1)
+        vbox.add(btn2)
+        vbox.add(btn3)
+
+        align = gtk.Alignment(0.5,1,0.7,0)  # 子部件左边空余50%的空闲空间（居中），子部件以最大高度占满垂直空间，子部件宽度为水平空间的70%
+
+        align.add(vbox)
+        self.window.add(align)
+        self.window.connect("destroy",gtk.main_quit)
+        self.window.show_all()
+
+if __name__ == "__main__":
+    al = AlignLC()
+    gtk.main()
+</code></pre>
+
+<p>因为Alignment只能为其添加一个子部件的特性，所以我们配合使用了VBox。在VBox一个共有3个Button，然后把VBox添加至Alignment内。其中的关键是Alignment实例化的时候其中的参数。参照前面讲的构造函数参数的介绍和代码中我注释的内容，第一个 0.5 表示VBox中的三个Button左边的空间占全部空闲空间的50%,这样也达到了居中的效果。第二个 1 表示的是，垂直方向上三个Button顶部的空间为全部空闲空间，也就是说底部距离为0。第三个 0.7 表示三个Button的总宽度为水平宽度的70%。最后一个 0 表示三个Button的高度为其最小高度。<br/>
+而且这里使用Alignment布局管理来处理的大小和对齐方案都是适应窗口变化的，即使窗口重新调整，这些布局也能按照设置来适应当前变化。</p>
+
+<h2>3.其他示例</h2>
+
+<p>上面一个例子可能不好理解，下面我诺列一下参数变化后不同的效果：</p>
+
+<p>gtk.Alignment(0,0,0,0) 效果：</p>
+
+<p>[![][4]][4]</p>
+
+<p>gtk.Alignment(0.5,0,0,0) 效果：</p>
+
+<p>[![][5]][5]</p>
+
+<p>gtk.Alignment(0.5,0,0.5,0) 效果：</p>
+
+<p>[![][6]][6]</p>
+
+<p>gtk.Alignment(0.5,0.8,0.5,0) 效果：</p>
+
+<p>[![][7]][7]</p>
+
+<p>gtk.Alignment(0.5,0.8,0.5,0.5) 效果：</p>
+
+<p>[![][8]][8]</p>
+
+<p>gtk.Alignment(0,0,1,1) 效果：</p>
+
+<p>[![][9]][9]</p>
+
+<p>gtk.Alignment(0,0,1,1)<br/>
+align.set_padding(50,30,10,2)<br/>
+效果：</p>
+
+<p>[![][10]][10]</p>
+
+<p>前面没有讲到set_padding这个方法，这个方法也就设置边距，如上图就是设置顶部边距为50，底部边距为30，左边距为10，右边距为2的效果。</p>
+
+<p>Alignment是一个灵活的布局管理器，主要用于管理其子部件的大小尺寸和对齐方案。配合使用其他的布局管理，你可以用它来构造体验有好的UI。</p>
+
+<p>未完，待续……</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(3)–布局管理(VBox, HBox)]]></title>
+    <link href="http://dawndiy.github.com/archives/107"/>
+    <updated>2012-07-15T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-3-layout-manager-vbox-hbox</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面一次学习了一个很简单的Fixed布局方式，这次和DawnDIY来学习一下最常用的Box布局管理。Box布局管理分为VBox和HBox两种，在GTK 3中都把这两个合并为Box一个部件了，但是目前来说PyGtk还是GTK 2的，所以DawnDIY还是建议还是把VBox和HBox单独用，不用统一成Box，这样写出来的程序兼容性更好。GTK 3中的Box可以等到PyGObject比较普及、稳定的时候在用。毕竟还是那句话，用最稳定的，不用最新的。</p>
+
+<h2>1.介绍</h2>
+
+<p>下面我们先介绍一下VBox和HBox。</p>
+
+<p>VBox是一个垂直布局容器。这个容器里的部件都是以垂直排列的方式一个个竖直分布在容器中。<br/>
+HBox是一个水平布局容器。这个容器里的部件都是以水平排列的方式一个个横向分布在容器中。<br/>
+这两个布局容器是最常用的两个布局容器，我们可以配合使用他们来构建出你想要的UI。</p>
+
+<h2>2.VBox</h2>
+
+<p>先来看一个VBox的示例，上图先：</p>
+
+<p>[![][2]][2]</p>
+
+<p>从上面的图中可以看到，有两个按钮，一个大一个小，而且是竖直排列的。small和big按钮都是放在VBox中，然后在把VBox添加到主窗口中就行了，这个示例很简单，下面是完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# VBox layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class VBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("VBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(300,200)
+
+        vbox.add(btn1)
+        vbox.add(btn2)
+        self.window.add(vbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    vbox = VBoxLC()
+    vbox.main()
+</code></pre>
+
+<p>在分析代码之前我们先来看一下VBox类的概要：</p>
+
+<pre><code>class gtk.VBox(gtk.Box):
+    gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p>VBox的继承关系</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.VBox
+</code></pre>
+
+<p>构造函数：</p>
+
+<pre><code>gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p><strong><code>homogeneous</code></strong> :</p>
+
+<p>如果为 True 所有的子部件都会被分配均等的空间</p>
+
+<p><strong><code>spacing</code></strong> :</p>
+
+<p>垂直空间子部件之间的像素大小。</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 gtk.VBox</p>
+
+<p>如上面的例子来说，我们建立了一个 window ，然后建立了一个子部件空间分配不均等、子部件间隔5像素的VBox，然后建立两个Button，并且添加到VBox中，最后在把VBox添加到window中。最后就完成了一个简单的垂直排列的布局了。</p>
+
+<h2>3.HBox</h2>
+
+<p>接下来同样介绍一下HBox，它和VBox十分相似，不过它用来管理水平排列的布局，来看一个相同的示例，先上图：</p>
+
+<p>[![][3]][3]</p>
+
+<p>如上图，我们对比一下之前的图就很容易看出，HBox管理部件的水平排列布局，在很多应用程序的布局都是应用VBox和HBox配合使用来构建出丰富的UI来的。下面我们看一下完整代码，其实你很容易看出不同：</p>
+
+<pre><code>#!/usr/bin/env python
+
+# HBox layout container
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class HBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("HBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        hbox = gtk.HBox(False, 5)
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(200,150)
+
+        hbox.add(btn1)
+        hbox.add(btn2)
+        self.window.add(hbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    hbox = HBoxLC()
+    hbox.main()
+</code></pre>
+
+<p>下面同样是HBox类的概要和继承关系：</p>
+
+<pre><code>class gtk.HBox(gtk.Box):
+    gtk.HBox(homogeneous=False, spacing=0)
+
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.HBox
+</code></pre>
+
+<h2> 4.总结</h2>
+
+<p>学习了一下VBox和HBox，非茶有用的两个布局管理部件，而且配合使用可以构建出非常复杂的UI，其实DawnDIY觉得VBox和HBox很容易让人想到HTML中的和标签，它们可以自由的相互嵌套来构建UI。所以你有好的设计，可以尝试一下用VBox和HBox把它设计出来吧。</p>
+
+<p>今天学到这里，待续。。。</p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(2)–布局管理(Fixed)]]></title>
+    <link href="http://dawndiy.github.com/archives/97"/>
+    <updated>2012-07-07T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk study-notes-2 - layout-manager-fixed</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面介绍了一下PyGtk，使用它可以做Python的GUI程序。在前面的例子中我们只实现了一个简单的窗口，那么要在窗口里面加内容怎么办？一个add就行了，但是如果想要做出包含丰富的元素，那么就要使用布局管理了。写过GUI的人都知道布局管理是多么重要的事情。虽然现在有很好的Glade工具来实现直接拖拽的方式来进行UI设计，但是毕竟学习的过程还是要从最基本的学起，所以和我一起来学习PyGtk的布局管理吧。</p>
+
+<p>为了组织我们的部件,我们使用专门的不可见部件,其被称为布局容器 (layout containers)。PyGtk常用的有Alignment,Fixed,VBox和Table这四种布局容器(layout containers)。</p>
+
+<p>这里先学习一下简单的Fixed布局，Fixed容器将放置位置固定和尺寸固定的子部件。这个容器不进行自动的布局管理。在大多数的程序中,我们不用这种容器。但是在一些专门的领域,我们会用它。例如游戏,一些工作在图表中的专门程序,那些能被移动可变化尺寸的组件(就想在电子表格程序中的一个chart表一样),小型的学习示例等。</p>
+
+<p>A picture is worth a thousand words:</p>
+
+<p>[![][2]][2]</p>
+
+<p>如上图，我用了Fixed的布局方式，顺带展示一下Button的几种显示，完整代码如下：</p>
+
+<pre><code>#!/usr/bin/env python
+
+# Fixed layout container
+# PyGtk Study Notes By DawnDIY
+# http://dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class FixedLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("Fixed Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        btn1 = gtk.Button("Button1")
+        btn2 = gtk.Button("Button2")
+        btn3 = gtk.Button("Button3")
+        btn4 = gtk.Button(stock = gtk.STOCK_CLOSE)
+
+        btn2.set_sensitive(False)
+        btn3.set_size_request(80,40)
+
+        fixed = gtk.Fixed()
+
+        fixed.put(btn1, 30, 30)
+        fixed.put(btn2, 150, 30)
+        fixed.put(btn3, 30, 130)
+        fixed.put(btn4, 150, 130)
+
+        btn4.connect("clicked", gtk.main_quit)
+        self.window.connect("destroy", gtk.main_quit)
+
+        self.window.add(fixed)
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    fixedLC = FixedLC()
+    fixedLC.main()
+</code></pre>
+
+<p>分析上面的程序，我们设置了4个Button：btn1是一个普通的Button，btn2是一个不敏感的Button，btn3是一个自定义大小的Button，而btn4是根据GTK中的ITEM选择的一些常用Button。在窗口上，用Fixed容器来布局，调用put方法来向其添加部件，然后记得带上坐标就OK了，所以这种方法很简单，但是这中方法不通用，只能用在一些特殊界面中。</p>
+
+<p>下面详细说一下Fixed：</p>
+
+<p>Fixed的继承关系：</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Fixed
+</code></pre>
+
+<p>Fixed的概要：</p>
+
+<pre><code>class gtk.Fixed(gtk.Container):
+    gtk.Fixed()
+
+    def put(widget, x, y)
+
+    def move(widget, x, y)
+
+    def set_has_window(has_window)
+
+    def get_has_window()
+</code></pre>
+
+<p>这里列出的Fixed的函数。</p>
+
+<pre><code>def put(widget, x, y)
+</code></pre>
+
+<p>添加一个widget，x、y分别是该widget在fixed中的横、纵坐标。（只要是x、y都是指widget的左上角）</p>
+
+<pre><code>def move(widget, x, y)
+</code></pre>
+
+<p>移动一个widget，值得注意的是这里的widget一定要是已经添加的fixed中的widget，如果不是已经添加的，这个函数将不起任何作用。x、y分别是这个子widget需要移动到的坐标</p>
+
+<pre><code>def set_has_window(has_window)
+</code></pre>
+
+<p><code>set_has_window</code>()方法指定根据has_window的值来决定是否创建一个单独的window。如果has_window的值为Ture，则fixed会创建它自己的单独的window。在默认情况下，has_window的值是False并且fixed会被建立在一个没有独立的window中。这个方法必须使用在fixed还没有实现的时候，例如，在window创建后立即使用。</p>
+
+<pre><code>def get_has_window()
+</code></pre>
+
+<p>如果fixed拥有自己独立的window则返回True，否则返回False。</p>
+
+<p> </p>
+
+<p>这就是Fixed布局容器，只用坐标定位的简单布局，虽然不常用，但也是一个简单的布局，适用于一些小型示例中。这次就先学这么多，和大家分享这写。</p>
+
+<p>待续布局容器。。。</p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(1)&#8211;初窥PyGtk]]></title>
+    <link href="http://dawndiy.github.com/archives/72"/>
+    <updated>2012-07-07T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk study-notes-1 - early-glimpse-pygtk</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>之前一直在学习Python，Python确实是一门非常简练的编程语言。然而学习了一段时间后，用Python怎么做GUI程序呢，那这里有一个很好的GUI库可以使用，就是PyGtk。PyGtk是Gtk 的Python绑定版本，使用这个GUI可以方便的设计GUI程序。而且对比我之前用过的Java-Gnome，这个方便多了。所以要做GUI程序，值得学习一下PyGtk的使用，在此记录下自己的学习笔记分享给大家。</p>
+
+<h2>1.PyGtk简介</h2>
+
+<p><a href="http://zh.wikipedia.org/wiki/PyGTK" title="PyGtk Wiki">PyGtk</a>是一套用<a href="http://zh.wikipedia.org/wiki/Python" title="Python Wiki">Python</a>封装的GTK 的图形库，通过Python编程语言使用PyGtk图形库可以轻松的写出GUI程序。它是GNOME项目的一部分。PyGTK是基于LGPL许可之下的免费软件。其原始作者是James Henstridge。PyGTK非常容易使用,对于速成原型法,它是相当理想的。普遍地认为,PyGTK是最流行的GTK 库封装中的一种。</p>
+
+<p>其中PyGtk包含几个模块：GObject、ATK、GTK、Pango、Cairo、Clade<br/>
+GObject是基类,它为PyGTK所以类提供通用的属性和函数。</p>
+
+<ul>
+<li>ATK 是一个提供辅助功能的工具包。该工具包提供了帮助残障人士使用计算机的各种工具。</li>
+<li>GTK 是用户界面模块。</li>
+<li>Pango是一个用于处理文本和国际化的库。</li>
+<li>Cairo是一个用于创建2D矢量模型的库。</li>
+<li>Glade是用来从XML描述中构建GUI界面。</li>
+</ul>
+
+
+<p>如果你是Linux用户的话，不必担心安装配置问题，目前大部分Linux发行版中都包含了Python、PyGtk，所以直接用就行了。</p>
+
+<h2>2.从一个简单示例开始</h2>
+
+<p>先上图，接下来的程序效果如下图：</p>
+
+<p>[![][4]][4]</p>
+
+<p>很简单的一个窗口，下面是实现它的完整代码：</p>
+
+<pre><code>#!/usr/bin/python
+#-*- encoding:utf-8 -*-
+#建立一个窗口
+
+import gtk
+class PyApp(gtk.Window):
+    def __init__(self):
+        super(PyApp, self).__init__()
+        self.set_title("PyGtk")
+        self.set_size_request(250, 150)
+        self.set_position(gtk.WIN_POS_CENTER)
+
+        self.connect("destroy", gtk.main_quit)
+
+        self.show()
+
+    def main(self):
+        gtk.main()
+
+print __name__
+if __name__ == "__main__":
+    pyapp = PyApp()
+    pyapp.main()
+</code></pre>
+
+<p>使用PyGtk当然要有一定的Python基础，把上述代码保存为pygtkwin.py，在控制台执行如下命令就能看到一个窗口了。</p>
+
+<pre><code>python pygtkwin.py
+</code></pre>
+
+<p>简单分析一下代码：</p>
+
+<pre><code>import gtk
+</code></pre>
+
+<p>这里是导入PyGtk的gtk模块。</p>
+
+<pre><code>self.set_title("PyGtk")
+self.set_size_request(250, 150)
+self.set_position(gtk.WIN_POS_CENTER)
+</code></pre>
+
+<p>这里的PyApp继承至GTK的窗口类，即gtk.Window。上面的set分别是设置窗口标题、窗口尺寸、窗口位置。</p>
+
+<pre><code>self.connect("destroy", gtk.main_quit)
+</code></pre>
+
+<p>这里的connect是把该类的destroy事件绑定到gtk.main_quit方法上。效果就是点击窗口的关闭按钮，就会销毁整个装口。</p>
+
+<pre><code>self.show()
+</code></pre>
+
+<p>用来现实这个窗口。</p>
+
+<pre><code>gtk.main()
+</code></pre>
+
+<p>使用于启动GTK的循环，来保持窗口的运行。</p>
+
+<p>到此，你就算初识PyGtk了。我也是在学习的过程，记录下自己的学习笔记和大家一起分享学习。待续…</p>
+
+<p>一些有用的网站：<br/>
+Python官网：<br/>
+PyGtk官网：</p>
+
+<p><strong>以后 PyGtk/PyGObject 学习笔记的代码全部在 github 上管理，地址：</strong></p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+</feed>

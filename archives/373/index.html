@@ -1,0 +1,232 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>PyGTK or PyGObject - 一个人的世界</title>
+    <meta name="author" content="DawnDIY">
+    
+	<meta name="description" content="本来是写应该开始用PyGObject来代替PyGTK的，结果扯了很多自己的经历，呵呵，我的博客不能只有技术文章啊，也要点扯淡的东西！
+——————————– 最初是在Linux的GNOME桌面下认识了GTK ，后来为了能在Linux桌面下开发桌面应用就一直在学习GTK ，起初我只会C/C &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="一个人的世界" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        DawnDIY
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/DawnDIY" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/DawnDIYSoft" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">PyGTK or PyGObject</h2>
+	<div class="entry-content"><h1></h1>
+
+<p>本来是写应该开始用PyGObject来代替PyGTK的，结果扯了很多自己的经历，呵呵，我的博客不能只有技术文章啊，也要点扯淡的东西！<br/>
+——————————–</p>
+
+<p>最初是在Linux的GNOME桌面下认识了GTK ，后来为了能在Linux桌面下开发桌面应用就一直在学习GTK ，起初我只会C/C 和Java。经过一番查阅对于GTK 的开发还是C的文献比较多，那就看吧、学吧。。。后来看的没心思啦，可能本来我C/C 用的就比较少，好多库不熟悉，后来就没看了。想在Linux桌面开发的愿望也就搁置在一旁啦。</p>
+
+<p>但是后来我发现了 Java-Gnome ，也就是GTK 的Java绑定版本，不过一样中文文献资料非常少，那就英文的吧，又不是啃啃看不懂。刚好那时候Java天天在手上用，非常习惯，在加上之前看过的GTK 的一些教程文章，我又燃起了当初开发桌面应用的热情，刚好那时候还自己学了一项新技术，就是面向对象的数据库–db4o，然后一起结合起来完成了我的第一个正式的Linux的桌面应用。</p>
+
+<p>在Linux下开发当然想做跨平台嘛，不过悲剧来了，我这才发现使用 Java-Gnome 开发的程序不能直接在 Windows 平台上使用。后来的后来越来越发现 Java-Gnome 的一些缺点。首先开源软件的通病–更新缓慢，官方现在 Java-Gnome 的最新版本是 4.1.2 。而且按照官方的说法要到 4.2 才算正式版。而且现在已经 GTK 3 了，Java-Gnome 还只是支持GTK 2 。我也一直没有看到有什么要更新的动静。所以我之前还在抱怨我用Glade3做的UI文件用Java-Gnome解析不了，非要用Glade2来做UI才能用。这一点也证实了 Java-Gnome不支持GTK 3 。所以我的桌面应用又搁浅啦~</p>
+
+<p>在大二的时候，老师出了一道有意思的ACM题目给我们做，当时记得我用C 写了几十行的代码才解决，结果老师介绍有一个叫Python的语言，5行搞定，我当时眼前就一亮，马上去找资料学习，发现 Python 真是方便，而且是解释型的语言，调试起来非常方便。对于我来说更重要的是学习这类语言让我想起来我学的第一门编程语言–QBasic。所以Python让我找到了当时最初学习编程的热情，后来就怀抱着这个热情学习Python到现在。</p>
+
+<p>当然，Python让我相见恨晚，非常喜欢这种风格和简洁的语言，后来同样学习了 PyGTK 。所以有了我的PyGTK学习笔记，我想认真学习一下，然后重写我那一波三折的项目，等到成熟了我就会正是发布。学习嘛，我当然是看官网资料咯，但是刚开始去了解 PyGTK的时候我也注意到了 PyGObject ，但是我当时没有放在心上，因为目前 PyGTK 的资料还是挺多的，所以让我忽视了 PyGObject 但是不断学习，就会不断发现。现在正的了解到确实向PyGObject会成为未来的替代品，官方就是这么说的，而且目前的PyGTK是只支持GTK 2的，想要用 Python 来写 GTK 3的应用应该用 PyGObject ，而且在 Gnome 上翻译的时候也发现所有的代码都是用”from gi.repository import Gtk”，而不是以前的”import gtk”了，看到这里我自己想想应该向前看看嘛~所以呢，以后，当然我的 <strong>学习笔记</strong> 会继续随笔写一写，以后的都会围绕 PyGObject 来写。而且看到 Fedora 早就说要在最新发行版里面默认Python3了，不仅如此，Ubuntu 也宣布在最新的发行版里会默认安装Python3 。 这样更说明我要多多向前看啊。所以以后的学习Python/PyGTK/PyGObject的笔记都会用python3 。</p>
+
+<p>在这里先写一个简单的使用Python开发GTK 3的示例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#!/usr/bin/python</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">gi.repository</span> <span class="kn">import</span> <span class="n">Gtk</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">MyWindow</span><span class="p">(</span><span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="p">):</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class='line'>        <span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Hello World&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Click Here&quot;</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;clicked&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_button_clicked</span><span class="p">)</span>
+</span><span class='line'>        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">on_button_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+</span><span class='line'>        <span class="k">print</span> <span class="s">&quot;Hello World&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">win</span> <span class="o">=</span> <span class="n">MyWindow</span><span class="p">()</span>
+</span><span class='line'><span class="n">win</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;delete-event&quot;</span><span class="p">,</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">main_quit</span><span class="p">)</span>
+</span><span class='line'><span class="n">win</span><span class="o">.</span><span class="n">show_all</span><span class="p">()</span>
+</span><span class='line'><span class="n">Gtk</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>图片这次不上了，因为自己试过一遍才是最好的体会！！！！</p>
+
+<p>More: https://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html (English)</p>
+
+<p>因为这段时间一直准备那个什么***|考试，每天也只能睡觉前看看自己感兴趣的东西，而且偷个懒上个网更新一下博客~呵呵~</p>
+
+<p>PS：本来就是要说一下以后用PyGObject和Python3的，结果扯了这么一大堆！！！ over~</p>
+
+<p> </p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/archives/373#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    DawnDIY
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'DawnDIY';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

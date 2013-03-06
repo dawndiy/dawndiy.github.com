@@ -1,0 +1,369 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ubuntu 下搭建 Android 开发环境(图文) - 一个人的世界</title>
+    <meta name="author" content="DawnDIY">
+    
+	<meta name="description" content="随着智能手机、平板电脑等越来越普及，现在的移动平台开发越来越火，IOS、Android等等，以前一直没有开发过移动平台的应用，然而网上的N多教程全是Windows平台的，而我却坚持这Linux桌面，那么这么新鲜、这么火、这么有前景的开发，我也先起个头，把环境搭建起来先。 1.安装JDK 请看这里 &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="一个人的世界" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        DawnDIY
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/DawnDIY" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/DawnDIYSoft" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">Ubuntu 下搭建 Android 开发环境(图文)</h2>
+	<div class="entry-content"><h1></h1>
+
+<p>随着智能手机、平板电脑等越来越普及，现在的移动平台开发越来越火，IOS、Android等等，以前一直没有开发过移动平台的应用，然而网上的N多教程全是Windows平台的，而我却坚持这Linux桌面，那么这么新鲜、这么火、这么有前景的开发，我也先起个头，把环境搭建起来先。</p>
+
+<h2>1.安装JDK</h2>
+
+<p>请看这里 > <a href="http://www.dawndiy.com/archives/155" title="Linux 下安装配置 JDK7">《Linux 下安装配置 JDK7》</a></p>
+
+<h2>2.安装Eclipse</h2>
+
+<p>现在Eclipse已经出4.2版本，并且官方也已经将4.x版作为默认的下载版本了，大家可以自己选择，下面给出4.x和3.7.x的下载链接：</p>
+
+<p><strong>Eclipse Juno (4.2)：</strong><br/>
+Windows    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32.zip">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32-x86_64.zip">64-bit</a><br/>
+Mac    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-macosx-cocoa.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-macosx-cocoa-x86_64.tar.gz">64-bit</a><br/>
+Linux    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-linux-gtk-x86_64.tar.gz">64-bit</a><strong><br/>
+</strong></p>
+
+<p><strong>Eclipse Indigo (3.7)：</strong><br/>
+Windows    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-win32.zip">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-win32-x86_64.zip">64-bit</a><br/>
+Mac    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-macosx-cocoa.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-macosx-cocoa-x86_64.tar.gz">64-bit</a><br/>
+Linux    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk.tar.gz">32-bit</a>    <a href="http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops/R-3.7.2-201202080800/eclipse-SDK-3.7.2-linux-gtk-x86_64.tar.gz">64-bit</a></p>
+
+<p>下载后解压到本地直接都可以使用了（在配置好JDK的前提下）。</p>
+
+<h2>3.下载安装 Android SDK</h2>
+
+<p>先下载好最新的 Android SDK Package。这里我给出下载地址：</p>
+
+<p>Platform</p>
+
+<p>Package</p>
+
+<p>Size</p>
+
+<p>MD5 Checksum</p>
+
+<p>Windows</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-windows.zip">android-sdk_r20.0.1-windows.zip</a></p>
+
+<p>90370975 bytes</p>
+
+<p>5774f536892036f87d3bf6502862cea5</p>
+
+<p><a href="http://dl.google.com/android/installer_r20.0.1-windows.exe">installer_r20.0.1-windows.exe</a> (Recommended)</p>
+
+<p>70486979 bytes</p>
+
+<p>a8df28a29c7b8598e4c50f363692256d</p>
+
+<p>Mac OS X (intel)</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-macosx.zip">android-sdk_r20.0.1-macosx.zip</a></p>
+
+<p>58217336 bytes</p>
+
+<p>cc132d04bc551b23b0c507cf5943df57</p>
+
+<p>Linux (i386)</p>
+
+<p><a href="http://dl.google.com/android/android-sdk_r20.0.1-linux.tgz">android-sdk_r20.0.1-linux.tgz</a></p>
+
+<p>82607616 bytes</p>
+
+<p>cd7176831087f53e46123dd91551be32</p>
+
+<p>官网下载地址：</p>
+
+<p>下载好后当然是解压了，解压到您的工作目录，这个目录就是今后使用SDK的目录：</p>
+
+<pre><code>tar zvxf android-sdk_r20.0.1-linux.tgz
+</code></pre>
+
+<p>解压找到 tools 目录下的 android 后如图：</p>
+
+<p><img src="http://i.imgur.com/qtV6C.png" title="2012-07-31 10:08:30的屏幕截图" alt="" /></p>
+
+<p> </p>
+
+<p>这个就是 Android SDK Manager，你可以通过这个来配置、管理和下载最新的SDK。</p>
+
+<p>首先我们先通过 Android SDK Manager 来添加平台和包，打开 Android SDK Manager 后勾选你需要的工具和包，这里 Android SDK Manager 会默认为您勾选它所推荐的包，您只需要点击下载安装就可以了。如图：</p>
+
+<p><img src="http://i.imgur.com/kZRDG.png" title="2012-07-31 10:11:13的屏幕截图" alt="" /></p>
+
+<h2>4.配置 Android SDK 开发调试环境</h2>
+
+<p>在这里我们是要配置开发调试环境，以便我们在控制台能够很好的使用 SDK 。如果你只是希望使用 Eclipse 来做 Android 开发的话，这里也可以省略。不过我还是觉得控制台挺好的，虽然一片片的看着头晕，呵呵。</p>
+
+<p>首先配置环境变量，和配置 JDK 一样。运行一下代码来配置环境变量：</p>
+
+<pre><code>gedit ~/.bashrc
+</code></pre>
+
+<p>在文件的最末端添加下面内容：</p>
+
+<pre><code># Android SDK
+export ANDROID_SDK=/home/dawndiy/workspace/android/android-sdk-linux
+export PATH=$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH
+</code></pre>
+
+<p>当然， “ANDROID_SDK=” 后面的内容当然是你自己的 SDK 所在的目录啦，千万别照搬啊，上面的可是我电脑上的。修改好了以后记得保存，最后运行一下：</p>
+
+<pre><code>source ~/.bashrc
+</code></pre>
+
+<p> </p>
+
+<p>————更新————-</p>
+
+<p>==这里是后来添加上的==</p>
+
+<p>在之后的使用中我发现在控制台使用  adb 命令正常，但是有的时候需要 root 权限的时候我们再使用 sudo adb 的时候居然会提示 找不到 adb 命令。后来我找到了解决方法，这里说明一下：</p>
+
+<pre><code>cd /usr/bin
+rm -rf adb
+sudo ln -s /home/dawndiy/workspace/android/android-sdk-linux/platform-tools/adb
+</code></pre>
+
+<p>这样就可以解决在 sudo 下也可以使用 adb 了，如果 fastboot 也有这样的情况，一样解决！</p>
+
+<p>—————————–</p>
+
+<p> </p>
+
+<h2>5.安装 ADT(Android Development Tools) 插件</h2>
+
+<p>打开 Eclipse，选择 <strong>Help</strong> > <strong>Install New Software…</strong>.</p>
+
+<p>点击 <strong>Add</strong>，在 <strong>Name</strong> 输入 “ADT Plugin” 作为名字，在 <strong>Location</strong> 输入 “https://dl-ssl.google.com/android/eclipse/”(不要引号)，如图：</p>
+
+<p><img src="http://i.imgur.com/jPRY9.png" title="2012-07-31 12:50:46的屏幕截图" alt="" /></p>
+
+<p>添加好插件地址后，在 <strong>Work with</strong> 中选择刚才添加的插件地址，然后等待一会儿下面就会出现需要安装的插件。选择需要安装的插件后点击安装即可。如图：</p>
+
+<p><img src="http://i.imgur.com/7Moeo.png" title="2012-07-31 12:57:59的屏幕截图" alt="" /></p>
+
+<p>接下来就是等待下载安装，安装后了以后重启Eclipse即安装完成。</p>
+
+<h2>6.配置 ADT 插件</h2>
+
+<p>这里可能重启Eclipse后就会弹出ADT的配置对话框，如果没有弹出的话下面会介绍。</p>
+
+<p>弹出的对话框如图，只需要把前面安装好的 Android SDK 的目录填入 <strong>Location</strong> 中就可以了。</p>
+
+<p><img src="http://i.imgur.com/tssKQ.png" title="2012-07-31 13:15:48的屏幕截图" alt="" /></p>
+
+<p>然后弹出一个问你是否愿意想Google反馈使用信息的对话框，Yes or No 随便，然后 Finish。</p>
+
+<p><strong>如果没有弹出ADT配置对话框，那么我们如下操作来配置。</strong></p>
+
+<p>打开 Eclipse ，选择 <strong>Window</strong> > <strong>Preferences…</strong> 来打开选项面板。</p>
+
+<p>在左侧选择 <strong>Android</strong> ，在右侧面板中找到 <strong>SDK Location</strong> 点击 <strong>Browse…</strong> 来选择你前面安装的SDK目录，最后点击 <strong>Apply</strong> 即可。如图：</p>
+
+<p><img src="http://i.imgur.com/9zpfS.png" title="2012-07-31 13:27:51的屏幕截图" alt="" /></p>
+
+<p>这样您的ADT就基本配置完成了。最后为了保证您的插件是最新的，可以选择 <strong>Help</strong> > <strong>Check for Updates</strong> 让Eclipse自动检测需要更新的组件来更新。</p>
+
+<h2>7.新建 AVD(android vitural device)</h2>
+
+<p>开发的时候当然需要一台设备来做测试，Android SDK 的工具中提供了 Android 虚拟设备的功能，能够在本地虚拟一台 Android 设备。在正式开发之前，我们需要配置新建一个 AVD ，当然你可以使用前面安装好的 Android SDK Manager 来新建，这里我们也可以直接在已经配置好了的Eclipse里面进行添加。</p>
+
+<p>选择 <strong>Windows > AVD Manager</strong> 点击 <strong>New</strong> 来新建一台 AVD ，然后在里面配备相应的参数，如图：</p>
+
+<p><img src="http://i.imgur.com/3ypIG.png" title="2012-07-31 13:46:19的屏幕截图" alt="" /></p>
+
+<p>点击 <strong>Create AVD</strong> 完成。</p>
+
+<p>你可以在新建完成后在 AVD Manager 里面运行您刚才新建的虚拟设备，附上几幅图：</p>
+
+<p><img src="http://i.imgur.com/xpi9z.png" title="2012-07-31 14:07:46的屏幕截图" alt="" /></p>
+
+<p><img src="http://i.imgur.com/Hp9T3.png" title="2012-07-31 14:11:01的屏幕截图" alt="" /></p>
+
+<h2>8.新建 Android 项目</h2>
+
+<p>打开 Eclipse ， <strong>File > New > Other…</strong> 选择 Android Application Project 后，就会出现向导对话框，然后更具向导填好相关信息，最后就可以生成一个 Android 项目，如图：</p>
+
+<p><img src="http://i.imgur.com/ndSpv.png" title="2012-07-31 16:20:49的屏幕截图" alt="" /></p>
+
+<p>填写应用名、项目名、包名等信息，还有选择构建的SDK版本。</p>
+
+<p><img src="http://i.imgur.com/wZGpZ.png" title="2012-07-31 14:21:57的屏幕截图" alt="" /></p>
+
+<p>设置应用的图标：</p>
+
+<p><img src="http://i.imgur.com/HjUCR.png" title="2012-07-31 14:23:03的屏幕截图" alt="" /></p>
+
+<p><img src="http://i.imgur.com/2CK0b.png" title="2012-07-31 14:25:32的屏幕截图" alt="" /></p>
+
+<p>完成新建 Android 项目：</p>
+
+<p><img src="http://i.imgur.com/ISKJf.png" title="2012-07-31 16:14:08的屏幕截图" alt="" /></p>
+
+<p>项目建立好后，默认给出的是一个示例，我们直接运行一下看能否运行，点击工具栏的绿色运行按钮或者键盘 Ctrl F11 。运行效果如下：</p>
+
+<p><img src="http://i.imgur.com/fl8sA.png" title="2012-07-31 16:13:23的屏幕截图" alt="" /></p>
+
+<p>这样，我们的环境就配置完成了！</p>
+
+<h2>9.总结</h2>
+
+<p>一直都想去尝试开发一款自己的Android程序，但是一直都没有去学，趁今天下午有时间，参考了官方的文档，自己摸索的搭建了一下开发环境，算一个开头。接下来就慢慢的学习吧～ Over………………….</p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/archives/153#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    DawnDIY
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'DawnDIY';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>

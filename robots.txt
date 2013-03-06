@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://dawndiy.github.com/sitemap.xml 

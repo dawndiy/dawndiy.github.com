@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PyGtk | 一个人的世界]]></title>
+  <link href="http://dawndiy.github.com/blog/categories/pygtk/atom.xml" rel="self"/>
+  <link href="http://dawndiy.github.com/"/>
+  <updated>2013-03-07T02:03:26+08:00</updated>
+  <id>http://dawndiy.github.com/</id>
+  <author>
+    <name><![CDATA[DawnDIY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(7)–工具栏]]></title>
+    <link href="http://dawndiy.github.com/archives/336"/>
+    <updated>2012-09-20T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-7-toolbar</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>在前面的Gtk学习中我们构造界面用到 Menu 菜单，菜单当然是让我们能方便的选择某一项功能，但是如果一个我们经常用到的菜单项在二级菜单下面，或者更深，这样一来就显得非常不方便啦。所以我们又有了更显而易见的控件– Toolbar （工具栏）。是的，工具栏通常把我们经常使用的按钮及其功能列出在一栏上面，这样就可以轻松通过鼠标的一次点击即可。就像IE、Firefox的前进和后退、地址栏、刷新等，这几个都是我们浏览网页最常用的几个功能，所以这写浏览器也会将这几个按钮列出在一栏里面供快捷使用。所以，如果你的软件功能繁多，但是想为用户提供几个常用到的快捷按钮，那就使用 Toolbar 吧。</p>
+
+<h2>一.介绍</h2>
+
+<p>一个简单的 Toolbar 就是这样的，如下图：[![][2]][2]</p>
+
+<p>上面的 <strong>工具栏</strong> 中包含了4个按钮和一个分隔符，并且倒数第二个按钮是灰色的，不可用状态。OK，了解了上面的 Toolbar 长什么样，接下来我们就来实现它。</p>
+
+<h2>二.Toolbar（工具栏）</h2>
+
+<h3>Toolbar的继承关系：</h3>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Toolbar
+</code></pre>
+
+<h3>Toolbar类的概要：</h3>
+
+<pre><code>class gtk.Toolbar(gtk.Container):
+    gtk.Toolbar()
+
+    def insert(item, pos)
+
+    def get_item_index(item)
+
+    def get_n_items()
+
+    def get_nth_item(n)
+
+    def get_drop_index(x, y)
+
+    def set_drop_highlight_item(tool_item, index)
+
+    def set_show_arrow(show_arrow)
+
+    def get_show_arrow()
+
+    def get_relief_style()
+
+    def append_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data=None)
+
+    def prepend_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def insert_stock(stock_id, tooltip_text, tooltip_private_text, callback, user_data, position)
+
+    def append_space()
+
+    def prepend_space()
+
+    def insert_space(position)
+
+    def remove_space(position)
+
+    def append_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def prepend_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def append_widget(widget, tooltip_text, tooltip_private_text)
+
+    def prepend_widget(widget, tooltip_text, tooltip_private_text)
+
+    def insert_widget(widget, tooltip_text, tooltip_private_text, position)
+
+    def set_orientation(orientation)
+
+    def set_style(style)
+
+    def set_icon_size(icon_size)
+
+    def set_tooltips(enable)
+
+    def unset_style()
+
+    def unset_icon_size()
+
+    def get_orientation()
+
+    def get_style()
+
+    def get_icon_size()
+
+    def get_tooltips()
+</code></pre>
+
+<h3> 构造方法：</h3>
+
+<pre><code>gtk.Toolbar()
+</code></pre>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 Toolbar （工具栏）对象</p>
+
+<h3>常用方法：</h3>
+
+<h3>gtk.Toolbar.insert</h3>
+
+<pre><code>def insert(item, pos)
+</code></pre>
+
+<p>  <strong><code>item</code></strong> :</p>
+
+<p>一个 <code>gtk.ToolItem</code> 对象</p>
+
+<p><strong><code>pos</code></strong> :</p>
+
+<p>新项目的位置（0，1，2 …）</p>
+
+<p><strong>注：</strong><br/>
+这个方法在PyGTK 2.4以及以上版本才可用。</p>
+
+<p>通过 insert() 方法可以在工具栏中添加 ToolItem ，用 pos 来确定其位置，如果 pos 为0，则表示该 Item 在工具栏的起始位置。</p>
+
+<h3>gtk.Toolbar.set_style``</h3>
+
+<pre><code>def set_style(style)
+</code></pre>
+
+<p><strong><code>style</code></strong> :</p>
+
+<p>样式，包括：  <code>gtk.TOOLBAR_ICONS</code> （仅图标）, <code>gtk.TOOLBAR_TEXT</code>（仅文字）, <code>gtk.TOOLBAR_BOTH（全部）</code> or <code>gtk.TOOLBAR_BOTH_HORIZ（水平全部）</code></p>
+
+<p>通过过 <code>set_style</code>() 方法，我们可以为 Toolbar 设置显示样式。</p>
+
+<h3>gtk.Toolbar.set_icon_size</h3>
+
+<pre><code>def set_icon_size(icon_size)
+</code></pre>
+
+<p>  <strong><code>icon_size</code></strong> :</p>
+
+<p>图标的尺寸。``</p>
+
+<p>通过 <code>set_icon_size</code>() 方法可以设置显示在 Toolbar 上的图标的尺寸。icon_size 的值如下：</p>
+
+<ul>
+<li><code>gtk.ICON_SIZE_MENU</code></li>
+<li><code>gtk.ICON_SIZE_SMALL_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_LARGE_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_BUTTON</code></li>
+<li><code>gtk.ICON_SIZE_DND</code>, or</li>
+<li><code>gtk.ICON_SIZE_DIALOG</code></li>
+</ul>
+
+
+<h2>三.完整代码</h2>
+
+<p>了解了上面的基本方法，我们就可以看实现前面的图的完整代码啦。</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Toolbar
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class Toolbar:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Toolbar")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        toolbar = gtk.Toolbar()
+        #工具栏仅显示图标
+        toolbar.set_style(gtk.TOOLBAR_ICONS)
+
+        #工具栏图标的尺寸
+        toolbar.set_icon_size(gtk.ICON_SIZE_LARGE_TOOLBAR) 
+
+        #新建工具栏按钮
+        newtb = gtk.ToolButton(gtk.STOCK_NEW)
+        opentb = gtk.ToolButton(gtk.STOCK_OPEN)
+        sep = gtk.SeparatorToolItem()  #工具栏的分隔符
+        closetb = gtk.ToolButton(gtk.STOCK_CLOSE)
+        exittb = gtk.ToolButton(gtk.STOCK_QUIT)
+
+        exittb.connect("clicked", gtk.main_quit)
+
+        #设置CLOSE按钮不可用
+        closetb.set_sensitive(False)
+
+        #添加工具栏按钮
+        toolbar.insert(newtb, 0)
+        toolbar.insert(opentb, 1)
+        toolbar.insert(sep, 2)
+        toolbar.insert(closetb, 3)
+        toolbar.insert(exittb, 4)
+
+        vbox = gtk.VBox()
+        vbox.pack_start(toolbar, False, False, 0)
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    toolbar = Toolbar()
+    gtk.main()
+</code></pre>
+
+<p>按照我在代码中给出的注释就很容易懂啦。然后动手改一改 icon_size 、style 等等，你会找到你想要的效果的！打完手工，待续。。。。。。</p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(6)–菜单]]></title>
+    <link href="http://dawndiy.github.com/archives/290"/>
+    <updated>2012-08-24T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-6-menu</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面一直都在讲布局，布局学的差不多了，使用前面讲的所有布局管理已经可以设计出复杂的UI了。那么接下来来学习一下GUI程序中最常用的控件之一——菜单。</p>
+
+<h2>1.介绍</h2>
+
+<p>菜单栏(Menubar)是GTK中使用最多的控件之一，在菜单栏上(Menubar)上我们可以添加各式各样的菜单(Menu)和菜单项(MenuItem)。其中菜单项大致分为这几种：普通菜单项(MenuItem)、带图标的菜单项(ImageMenuItem)、带复选框的菜单项(CheckMenuItem)、分级菜单项 和 分割线(SeparatorMenuItem)。</p>
+
+<p>先上一张图，看一看一个最普通的菜单栏：</p>
+
+<p>[![][2]][2]</p>
+
+<p>上面图就是一个普通的菜单栏，我们在菜单栏上面设置了四个菜单，接下来就分别详细介绍一下常用的几种菜单项。</p>
+
+<h2>2.普通菜单</h2>
+
+<p>普通菜单就是形式只有文字的最基本菜单，如图：</p>
+
+<p>[![][3]][3]</p>
+
+<p>如图，我们在菜单栏上设置了一个File1菜单，然后我们在File1下设置了3个菜单项和一个分割线。这就是一个最基本的菜单了。下面我们来看看它的代码。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+
+        # 普通菜单
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("File_1")
+        filem.set_submenu(filemenu)
+
+        new = gtk.MenuItem("New")
+        filemenu.append(new)
+
+        open = gtk.MenuItem("Open")
+        filemenu.append(open)
+
+        sep = gtk.SeparatorMenuItem()
+        filemenu.append(sep)
+
+        exit = gtk.MenuItem("Exit")
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        Mb.append(filem)
+</code></pre>
+
+<p>如上面代码 首先新建一个菜单栏(MenuBar)</p>
+
+<pre><code>filemenu = gtk.Menu()
+</code></pre>
+
+<p>接下来要设置一个显示在菜单栏上的菜单(Menu)和菜单项(MenuItem)</p>
+
+<pre><code>filemenu = gtk.Menu()  # 菜单
+filem = gtk.MenuItem("File_1")   # 菜单项，并添加快捷键(ALT 1)
+filem.set_submenu(filemenu)    # 将菜单项设置到菜单上，显示在菜单栏上
+</code></pre>
+
+<p>然后我们就要为这个菜单添加更多的菜单项了</p>
+
+<pre><code>new = gtk.MenuItem("New")
+filemenu.append(new)   # 把菜单项添加到菜单下
+
+open = gtk.MenuItem("Open")
+filemenu.append(open)
+</code></pre>
+
+<p>添加了菜单项，我们的目的当然是要使得点击菜单能够<strong>触发事件</strong>，那么我们就可以用connect</p>
+
+<pre><code>exit = gtk.MenuItem("Exit")
+exit.connect("activate", gtk.main_quit)   # 为exit菜单项添加事件
+filemenu.append(exit)
+</code></pre>
+
+<p>当然，为了很好的把菜单项分类，我们可以使用分割线</p>
+
+<pre><code>sep = gtk.SeparatorMenuItem()
+filemenu.append(sep)
+</code></pre>
+
+<p>一个最普通的菜单就是这样的~</p>
+
+<h2>3.带图标的菜单</h2>
+
+<p>在GUI程序里，图标往往给人带来请切感，也使得菜单更加美观。惯例，先上个图：</p>
+
+<p><a href="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items"><img src="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items" alt="" /></a></p>
+
+<p>这些丰富的图标都是GTK自带的，GTK为菜单、按钮、工具栏等等都提供了一套原生的图标，所以可以很方便的使用。下面我们来看一下带图标的菜单是如何用代码实现的。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+        # 带图标的菜单
+        imagemenu = gtk.Menu()
+        filei = gtk.MenuItem("File_2")
+        filei.set_submenu(imagemenu)
+
+        newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+        newi.set_label("New")
+        imagemenu.append(newi)
+
+        openi = gtk.ImageMenuItem(gtk.STOCK_OPEN)
+        openi.set_label("Open")
+        imagemenu.append(openi)
+
+        sep2 = gtk.SeparatorMenuItem()
+        imagemenu.append(sep2)
+
+        exiti = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+        exiti.set_label("Exit")
+        exiti.connect("activate", gtk.main_quit)
+        imagemenu.append(exiti)
+
+                Mb.append(filei)
+</code></pre>
+
+<p>看到代码，我们发现其实就是使用了 <strong>gtk.ImageMenuItem</strong> 这个函数。</p>
+
+<p>首先我们新建带图标的菜单项，并且给它设置图标</p>
+
+<pre><code>newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+</code></pre>
+
+<p>其中的 <strong>gtk.STOCK_NEW</strong> 是GTK预设的 NEW 图标。<strong>有关所有的GTK预设的 STOCK 请看这里：<a href="http://developer.gnome.org/pygtk/stable/gtk-stock-items.html" title="Gtk Stock Items">Stock Items</a></strong></p>
+
+<p>然后是设置菜单项显示的文字(标签)，并添加至菜单中</p>
+
+<pre><code>newi.set_label("New")
+imagemenu.append(newi)
+</code></pre>
+
+<p>这就是带图标的菜单，让你的菜单更美观~</p>
+
+<h2>4.带复选框的菜单</h2>
+
+<p>在GUI程序中常常用菜单选项来对程序进行设置，那么带复选框的菜单就可以完成这样的功能，先上图：</p>
+
+<p>[![][6]][6]</p>
+
+<p>如图，New选项目前是勾选上的，其他的都没有勾选，这样的菜单我们就能够拿来当设置选项来用。下面看一下代码有什么不同。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code>Mb = gtk.MenuBar()
+        # 带复选框的菜单项
+        checkmenu = gtk.Menu()
+        filec = gtk.MenuItem("File_3")
+        filec.set_submenu(checkmenu)
+
+        newc = gtk.CheckMenuItem("New")
+        newc.set_active(True)       # 激活复选框
+        checkmenu.append(newc)
+
+        openc = gtk.CheckMenuItem("Open")
+        openc.set_active(False) 
+        checkmenu.append(openc)
+
+        sep3 = gtk.SeparatorMenuItem()
+        checkmenu.append(sep3)
+
+        exitc = gtk.CheckMenuItem("Exit")
+        checkmenu.append(exitc)
+
+        Mb.append(filec)
+</code></pre>
+
+<p>如上面的代码，我们通过以下代码来新建菜单项，这就是和别的菜单项不同的地方</p>
+
+<pre><code>newc = gtk.CheckMenuItem("New")
+</code></pre>
+
+<p>接下来是设置<strong>复选框的状态</strong>，默认复选框是没有被选中的。</p>
+
+<pre><code>newc.set_active(True) # 激活复选框
+</code></pre>
+
+<p>同样，选中后触发的实际依然是用<strong>connect</strong>。</p>
+
+<h2>5.分级的菜单项</h2>
+
+<p>在菜单下的菜单项非常多的时候我们往往使用分割线来把不同类型的菜单项分隔开来，但是更多的菜单项的时候就会显得一个菜单下面老长一条的，显得没有调理，这时候我们可以使用分级菜单，按照菜单项分类，把同一类的归于一个菜单项的子项。这样就既有调理，又美观。看一个分级菜单的图先(图没截好，但你懂得~ ^.<sup>)。</sup></p>
+
+<p>[![][7]][7]</p>
+
+<p>其实分级的菜单也就是菜单一层套一层实现的。</p>
+
+<p><strong>部分代码：</strong></p>
+
+<pre><code># 多级菜单
+        topmenu = gtk.Menu()    
+        files = gtk.MenuItem("File_4")
+        files.set_submenu(topmenu)
+
+        submenu = gtk.Menu()    # 上层
+
+        news = gtk.MenuItem("New")
+        news.set_submenu(submenu)
+
+        sub1 = gtk.MenuItem("Sub1")     # 子层
+        sub2 = gtk.MenuItem("Sub2")
+        sub3 = gtk.MenuItem("Sub3")
+
+        submenu.append(sub1)
+        submenu.append(sub2)
+        submenu.append(sub3)
+
+        topmenu.append(news)
+
+        self.append(filem)
+        self.append(filei)
+        self.append(filec)
+        self.append(files)
+</code></pre>
+
+<p>在代码中我们能够发现的是，其实就是在普通的菜单的基础上再套了一层菜单。通俗的讲，首先我们建立菜单，然后将菜单项添加至菜单，随后再一个个向其中添加菜单项(MenuItem)，然后分级菜单在这里不同的是，本要一个个添加菜单项(MenuItem)的时候这里添加的确实菜单(Menu)，然后在向这个子菜单(Menu)添加菜单项(MenuItem)，这样就达到了多级菜单的效果了。</p>
+
+<h2>6.菜单快捷键</h2>
+
+<p>在前面普通菜单的地方，我们提到了菜单的快捷键，在菜单项标签设置的时候，在字母或数字前加“_”即可，这样的话，在当前活动窗口按下 <strong>ALT</strong> 键不放，下划线就会出现，这时你再按下相应的字母和数字就能激活该菜单了。设置如下：</p>
+
+<pre><code>files = gtk.MenuItem("File_4")
+</code></pre>
+
+<p>值得注意的是，要是把这种下划线的快捷方式用在菜单里面的每个菜单项也能用吗？答案是当然能用，但是不同的是，你首先要使用 <strong>ALT 字母</strong> 先激活打开菜单，然后再 <strong>按下相应字母</strong> 才能选中该菜单项，<strong>而不能</strong>在当前窗口之间按 <strong>ALT 字母</strong> 来触发。</p>
+
+<p>那有什么方法能够是的在整个窗口全局的情况下，不用进入菜单直接按快捷方式就能完成点击某个菜单子项的功能吗？答案依然是可以的，使用<strong> add_accelerator</strong> 这个函数就能实现。</p>
+
+<p>先看效果图：</p>
+
+<p>[![][8]][8]</p>
+
+<p>如图我们设置的快捷键是 <strong>Ctrl Q</strong> ,同时Exit的标签我们也用“_Exit”设置过了，放在一起对比一下，下面是<strong>该例子的完整代码：</strong></p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Menu_accelerator
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class MenuTest(gtk.Window):
+    def __init__(self):
+        super(MenuTest, self).__init__()
+
+        self.set_title("Menu")
+        self.set_size_request(300,250)
+        self.set_position(gtk.WIN_POS_CENTER)
+
+        mb = gtk.MenuBar()
+
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("_File")
+        filem.set_submenu(filemenu)
+
+        agr = gtk.AccelGroup()
+        self.add_accel_group(agr)
+
+        exit = gtk.MenuItem("_Exit", agr)
+
+        key, mod = gtk.accelerator_parse("Q")
+        exit.add_accelerator("activate", agr, key, mod, gtk.ACCEL_VISIBLE)
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        mb.append(filem)
+
+        vbox = gtk.VBox(False, 2)
+        vbox.pack_start(mb, False, False, 0)
+
+        self.add(vbox)
+        self.connect("destroy", gtk.main_quit)
+        self.show_all()
+
+if __name__ == "__main__":
+    mt = MenuTest()
+    gtk.main()
+</code></pre>
+
+<p>看到代码中，比我们前面讲的多了一些东西。</p>
+
+<p>为了使用快捷键,我们先创建了一个全局的AccelGroup对象,它将在之后被使用</p>
+
+<pre><code>agr = gtk.AccelGroup()
+self.add_accel_group(agr)
+</code></pre>
+
+<p>在菜单项建立的时候，添加该菜单项的快捷方式属于那个AccelGroup对象</p>
+
+<pre><code>exit = gtk.MenuItem("_Exit", agr)
+</code></pre>
+
+<p>然后就是设置具体的快捷键了。</p>
+
+<pre><code>key, mod = gtk.accelerator_parse("Q")
+exit.add_accelerator("activate", agr, key, mod, gtk.ACCEL_VISIBLE)
+</code></pre>
+
+<p><strong>详细说一下几个函数:</strong></p>
+
+<h3>gtk.accelerator_parse</h3>
+
+<pre><code>def gtk.accelerator_parse(accelerator)
+</code></pre>
+
+<p>  <strong><code>accelerator</code></strong> :</p>
+
+<p>一个表示快捷键的字符串</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个包含快捷方式的 键值 和 修饰符 的 2元组</p>
+
+<h3>gtk.Widget.add_accelerator</h3>
+
+<pre><code>def add_accelerator(accel_signal, accel_group, accel_key, accel_mods, accel_flags)
+</code></pre>
+
+<p>  <strong><code>accel_signal</code></strong> :</p>
+
+<p>快捷键激活的控件信号</p>
+
+<p><strong><code>accel_group</code></strong> :</p>
+
+<p>控件快捷方式的组，加入它的顶层</p>
+
+<p><strong><code>accel_key</code></strong> :</p>
+
+<p>快捷方式的键值 如(‘q’)``</p>
+
+<p><strong><code>accel_mods</code></strong> :</p>
+
+<p>快捷键的修饰符</p>
+
+<p><strong><code>accel_flags</code></strong> :</p>
+
+<p>快捷键标识, 如 <code>gtk.ACCEL_VISIBLE</code></p>
+
+<p>运行上面的代码后你会发现，在当前活动的窗口下，直接按 ALT E 是没有效果的，窗口不会关闭，非要先按 Alt E 激活菜单再按E键就能关闭窗口，这是第一种快捷方式。然而我们加入了第二种后，不管有没有激活菜单，直接按下 Ctrl Q 即可关闭窗口，这就是两种不同的快捷方式的设置。</p>
+
+<h2>7.完整代码</h2>
+
+<p><strong>下面是前面讲到的四中菜单示例的完整代码：</strong></p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Menu
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+# 菜单条
+class Mb(gtk.MenuBar):
+    def __init__(self):
+        super(Mb,self).__init__()
+
+        # 普通菜单
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("File_1")
+        filem.set_submenu(filemenu)
+
+        new = gtk.MenuItem("New")
+        filemenu.append(new)
+
+        open = gtk.MenuItem("Open")
+        filemenu.append(open)
+
+        sep = gtk.SeparatorMenuItem()
+        filemenu.append(sep)
+
+        exit = gtk.MenuItem("Exit")
+        exit.connect("activate", gtk.main_quit)
+        filemenu.append(exit)
+
+        # 带图标的菜单
+        imagemenu = gtk.Menu()
+        filei = gtk.MenuItem("File_2")
+        filei.set_submenu(imagemenu)
+
+        newi = gtk.ImageMenuItem(gtk.STOCK_NEW)
+        newi.set_label("New")
+        imagemenu.append(newi)
+
+        openi = gtk.ImageMenuItem(gtk.STOCK_OPEN)
+        openi.set_label("Open")
+        imagemenu.append(openi)
+
+        sep2 = gtk.SeparatorMenuItem()
+        imagemenu.append(sep2)
+
+        exiti = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+        exiti.set_label("Exit")
+        exiti.connect("activate", gtk.main_quit)
+        imagemenu.append(exiti)
+
+        # 带复选框的菜单项
+        checkmenu = gtk.Menu()
+        filec = gtk.MenuItem("File_3")
+        filec.set_submenu(checkmenu)
+
+        newc = gtk.CheckMenuItem("New")
+        newc.set_active(True)       # 激活复选框
+        checkmenu.append(newc)
+
+        openc = gtk.CheckMenuItem("Open")
+        openc.set_active(False) 
+        checkmenu.append(openc)
+
+        sep3 = gtk.SeparatorMenuItem()
+        checkmenu.append(sep3)
+
+        exitc = gtk.CheckMenuItem("Exit")
+        checkmenu.append(exitc)
+
+        # 多级菜单
+        topmenu = gtk.Menu()    
+        files = gtk.MenuItem("File_4")
+        files.set_submenu(topmenu)
+
+        submenu = gtk.Menu()    # 上层
+
+        news = gtk.MenuItem("New")
+        news.set_submenu(submenu)
+
+        sub1 = gtk.MenuItem("Sub1")     # 子层
+        sub2 = gtk.MenuItem("Sub2")
+        sub3 = gtk.MenuItem("Sub3")
+
+        submenu.append(sub1)
+        submenu.append(sub2)
+        submenu.append(sub3)
+
+        topmenu.append(news)
+
+        self.append(filem)
+        self.append(filei)
+        self.append(filec)
+        self.append(files)
+class Win:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Menu")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        mb = Mb()
+        vbox = gtk.VBox(False, 2)       
+        vbox.pack_start(mb, False, False, 0)
+
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    win = Win()
+    gtk.main()
+</code></pre>
+
+<p>OK~菜单基本上就是这些了，今天学习到这里。。。待续。。。</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(5)–布局管理(Table)]]></title>
+    <link href="http://dawndiy.github.com/archives/186"/>
+    <updated>2012-07-31T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk study-notes-5- layout-management-table</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>这次学习一下一个简单的布局管理–Table。Table我说他简单是因为是一个“方方正正”的容器，和HTML中的标签类似，它使用于一些平面需要行和列排列的UI中。</p>
+
+<h2>1.介绍</h2>
+
+<p>Table可以用来很好的管理行和列对齐和布局的UI中，比如《计算器》、《五子棋》、《扫雷》等，这些程序的主界面都是许许多多的子部件方方正正的行列对齐地排列在一起的。说道这几个程序，你应该对Table有一定的猜想了吧。下面开始介绍。</p>
+
+<h3>Table类的概要：</h3>
+
+<pre><code>class gtk.Table(gtk.Container):
+    gtk.Table(rows=1, columns=1, homogeneous=False)
+
+    def resize(rows, columns)
+
+    def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+
+    def set_row_spacing(row, spacing)
+
+    def get_row_spacing(row)
+
+    def set_col_spacing(column, spacing)
+
+    def get_col_spacing(column)
+
+    def set_row_spacings(spacing)
+
+    def get_default_row_spacing()
+
+    def set_col_spacings(spacing)
+
+    def get_default_col_spacing()
+
+    def set_homogeneous(homogeneous)
+
+    def get_homogeneous()
+</code></pre>
+
+<h3></h3>
+
+<h3>Table的继承关系：</h3>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Table
+</code></pre>
+
+<h3> 构造方法：</h3>
+
+<pre><code>gtk.Table(rows=1, columns=1, homogeneous=False)
+</code></pre>
+
+<p>参数：</p>
+
+<p><strong><code>rows</code></strong> :</p>
+
+<p>行数</p>
+
+<p><strong><code>columns</code></strong> :</p>
+
+<p>列数</p>
+
+<p><strong><code>homogeneous</code></strong> :</p>
+
+<p>如果为True，所有的单元格都与最大的单元格尺寸相同</p>
+
+<p><em>Returns</em> :</p>
+
+<p><code>一个新的 gtk.Table 对象</code></p>
+
+<p>如果 rows 和 columns 没有赋值，默认为 1 。</p>
+
+<p><strong>注意：</strong><br/>
+这里的rows和columns意思是行数和列数，但在布局的时候我们如果把它们理解成分割线的话这样更好理解。因为下面attach这个方法中的一些参数是通过起始和结束来确定一个子控件的位置的，所以我们把行列抽象理解成分割线的话更容易理解构建。比如 rows =2 , columns = 2 , 那么它的布局应该是这样的：</p>
+
+<p>0               1                 2<br/>
+0 ———- ———- <br/>
+|                  |                 |<br/>
+1 ———- ———- <br/>
+|                  |                 |<br/>
+2 ———- ———-</p>
+
+<h3>主要方法：</h3>
+
+<p><strong>gtk.Table.attach</strong></p>
+
+<pre><code>def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+</code></pre>
+
+<p><strong><code>child</code></strong> :</p>
+
+<p>需要添加的控件</p>
+
+<p><strong><code>left_attach</code></strong> :</p>
+
+<p>子控件左部起始列号。（<strong>可以用上面的分割线来理解</strong>）</p>
+
+<p><strong><code>right_attach</code></strong> :</p>
+
+<p>子控件右部结束列号。</p>
+
+<p><strong><code>top_attach</code></strong> :</p>
+
+<p>子控件顶部起始列号。</p>
+
+<p><strong><code>bottom_attach</code></strong> :</p>
+
+<p>子控件底部结束列号。</p>
+
+<p><strong><code>xoptions</code></strong> :</p>
+
+<p>当 table 水平调整大小时，用于指定子控件的属性。默认值 <code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p><strong><code>yoptions</code></strong> :</p>
+
+<p>当 table 垂直调整大小时，用于指定子控件的属性。默认值 <code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p><strong><code>xpadding</code></strong> :</p>
+
+<p>添加控件的左侧和右侧的填充量，默认值 0</p>
+
+<p><strong><code>ypadding</code></strong> :</p>
+
+<p>添加控件的上侧和下侧的填充量，默认值 0</p>
+
+<p><em><code>xoptions</code></em> 和 <em><code>yoptions</code></em> 确定控件在水平和垂直方向上的扩展属性，默认值是：<code>gtk.FILL</code>|<code>gtk.EXPAND</code></p>
+
+<p>  <code>gtk.EXPAND</code></p>
+
+<p>table单元格将扩展占据分配的所有空闲空间。</p>
+
+<p><code>gtk.SHRINK</code></p>
+
+<p>控件随着table单元格收缩而收缩。</p>
+
+<p><code>gtk.FILL</code></p>
+
+<p>空间将会填充所有table单元格分配的空间。</p>
+
+<h2>2.示例</h2>
+
+<p>上面都是不实在的东西，下面来看一个例子，有图有真相，先上图：</p>
+
+<p>[![][2]][2]</p>
+
+<p>如图所示，你应该想到Table是怎么一个布局容器吧。接下来看一下完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Table layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class TableLC:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Table Layout Container")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        table = gtk.Table(4, 3, True)   # 4行3列
+        table.attach(gtk.Button("1"), 0, 1, 0, 1)
+        table.attach(gtk.Button("2"), 1, 2, 0, 1)
+        table.attach(gtk.Button("3"), 2, 3, 0, 1)
+        table.attach(gtk.Button("4"), 0, 1, 1, 2)
+        table.attach(gtk.Button("5"), 1, 2, 1, 2)
+        table.attach(gtk.Button("6"), 2, 3, 1, 2)
+        table.attach(gtk.Button("7"), 0, 1, 2, 3)
+        table.attach(gtk.Button("8"), 1, 2, 2, 3)
+        table.attach(gtk.Button("9"), 2, 3, 2, 3)
+        table.attach(gtk.Button("0"), 1, 2, 3, 4)
+
+        self.win.add(table)
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    tab = TableLC()
+    gtk.main()
+</code></pre>
+
+<p>在这个例子中，我们主要看的还是Table中子控件的布局方式，结合前面介绍的 table.attach 方法，我们首先通过 gtk.Table(4, 3, True)来建立了一个 4行 3列 的 table 。<br/>
+那么这些数字是怎么布局的呢？<br/>
+就添加数字“1”来说明，table.attach(gtk.Button(“1″), 0, 1, 0, 1) ，首先第一个参数就不说了；第二个参数 “0”表示控件从第0列起始；第三个参数“1”表示控件结束于第2列前；第四个参数“0”表示控件开始于第0行；第五个参数表示控件结束于第1行前。这样就确定了数字“1”的位置以及所占行列了。<br/>
+其他的也就都是一样的。</p>
+
+<p>那么我们多举些例子，改一下代码看看有什么效果。</p>
+
+<p>如果把数字“0”的布局改成：</p>
+
+<pre><code>table.attach(gtk.Button("0"), 1, 3, 3, 4)
+</code></pre>
+
+<p>效果如下：</p>
+
+<p>[![][3]][3]</p>
+
+<p>因为我将第二个参数和第三个参数改成了 1 , 3 。也就是说数字“0”是从第1列起始结束于第3列前。这样它就占据了2列的位置了。</p>
+
+<p>table.attach 还有四个参数没有讲到，下面我们继续修改一下代码。</p>
+
+<p>我们先说一下我们接下来要修改的目的：<br/>
+1.数字“1”上下分别设置边距为5，左右边距分别为10。<br/>
+2.数字“2”垂直方向设置为FILL，水平方向设置为EXPAND。<br/>
+3.数字“3”水平垂直方向均设置为<code>SHRINK</code>。</p>
+
+<p>那么我们修改的局部代码为：</p>
+
+<pre><code>table.attach(gtk.Button("1"), 0, 1, 0, 1, gtk.EXPAND|gtk.FILL, gtk.EXPAND|gtk.FILL, 10, 5)
+        table.attach(gtk.Button("2"), 1, 2, 0, 1, gtk.EXPAND, gtk.FILL)
+        table.attach(gtk.Button("3"), 2, 3, 0, 1, gtk.SHRINK, gtk.SHRINK)
+</code></pre>
+
+<p>效果：</p>
+
+<p>[![][4]][4]</p>
+
+<p>就是这样的。table.attach 后面几个参数，对于动态调整窗口时，控件的布局非常有用。认真参考上面我给出的 table.attach 的介绍，是能够理解的。</p>
+
+<p>OK，今天学到这里，使用这些布局已经能够构建很多UI了，下次学学别的，未完，待续…………..</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(4)–布局管理(Alignment)]]></title>
+    <link href="http://dawndiy.github.com/archives/127"/>
+    <updated>2012-07-29T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-4- layout-management-alignment</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面我们学习了HBox和VBox这对灵活的布局器，今天再来学习一个非常灵活的布局管理器——Alignment 。Alignment名为对齐布局管理，顾名思义，它是主要是用来管理部件对齐和子部件大小的。Alignment在对于需要更具Window等部件大小变化而变化的子部件对齐来说，使用非常方面。所以对于制作一款体验较好的应用程序来说，值得学习使用Alignment来管理子部件的对齐和大小。</p>
+
+<h2>1.介绍</h2>
+
+<p>这次先不上图了，先来讲解一下Alignment的相关功能。<br/>
+使用Alignment的时候应该注意，Alignment只能为其添加一个子部件，也就是说只能add一个widget。那一个部件怎么对齐？所以，我们通常配合VBox和HBox（<a href="http://www.dawndiy.com/archives/107" title="PyGtk学习笔记(3)–布局管理(VBox, HBox)">PyGtk学习笔记(3)–布局管理(VBox, HBox)</a>）来使用。详细说，就是我们把需要的部件添加Box中后，再把Box交给Alignment来管理它的子部件的对齐和大小。这样就可以构建美观的UI了。</p>
+
+<p>Alignment类的概要：</p>
+
+<pre><code>class gtk.Alignment(gtk.Bin):
+    gtk.Alignment(xalign=0.0, yalign=0.0, xscale=0.0, yscale=0.0)
+
+    def set(xalign, yalign, xscale, yscale)
+
+    def set_padding(padding_top, padding_bottom, padding_left, padding_right)
+
+    def get_padding()
+</code></pre>
+
+<p> Alignment的继承关系：</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Bin
+           -- gtk.Alignment
+</code></pre>
+
+<p>构造函数：</p>
+
+<pre><code>gtk.Alignment(xalign=0.0, yalign=0.0, xscale=0.0, yscale=0.0)
+</code></pre>
+
+<p><strong><code>xalign</code></strong> :</p>
+
+<p>数值表示子部件左边的空闲位置占全部水平空闲位置的百分比。数值从0.0到1.0，0表示子部件左对齐，1表示子部件右对齐。默认0.0。</p>
+
+<p><strong><code>yalign</code></strong> :</p>
+
+<p>数值表示子部件上边的空闲位置占全部垂直空闲位置的百分比。数值从0.0到1.0，0表示子部件顶对齐，1表示子部件底对齐。默认0.0。</p>
+
+<p><strong><code>xscale</code></strong> :</p>
+
+<p>数值表示子部件占全部水平位置的百分比。数值从0.0到1.0，0表示子部件最小宽度，1表示子部件最大宽度。默认0.0。</p>
+
+<p><strong><code>yscale</code></strong> :</p>
+
+<p>数值表示子部件占全部垂直位置的百分比。数值从0.0到1.0，0表示子部件最小高度，1表示子部件最大高度。默认0.0。</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的Alignment对象。</p>
+
+<p>其他函数：</p>
+
+<pre><code>set_padding(padding_top, padding_bottom, padding_left, padding_right)
+</code></pre>
+
+<p>这个函数是用来设置边距的，也就是说Alignment管理的子部件和外出部件的上、下、左、右的边距。</p>
+
+<h2>2.实例详解</h2>
+
+<p>看实在的，来举一个例子看一看。先上图：</p>
+
+<p>[![][3]][3]如图所示，上面的按钮是使用了Alignment布局管理来控制其大小和对齐的。下面是完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Alignment layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class AlignLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("Alignment Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        btn1 = gtk.Button("btn1")
+        btn2 = gtk.Button("btn2")
+        btn3 = gtk.Button("btn3")
+
+        vbox = gtk.VBox(True,0)
+        vbox.add(btn1)
+        vbox.add(btn2)
+        vbox.add(btn3)
+
+        align = gtk.Alignment(0.5,1,0.7,0)  # 子部件左边空余50%的空闲空间（居中），子部件以最大高度占满垂直空间，子部件宽度为水平空间的70%
+
+        align.add(vbox)
+        self.window.add(align)
+        self.window.connect("destroy",gtk.main_quit)
+        self.window.show_all()
+
+if __name__ == "__main__":
+    al = AlignLC()
+    gtk.main()
+</code></pre>
+
+<p>因为Alignment只能为其添加一个子部件的特性，所以我们配合使用了VBox。在VBox一个共有3个Button，然后把VBox添加至Alignment内。其中的关键是Alignment实例化的时候其中的参数。参照前面讲的构造函数参数的介绍和代码中我注释的内容，第一个 0.5 表示VBox中的三个Button左边的空间占全部空闲空间的50%,这样也达到了居中的效果。第二个 1 表示的是，垂直方向上三个Button顶部的空间为全部空闲空间，也就是说底部距离为0。第三个 0.7 表示三个Button的总宽度为水平宽度的70%。最后一个 0 表示三个Button的高度为其最小高度。<br/>
+而且这里使用Alignment布局管理来处理的大小和对齐方案都是适应窗口变化的，即使窗口重新调整，这些布局也能按照设置来适应当前变化。</p>
+
+<h2>3.其他示例</h2>
+
+<p>上面一个例子可能不好理解，下面我诺列一下参数变化后不同的效果：</p>
+
+<p>gtk.Alignment(0,0,0,0) 效果：</p>
+
+<p>[![][4]][4]</p>
+
+<p>gtk.Alignment(0.5,0,0,0) 效果：</p>
+
+<p>[![][5]][5]</p>
+
+<p>gtk.Alignment(0.5,0,0.5,0) 效果：</p>
+
+<p>[![][6]][6]</p>
+
+<p>gtk.Alignment(0.5,0.8,0.5,0) 效果：</p>
+
+<p>[![][7]][7]</p>
+
+<p>gtk.Alignment(0.5,0.8,0.5,0.5) 效果：</p>
+
+<p>[![][8]][8]</p>
+
+<p>gtk.Alignment(0,0,1,1) 效果：</p>
+
+<p>[![][9]][9]</p>
+
+<p>gtk.Alignment(0,0,1,1)<br/>
+align.set_padding(50,30,10,2)<br/>
+效果：</p>
+
+<p>[![][10]][10]</p>
+
+<p>前面没有讲到set_padding这个方法，这个方法也就设置边距，如上图就是设置顶部边距为50，底部边距为30，左边距为10，右边距为2的效果。</p>
+
+<p>Alignment是一个灵活的布局管理器，主要用于管理其子部件的大小尺寸和对齐方案。配合使用其他的布局管理，你可以用它来构造体验有好的UI。</p>
+
+<p>未完，待续……</p>
+
+<p> </p>
+
+<p> </p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PyGtk学习笔记(3)–布局管理(VBox, HBox)]]></title>
+    <link href="http://dawndiy.github.com/archives/107"/>
+    <updated>2012-07-15T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygtk-study-notes-3-layout-manager-vbox-hbox</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>前面一次学习了一个很简单的Fixed布局方式，这次和DawnDIY来学习一下最常用的Box布局管理。Box布局管理分为VBox和HBox两种，在GTK 3中都把这两个合并为Box一个部件了，但是目前来说PyGtk还是GTK 2的，所以DawnDIY还是建议还是把VBox和HBox单独用，不用统一成Box，这样写出来的程序兼容性更好。GTK 3中的Box可以等到PyGObject比较普及、稳定的时候在用。毕竟还是那句话，用最稳定的，不用最新的。</p>
+
+<h2>1.介绍</h2>
+
+<p>下面我们先介绍一下VBox和HBox。</p>
+
+<p>VBox是一个垂直布局容器。这个容器里的部件都是以垂直排列的方式一个个竖直分布在容器中。<br/>
+HBox是一个水平布局容器。这个容器里的部件都是以水平排列的方式一个个横向分布在容器中。<br/>
+这两个布局容器是最常用的两个布局容器，我们可以配合使用他们来构建出你想要的UI。</p>
+
+<h2>2.VBox</h2>
+
+<p>先来看一个VBox的示例，上图先：</p>
+
+<p>[![][2]][2]</p>
+
+<p>从上面的图中可以看到，有两个按钮，一个大一个小，而且是竖直排列的。small和big按钮都是放在VBox中，然后在把VBox添加到主窗口中就行了，这个示例很简单，下面是完整代码：</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# VBox layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class VBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("VBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(300,200)
+
+        vbox.add(btn1)
+        vbox.add(btn2)
+        self.window.add(vbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    vbox = VBoxLC()
+    vbox.main()
+</code></pre>
+
+<p>在分析代码之前我们先来看一下VBox类的概要：</p>
+
+<pre><code>class gtk.VBox(gtk.Box):
+    gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p>VBox的继承关系</p>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.VBox
+</code></pre>
+
+<p>构造函数：</p>
+
+<pre><code>gtk.VBox(homogeneous=False, spacing=0)
+</code></pre>
+
+<p><strong><code>homogeneous</code></strong> :</p>
+
+<p>如果为 True 所有的子部件都会被分配均等的空间</p>
+
+<p><strong><code>spacing</code></strong> :</p>
+
+<p>垂直空间子部件之间的像素大小。</p>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 gtk.VBox</p>
+
+<p>如上面的例子来说，我们建立了一个 window ，然后建立了一个子部件空间分配不均等、子部件间隔5像素的VBox，然后建立两个Button，并且添加到VBox中，最后在把VBox添加到window中。最后就完成了一个简单的垂直排列的布局了。</p>
+
+<h2>3.HBox</h2>
+
+<p>接下来同样介绍一下HBox，它和VBox十分相似，不过它用来管理水平排列的布局，来看一个相同的示例，先上图：</p>
+
+<p>[![][3]][3]</p>
+
+<p>如上图，我们对比一下之前的图就很容易看出，HBox管理部件的水平排列布局，在很多应用程序的布局都是应用VBox和HBox配合使用来构建出丰富的UI来的。下面我们看一下完整代码，其实你很容易看出不同：</p>
+
+<pre><code>#!/usr/bin/env python
+
+# HBox layout container
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class HBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("HBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        hbox = gtk.HBox(False, 5)
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(200,150)
+
+        hbox.add(btn1)
+        hbox.add(btn2)
+        self.window.add(hbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    hbox = HBoxLC()
+    hbox.main()
+</code></pre>
+
+<p>下面同样是HBox类的概要和继承关系：</p>
+
+<pre><code>class gtk.HBox(gtk.Box):
+    gtk.HBox(homogeneous=False, spacing=0)
+
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.HBox
+</code></pre>
+
+<h2> 4.总结</h2>
+
+<p>学习了一下VBox和HBox，非茶有用的两个布局管理部件，而且配合使用可以构建出非常复杂的UI，其实DawnDIY觉得VBox和HBox很容易让人想到HTML中的和标签，它们可以自由的相互嵌套来构建UI。所以你有好的设计，可以尝试一下用VBox和HBox把它设计出来吧。</p>
+
+<p>今天学到这里，待续。。。</p>
+
+<p> </p>
+]]></content>
+  </entry>
+  
+</feed>

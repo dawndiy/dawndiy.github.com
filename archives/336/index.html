@@ -1,0 +1,383 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>PyGtk学习笔记(7)–工具栏 - 一个人的世界</title>
+    <meta name="author" content="DawnDIY">
+    
+	<meta name="description" content="在前面的Gtk学习中我们构造界面用到 Menu 菜单，菜单当然是让我们能方便的选择某一项功能，但是如果一个我们经常用到的菜单项在二级菜单下面，或者更深，这样一来就显得非常不方便啦。所以我们又有了更显而易见的控件– Toolbar （工具栏）。是的， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="一个人的世界" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.ico" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+
+    <link href='http://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Amethysta' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+    <script type="text/javascript" src="/javascripts/jquery-tapir.js"></script>
+
+    <!-- remove or comment it to disable ajaxification -->   
+    <script src="/javascripts/ajaxify.js"></script>
+   
+    
+</head>
+
+
+<body>
+    <div id="wrapper">
+    <header id="header" class="inner"><!-- for more effects see _animate.scss -->
+<h1 class="animated bounceInDown">
+    <div id="headerbg">
+        DawnDIY
+    </div>
+</h1>
+<br>
+
+<ul id="social-links" style="text-align:center">
+  
+  <!-- GitHub -->
+  <li>
+  <a href="https://github.com/DawnDIY" class="github" title="Github"></a>
+  </li>
+  
+  
+  
+  
+  <!-- Twitter -->
+  <li>
+  <a href="http://www.twitter.com/DawnDIYSoft" class="twitter" title="Twitter"></a>
+  </li>
+  
+  
+  
+  
+  
+</ul>
+
+
+<!-- use full url including 'index.html' for navigation bar if you are using ajax -->
+<ul id="nav">
+	<li id="ajax"><a href="/index.html">Home</a></li>
+	<li id="ajax"><a href="/blog/archives/index.html">Archives</a></li>
+    <li><a href="/atom.xml">RSS</a></li>
+    
+    <li>
+    <div id="dark">
+        <form method="get" action="/search.html" id="search">
+            <input name="query" type="text" placeholder="Search..." x-webkit-speech />
+        </form>
+    </div>
+    </li>
+        
+</ul>
+
+
+
+
+</header>
+
+<div id="toload">
+<!-- begin toload --> 
+    <div id="content" class="inner">
+        <article class="post">
+	<h2 class="title">PyGtk学习笔记(7)–工具栏</h2>
+	<div class="entry-content"><h1></h1>
+
+<p>在前面的Gtk学习中我们构造界面用到 Menu 菜单，菜单当然是让我们能方便的选择某一项功能，但是如果一个我们经常用到的菜单项在二级菜单下面，或者更深，这样一来就显得非常不方便啦。所以我们又有了更显而易见的控件– Toolbar （工具栏）。是的，工具栏通常把我们经常使用的按钮及其功能列出在一栏上面，这样就可以轻松通过鼠标的一次点击即可。就像IE、Firefox的前进和后退、地址栏、刷新等，这几个都是我们浏览网页最常用的几个功能，所以这写浏览器也会将这几个按钮列出在一栏里面供快捷使用。所以，如果你的软件功能繁多，但是想为用户提供几个常用到的快捷按钮，那就使用 Toolbar 吧。</p>
+
+<h2>一.介绍</h2>
+
+<p>一个简单的 Toolbar 就是这样的，如下图：[![][2]][2]</p>
+
+<p>上面的 <strong>工具栏</strong> 中包含了4个按钮和一个分隔符，并且倒数第二个按钮是灰色的，不可用状态。OK，了解了上面的 Toolbar 长什么样，接下来我们就来实现它。</p>
+
+<h2>二.Toolbar（工具栏）</h2>
+
+<h3>Toolbar的继承关系：</h3>
+
+<pre><code>-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Toolbar
+</code></pre>
+
+<h3>Toolbar类的概要：</h3>
+
+<pre><code>class gtk.Toolbar(gtk.Container):
+    gtk.Toolbar()
+
+    def insert(item, pos)
+
+    def get_item_index(item)
+
+    def get_n_items()
+
+    def get_nth_item(n)
+
+    def get_drop_index(x, y)
+
+    def set_drop_highlight_item(tool_item, index)
+
+    def set_show_arrow(show_arrow)
+
+    def get_show_arrow()
+
+    def get_relief_style()
+
+    def append_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data=None)
+
+    def prepend_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def insert_stock(stock_id, tooltip_text, tooltip_private_text, callback, user_data, position)
+
+    def append_space()
+
+    def prepend_space()
+
+    def insert_space(position)
+
+    def remove_space(position)
+
+    def append_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def prepend_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def append_widget(widget, tooltip_text, tooltip_private_text)
+
+    def prepend_widget(widget, tooltip_text, tooltip_private_text)
+
+    def insert_widget(widget, tooltip_text, tooltip_private_text, position)
+
+    def set_orientation(orientation)
+
+    def set_style(style)
+
+    def set_icon_size(icon_size)
+
+    def set_tooltips(enable)
+
+    def unset_style()
+
+    def unset_icon_size()
+
+    def get_orientation()
+
+    def get_style()
+
+    def get_icon_size()
+
+    def get_tooltips()
+</code></pre>
+
+<h3> 构造方法：</h3>
+
+<pre><code>gtk.Toolbar()
+</code></pre>
+
+<p><em>Returns</em> :</p>
+
+<p>一个新的 Toolbar （工具栏）对象</p>
+
+<h3>常用方法：</h3>
+
+<h3>gtk.Toolbar.insert</h3>
+
+<pre><code>def insert(item, pos)
+</code></pre>
+
+<p>  <strong><code>item</code></strong> :</p>
+
+<p>一个 <code>gtk.ToolItem</code> 对象</p>
+
+<p><strong><code>pos</code></strong> :</p>
+
+<p>新项目的位置（0，1，2 …）</p>
+
+<p><strong>注：</strong><br/>
+这个方法在PyGTK 2.4以及以上版本才可用。</p>
+
+<p>通过 insert() 方法可以在工具栏中添加 ToolItem ，用 pos 来确定其位置，如果 pos 为0，则表示该 Item 在工具栏的起始位置。</p>
+
+<h3>gtk.Toolbar.set_style&#8220;</h3>
+
+<pre><code>def set_style(style)
+</code></pre>
+
+<p><strong><code>style</code></strong> :</p>
+
+<p>样式，包括：  <code>gtk.TOOLBAR_ICONS</code> （仅图标）, <code>gtk.TOOLBAR_TEXT</code>（仅文字）, <code>gtk.TOOLBAR_BOTH（全部）</code> or <code>gtk.TOOLBAR_BOTH_HORIZ（水平全部）</code></p>
+
+<p>通过过 <code>set_style</code>() 方法，我们可以为 Toolbar 设置显示样式。</p>
+
+<h3>gtk.Toolbar.set_icon_size</h3>
+
+<pre><code>def set_icon_size(icon_size)
+</code></pre>
+
+<p>  <strong><code>icon_size</code></strong> :</p>
+
+<p>图标的尺寸。&#8220;</p>
+
+<p>通过 <code>set_icon_size</code>() 方法可以设置显示在 Toolbar 上的图标的尺寸。icon_size 的值如下：</p>
+
+<ul>
+<li><code>gtk.ICON_SIZE_MENU</code></li>
+<li><code>gtk.ICON_SIZE_SMALL_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_LARGE_TOOLBAR</code></li>
+<li><code>gtk.ICON_SIZE_BUTTON</code></li>
+<li><code>gtk.ICON_SIZE_DND</code>, or</li>
+<li><code>gtk.ICON_SIZE_DIALOG</code></li>
+</ul>
+
+
+<h2>三.完整代码</h2>
+
+<p>了解了上面的基本方法，我们就可以看实现前面的图的完整代码啦。</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Toolbar
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class Toolbar:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Toolbar")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        toolbar = gtk.Toolbar()
+        #工具栏仅显示图标
+        toolbar.set_style(gtk.TOOLBAR_ICONS)
+
+        #工具栏图标的尺寸
+        toolbar.set_icon_size(gtk.ICON_SIZE_LARGE_TOOLBAR) 
+
+        #新建工具栏按钮
+        newtb = gtk.ToolButton(gtk.STOCK_NEW)
+        opentb = gtk.ToolButton(gtk.STOCK_OPEN)
+        sep = gtk.SeparatorToolItem()  #工具栏的分隔符
+        closetb = gtk.ToolButton(gtk.STOCK_CLOSE)
+        exittb = gtk.ToolButton(gtk.STOCK_QUIT)
+
+        exittb.connect("clicked", gtk.main_quit)
+
+        #设置CLOSE按钮不可用
+        closetb.set_sensitive(False)
+
+        #添加工具栏按钮
+        toolbar.insert(newtb, 0)
+        toolbar.insert(opentb, 1)
+        toolbar.insert(sep, 2)
+        toolbar.insert(closetb, 3)
+        toolbar.insert(exittb, 4)
+
+        vbox = gtk.VBox()
+        vbox.pack_start(toolbar, False, False, 0)
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    toolbar = Toolbar()
+    gtk.main()
+</code></pre>
+
+<p>按照我在代码中给出的注释就很容易懂啦。然后动手改一改 icon_size 、style 等等，你会找到你想要的效果的！打完手工，待续。。。。。。</p>
+
+<p> </p>
+
+<p> </p>
+</div>
+
+<div class="meta">
+	
+		<span class="comments"><a href="/archives/336#disqus_thread">Comments</a></span>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+    </div>
+    <footer id="footer">
+    <div style="display:inline">
+    Copyright &copy; 2013
+
+    DawnDIY
+. Powered by <a href="http://octopress.org">Octopress</a> | 
+    Theme <a href="http://github.com/panks/fabric">fabric</a> by <a href="http://panks.me">Pankaj Kumar</a>
+</div>
+
+
+    </footer>
+    <script src="/javascripts/fabric.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'DawnDIY';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+<!-- end toload --> 
+</div>
+</div>
+<script src="/javascripts/jquery.ui.totop.js" type="text/javascript"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+;(function($){$().UItoTop({easingType:'easeOutCirc'});})(jQuery); 
+/*]]>*/
+</script><!-- remove it to remove the scroll to top button -->
+</body>
+</html>
