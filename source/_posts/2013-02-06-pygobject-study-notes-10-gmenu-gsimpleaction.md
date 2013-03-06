@@ -35,7 +35,7 @@ Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可
               ----GMenu
 ```
 要注意的是，GMenu 是在 GIO 中，而不是在 GTK 中，所以应该导入 Gio 模块
-
+<!-- more -->
 
 ``` python
     from gi.repository import Gio
