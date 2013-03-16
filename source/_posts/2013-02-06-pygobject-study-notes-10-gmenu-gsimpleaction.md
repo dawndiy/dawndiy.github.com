@@ -5,12 +5,14 @@ layout: post
 permalink: /archives/442
 categories:
   - PyGObject
+  - PyGtk
   - Python
 tags:
   - GMenu
   - GSimpleAction
   - PyGObject
   - PyGtk
+keywords: PyGObject, PyGtk, GMenu, GSimpleAction, 学习笔记
 ---
 # 
 

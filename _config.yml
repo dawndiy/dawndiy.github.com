@@ -7,7 +7,8 @@ title: 一个人的世界
 subtitle: DIY By Myself
 author: DawnDIY
 simple_search: http://google.com/search
-description:
+description: 一个人的世界 - 技术博客
+keywords: linux, hack, python, java, geek, ubuntu
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -94,7 +95,7 @@ disqus_short_name: DawnDIY
 disqus_show_comment_count: true
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: 
 
 # Facebook Like
 facebook_like: false
