@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PyGtk | 一个人的世界]]></title>
   <link href="http://dawndiy.github.com/blog/categories/pygtk/atom.xml" rel="self"/>
   <link href="http://dawndiy.github.com/"/>
-  <updated>2013-03-07T21:40:55+08:00</updated>
+  <updated>2013-03-17T02:31:28+08:00</updated>
   <id>http://dawndiy.github.com/</id>
   <author>
     <name><![CDATA[DawnDIY]]></name>
@@ -12,6 +12,221 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PyGObject 学习笔记(10)-GMenu &#038; GSimpleAction]]></title>
+    <link href="http://dawndiy.github.com/archives/442"/>
+    <updated>2013-02-06T00:00:00+08:00</updated>
+    <id>http://dawndiy.github.com/archives/pygobject-study-notes-10-gmenu-gsimpleaction</id>
+    <content type="html"><![CDATA[<h1></h1>
+
+<p>有段时间没更新了，一直想着想重新改一下Bolg，所以没怎么写了。好~二话不说，现在继续。今天来讲一个新的控件，一看标题，对！又是菜单，但这次菜单和之前的<a href="http://www.dawndiy.com/archives/290" title="PyGtk学习笔记(6)–菜单">《PyGtk学习笔记(6)–菜单》</a>的菜单是不同，自从转向学习PyGObject了，会有很多GTK 3的特性，所以，这次的 GMenu 和以往的菜单不同。所以老规矩，看图吧。</p>
+
+<p><img src="http://i.imgur.com/sNe0XA5.jpg" title="GMenu" alt="" /></p>
+
+<p>上面的图就是 GMenu 在原生 Gnome3 桌面里面显示的效果。好了，开始介绍。</p>
+
+<h2>一. 介绍</h2>
+
+<p>Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可视空间。当然，在 Gnome3 里面同样可以省去传统的 MenuBar ，根据 Gnome3 的新特性，增加了 GMenu 。就像上面的图一样，将菜单功能集成在 Gnome 的任务栏中，同样为用户挤出了更多的空间，而且现在很多 Gnome3 的应用也开始使用这一特性了，如：Empathy。当然，刚开始很多童鞋找不到菜单在最顶上，呵呵，不过发现了以后还是会比较惊喜，这样会省出一个 Bar 的空间。</p>
+
+<h3>1.类结构</h3>
+
+<p>```</p>
+
+<pre><code>GObject
+    ----GMenuModel
+          ----GMenu
+</code></pre>
+
+<p>```
+要注意的是，GMenu 是在 GIO 中，而不是在 GTK 中，所以应该导入 Gio 模块</p>
+
+<!-- more -->
+
+
+<p>``` python</p>
+
+<pre><code>from gi.repository import Gio
+</code></pre>
+
+<p>```</p>
+
+<h3> 2.常用方法</h3>
+
+<p>``` python</p>
+
+<pre><code>insert(position, label, detailed_action)
+append(label, detailed_action)   # 加到最后
+prepend(label, detailed_action)  # 加到最前
+</code></pre>
+
+<p><code>
+在菜单中插入一个选项  
+*position: 位置*  
+*label: 显示标签*  
+*detailed_action: 动作名，以 app. 为前缀*
+</code> python</p>
+
+<pre><code>insert_section(position, label, section)
+append_section(label, section)
+prepend_section(label, section)
+</code></pre>
+
+<p><code>
+在菜单中插入一个区域，上下会有分割线隔开  
+*position: 位置*  
+*label: 区域名*  
+*section: 可以是一个 GMenu*
+</code> python</p>
+
+<pre><code>insert_submenu(position, label, section)
+append_submenu(label, section)
+prepend_submenu(label, section)
+</code></pre>
+
+<p><code>
+在菜单中插入一个子菜单  
+*position: 位置*  
+*label: 区域名*  
+*section: 可以是一个 GMenu*
+</code> python</p>
+
+<pre><code>remove(postion)    # 删除选项
+set_label(label)   # 设置显示标签
+</code></pre>
+
+<p>```</p>
+
+<h3> 2.代码分析</h3>
+
+<p>以下是是想最上面图中的菜单的效果：
+``` python</p>
+
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# GMenu &amp; SimpleActions
+# PyGObject Study Notes By DawnDIY
+# http://dawndiy.com
+
+from gi.repository import Gtk
+from gi.repository import Gio
+import sys
+
+class MyWindow(Gtk.ApplicationWindow):
+    def __init__(self, app):
+        Gtk.Window.__init__(self, title="GMenu Example", application=app)
+
+class MyApplication(Gtk.Application):
+    def __init__(self):
+        Gtk.Application.__init__(self)
+
+    def do_activate(self):
+        win = MyWindow(self)
+        win.show_all()
+
+    def do_startup (self):
+        # 启动应用
+        Gtk.Application.do_startup(self)
+
+        # 建立顶层菜单
+        menu = Gio.Menu()
+        # 新建三个菜单选项
+        item_new = Gio.MenuItem.new("New", "app.new")
+        item_about = Gio.MenuItem.new("About", "app.about")
+        item_quit = Gio.MenuItem.new("Quit", "app.quit")
+
+        # 建立菜单，作为子菜单
+        submenu = Gio.Menu()
+        # 直接添加2个选项
+        submenu.append("sub_New", "app.new")
+        submenu.append("sub_About", "app.about")
+
+        # 建立菜单，作为父菜单
+        menu2 = Gio.Menu()
+        # 将子菜单添加进来
+        menu2.append_submenu("Sub", submenu)
+        menu2.append("exit", "app.quit")
+
+        # 把选项、父菜单都加入到顶层菜单中
+        menu.append_item(item_new)
+        menu.append_item(item_about)
+        menu.append_section("", menu2)  # 父菜单添加为不同菜单区域
+        menu.append_item(item_quit)
+
+        # 将顶层菜单作为应用程序的菜单
+        self.set_app_menu(menu)
+
+        # 为菜单 new 选项添加动作
+        new_action = Gio.SimpleAction.new("new", None)
+        # 连接到回调函数 new_cb
+        new_action.connect("activate", self.new_cb)
+        # 将动作添加到应用中 
+        self.add_action(new_action)
+
+        # about 选项
+        about_action = Gio.SimpleAction.new("about", None)
+        about_action.connect("activate", self.about_cb)
+        self.add_action(about_action)
+
+        # quit 选项 
+        quit_action = Gio.SimpleAction.new("quit", None)
+        quit_action.connect("activate", self.quit_cb)
+        self.add_action(quit_action)
+
+    # new 的回调函数 
+    def new_cb(self, action, parameter):
+        print("This does nothing. It is only a demonstration.")
+
+    # about 的回调函数 
+    def about_cb(self, action, parameter):
+        print("No AboutDialog for you. This is only a demonstration.")
+
+    # about 的回调函数 
+    def quit_cb(self, action, parameter):
+        print("You have quit.")
+        self.quit()
+
+app = MyApplication()
+exit_status = app.run(sys.argv)
+sys.exit(exit_status)
+</code></pre>
+
+<p>```
+代码中我已经注释的很详细了，相信认真看都能看懂的！下面我就补充一下前面提到的 GSimpleAction 。</p>
+
+<p>GSimpleAction 继承自 GObject， 用于建立一个独立的动作，使用它可以连接你的回调函数。</p>
+
+<p>常用函数有：
+``` python</p>
+
+<pre><code>action = Gio.SimpleAction.new("name", parameter_type)
+</code></pre>
+
+<p><code>
+*新建一个动作*  
+*name: 动作名*  
+*parameter_type: 参数类型，可以为 None*
+</code> python</p>
+
+<pre><code>set_enabled(True)
+</code></pre>
+
+<p>```
+<em>设置是否启用</em></p>
+
+<h3>3.总结</h3>
+
+<p>好吧，又写了一篇。希望感兴趣的朋友们能一起来交流！我刚看到 GMenu 的时候是用 Empathy 的时候发现它的菜单变化了，不过第一次用确实没找到菜单，呵呵，最后才知道这样的设计其实挺好的，节省了可视空间，尤其是在你的应用有很复杂的UI的时候，最后还是谈到用户体验了。</p>
+
+<p>PS：这次我学 GMenu 的时候其实我也找了很多资料，不过 PyGObject 的资料不多，最后还是拿着 C 的 GTK 开发手册（就是那个devhelp）一个个函数看的。所以，还是要多看看 API 文档。</p>
+
+<p>待续。。。</p>
+
+<p> </p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PyGtk学习笔记(7)–工具栏]]></title>
@@ -1135,174 +1350,6 @@ align.set_padding(50,30,10,2)<br/>
 <p> </p>
 
 <p> </p>
-
-<p> </p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PyGtk学习笔记(3)–布局管理(VBox, HBox)]]></title>
-    <link href="http://dawndiy.github.com/archives/107"/>
-    <updated>2012-07-15T00:00:00+08:00</updated>
-    <id>http://dawndiy.github.com/archives/pygtk-study-notes-3-layout-manager-vbox-hbox</id>
-    <content type="html"><![CDATA[<h1></h1>
-
-<p>前面一次学习了一个很简单的Fixed布局方式，这次和DawnDIY来学习一下最常用的Box布局管理。Box布局管理分为VBox和HBox两种，在GTK 3中都把这两个合并为Box一个部件了，但是目前来说PyGtk还是GTK 2的，所以DawnDIY还是建议还是把VBox和HBox单独用，不用统一成Box，这样写出来的程序兼容性更好。GTK 3中的Box可以等到PyGObject比较普及、稳定的时候在用。毕竟还是那句话，用最稳定的，不用最新的。</p>
-
-<h2>1.介绍</h2>
-
-<p>下面我们先介绍一下VBox和HBox。</p>
-
-<p>VBox是一个垂直布局容器。这个容器里的部件都是以垂直排列的方式一个个竖直分布在容器中。<br/>
-HBox是一个水平布局容器。这个容器里的部件都是以水平排列的方式一个个横向分布在容器中。<br/>
-这两个布局容器是最常用的两个布局容器，我们可以配合使用他们来构建出你想要的UI。</p>
-
-<h2>2.VBox</h2>
-
-<p>先来看一个VBox的示例，上图先：</p>
-
-<p>[![][2]][2]</p>
-
-<p>从上面的图中可以看到，有两个按钮，一个大一个小，而且是竖直排列的。small和big按钮都是放在VBox中，然后在把VBox添加到主窗口中就行了，这个示例很简单，下面是完整代码：</p>
-
-<pre><code>#!/usr/bin/env python
-# -*- coding: utf-8 -*
-
-# VBox layout container
-# PyGtk Study Notes By DawnDIY
-# http://www.dawndiy.com
-
-import pygtk
-pygtk.require('2.0')
-import gtk
-
-class VBoxLC:
-    def __init__(self):
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_title("VBox Layout Container")
-        self.window.set_size_request(300,250)
-        self.window.set_position(gtk.WIN_POS_CENTER)
-
-        self.window.connect("destroy", gtk.main_quit)
-
-        vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
-        btn1 = gtk.Button("small")
-        btn2 = gtk.Button("Big")
-        btn2.set_size_request(300,200)
-
-        vbox.add(btn1)
-        vbox.add(btn2)
-        self.window.add(vbox)
-
-        self.window.show_all()
-
-    def main(self):
-        gtk.main()
-
-if __name__ == "__main__":
-    vbox = VBoxLC()
-    vbox.main()
-</code></pre>
-
-<p>在分析代码之前我们先来看一下VBox类的概要：</p>
-
-<pre><code>class gtk.VBox(gtk.Box):
-    gtk.VBox(homogeneous=False, spacing=0)
-</code></pre>
-
-<p>VBox的继承关系</p>
-
-<pre><code>-- gobject.GObject
-   -- gtk.Object
-     -- gtk.Widget
-       -- gtk.Container
-         -- gtk.Box
-           -- gtk.VBox
-</code></pre>
-
-<p>构造函数：</p>
-
-<pre><code>gtk.VBox(homogeneous=False, spacing=0)
-</code></pre>
-
-<p><strong><code>homogeneous</code></strong> :</p>
-
-<p>如果为 True 所有的子部件都会被分配均等的空间</p>
-
-<p><strong><code>spacing</code></strong> :</p>
-
-<p>垂直空间子部件之间的像素大小。</p>
-
-<p><em>Returns</em> :</p>
-
-<p>一个新的 gtk.VBox</p>
-
-<p>如上面的例子来说，我们建立了一个 window ，然后建立了一个子部件空间分配不均等、子部件间隔5像素的VBox，然后建立两个Button，并且添加到VBox中，最后在把VBox添加到window中。最后就完成了一个简单的垂直排列的布局了。</p>
-
-<h2>3.HBox</h2>
-
-<p>接下来同样介绍一下HBox，它和VBox十分相似，不过它用来管理水平排列的布局，来看一个相同的示例，先上图：</p>
-
-<p>[![][3]][3]</p>
-
-<p>如上图，我们对比一下之前的图就很容易看出，HBox管理部件的水平排列布局，在很多应用程序的布局都是应用VBox和HBox配合使用来构建出丰富的UI来的。下面我们看一下完整代码，其实你很容易看出不同：</p>
-
-<pre><code>#!/usr/bin/env python
-
-# HBox layout container
-# PyGtk Stady Notes By DawnDIY
-# http://www.dawndiy.com
-
-import pygtk
-pygtk.require('2.0')
-import gtk
-
-class HBoxLC:
-    def __init__(self):
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_title("HBox Layout Container")
-        self.window.set_size_request(300,250)
-        self.window.set_position(gtk.WIN_POS_CENTER)
-
-        self.window.connect("destroy", gtk.main_quit)
-
-        hbox = gtk.HBox(False, 5)
-        btn1 = gtk.Button("small")
-        btn2 = gtk.Button("Big")
-        btn2.set_size_request(200,150)
-
-        hbox.add(btn1)
-        hbox.add(btn2)
-        self.window.add(hbox)
-
-        self.window.show_all()
-
-    def main(self):
-        gtk.main()
-
-if __name__ == "__main__":
-    hbox = HBoxLC()
-    hbox.main()
-</code></pre>
-
-<p>下面同样是HBox类的概要和继承关系：</p>
-
-<pre><code>class gtk.HBox(gtk.Box):
-    gtk.HBox(homogeneous=False, spacing=0)
-
--- gobject.GObject
-   -- gtk.Object
-     -- gtk.Widget
-       -- gtk.Container
-         -- gtk.Box
-           -- gtk.HBox
-</code></pre>
-
-<h2> 4.总结</h2>
-
-<p>学习了一下VBox和HBox，非茶有用的两个布局管理部件，而且配合使用可以构建出非常复杂的UI，其实DawnDIY觉得VBox和HBox很容易让人想到HTML中的和标签，它们可以自由的相互嵌套来构建UI。所以你有好的设计，可以尝试一下用VBox和HBox把它设计出来吧。</p>
-
-<p>今天学到这里，待续。。。</p>
 
 <p> </p>
 ]]></content>
