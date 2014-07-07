@@ -1,0 +1,8 @@
+# 文件字符编码
+encoding: UTF-8
+# 时区
+timezone: Asia/Shanghai
+# 禁用 自定义插件
+safe: true
+# 为相关文章生成索引
+lsi: false
