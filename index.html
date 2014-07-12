@@ -3,14 +3,12 @@ layout: default
 title: 首页
 ---
 
-
 <h2>Hello, 世界!</h2>
 <div>
-  <ul>
-    {% for post in site.posts %}
-      <li>
-        <a href="{{ post.url }}">{{ post.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  {% for post in site.posts %}
+  <section>
+    <a href="{{ post.url }}"><h3>{{ post.title }}<small>{{ post.date | date: "%F %T" }}</small></h3></a>
+    <p>{{ post.excerpt }}</p>
+  </section>
+  {% endfor %}
 </div>
