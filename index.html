@@ -3,12 +3,52 @@ layout: default
 title: 首页
 ---
 
-<h2>Hello, 世界!</h2>
-<div>
+<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="../" class="navbar-brand">DawnDIY</a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="../getting-started">首页</a>
+        </li>
+        <li>
+          <a href="../css">关于</a>
+        </li>
+        <li class="active">
+          <a href="../components">组件</a>
+        </li>
+        <li>
+          <a href="../javascript">JavaScript 插件</a>
+        </li>
+        <li>
+          <a href="../customize">定制</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/dawndiy" target="_blank"><i class="fa fa-github fa-lg"></i></a></li>
+        <li><a href="http://weibo.com/dawndiy" target="_blank"><i class="fa fa-weibo fa-lg"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+<div class="container">
   {% for post in site.posts %}
-  <section>
-    <a href="{{ post.url }}"><h3>{{ post.title }}<small>{{ post.date | date: "%F %T" }}</small></h3></a>
-    <p>{{ post.excerpt }}</p>
-  </section>
+    <div class="row">
+      <div class="col-md-12">
+        <a href="{{ post.url }}"><h2>{{ post.title }}</h2></a>
+        <small>{{ post.date | date: "%Y年%m月%d日" }}</small>
+        <p>{{ post.excerpt }}</p>
+      </div>
+    </div>
   {% endfor %}
 </div>
