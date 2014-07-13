@@ -28,8 +28,8 @@ tags:
 **Eclipse Juno (4.2)：**  
 Windows    [32-bit][2]    [64-bit][3]  
 Mac    [32-bit][4]    [64-bit][5]  
-Linux    [32-bit][6]    [64-bit][7]**  
-**
+Linux    [32-bit][6]    [64-bit][7]  
+
 
  [2]: http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32.zip
  [3]: http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2-201206081400/eclipse-SDK-4.2-win32-x86_64.zip
@@ -145,7 +145,7 @@ cd7176831087f53e46123dd91551be32
 
 ————更新————-
 
-==这里是后来添加上的==
+**这里是后来添加上的**
 
 在之后的使用中我发现在控制台使用  adb 命令正常，但是有的时候需要 root 权限的时候我们再使用 sudo adb 的时候居然会提示 找不到 adb 命令。后来我找到了解决方法，这里说明一下：
 

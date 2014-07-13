@@ -28,7 +28,7 @@ tags:
 当然，Python让我相见恨晚，非常喜欢这种风格和简洁的语言，后来同样学习了 PyGTK 。所以有了我的PyGTK学习笔记，我想认真学习一下，然后重写我那一波三折的项目，等到成熟了我就会正是发布。学习嘛，我当然是看官网资料咯，但是刚开始去了解 PyGTK的时候我也注意到了 PyGObject ，但是我当时没有放在心上，因为目前 PyGTK 的资料还是挺多的，所以让我忽视了 PyGObject 但是不断学习，就会不断发现。现在正的了解到确实向PyGObject会成为未来的替代品，官方就是这么说的，而且目前的PyGTK是只支持GTK 2的，想要用 Python 来写 GTK 3的应用应该用 PyGObject ，而且在 Gnome 上翻译的时候也发现所有的代码都是用”from gi.repository import Gtk”，而不是以前的”import gtk”了，看到这里我自己想想应该向前看看嘛~所以呢，以后，当然我的 **学习笔记** 会继续随笔写一写，以后的都会围绕 PyGObject 来写。而且看到 Fedora 早就说要在最新发行版里面默认Python3了，不仅如此，Ubuntu 也宣布在最新的发行版里会默认安装Python3 。 这样更说明我要多多向前看啊。所以以后的学习Python/PyGTK/PyGObject的笔记都会用python3 。
 
 在这里先写一个简单的使用Python开发GTK 3的示例：
-``` python
+{% highlight python %}
     #!/usr/bin/python
     from gi.repository import Gtk
     
@@ -48,12 +48,12 @@ tags:
     win.connect("delete-event", Gtk.main_quit)
     win.show_all()
     Gtk.main()
-```
+{% endhighlight %}
 图片这次不上了，因为自己试过一遍才是最好的体会！！！！
 
 More: https://python-gtk-3-tutorial.readthedocs.org/en/latest/index.html (English)
 
-因为这段时间一直准备那个什么\***|考试，每天也只能睡觉前看看自己感兴趣的东西，而且偷个懒上个网更新一下博客~呵呵~
+因为这段时间一直准备那个什么xxx考试，每天也只能睡觉前看看自己感兴趣的东西，而且偷个懒上个网更新一下博客~呵呵~
 
 PS：本来就是要说一下以后用PyGObject和Python3的，结果扯了这么一大堆！！！ over~
 

@@ -133,7 +133,7 @@ tags:
 
 通过 insert() 方法可以在工具栏中添加 ToolItem ，用 pos 来确定其位置，如果 pos 为0，则表示该 Item 在工具栏的起始位置。
 
-### gtk.Toolbar.set_style``
+### gtk.Toolbar.set_style
 
     def set_style(style)
 
@@ -149,7 +149,7 @@ tags:
 
   **`icon_size`** :
 
-图标的尺寸。``
+图标的尺寸。
 
 通过 `set_icon_size`() 方法可以设置显示在 Toolbar 上的图标的尺寸。icon_size 的值如下：
 

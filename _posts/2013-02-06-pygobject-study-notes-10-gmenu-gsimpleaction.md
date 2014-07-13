@@ -39,45 +39,46 @@ Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可
 要注意的是，GMenu 是在 GIO 中，而不是在 GTK 中，所以应该导入 Gio 模块
 <!-- more -->
 
-``` python
+{% highlight python%}
     from gi.repository import Gio
-```
+{% endhighlight %}
+
 ###  2.常用方法
-``` python
+{% highlight python%}
     insert(position, label, detailed_action)
     append(label, detailed_action)   # 加到最后
     prepend(label, detailed_action)  # 加到最前
-```
+{% endhighlight %}
 在菜单中插入一个选项  
 *position: 位置*  
 *label: 显示标签*  
 *detailed_action: 动作名，以 app. 为前缀*
-``` python
+{% highlight python%}
     insert_section(position, label, section)
     append_section(label, section)
     prepend_section(label, section)
-```
+{% endhighlight %}
 在菜单中插入一个区域，上下会有分割线隔开  
 *position: 位置*  
 *label: 区域名*  
 *section: 可以是一个 GMenu*
-``` python
+{% highlight python%}
     insert_submenu(position, label, section)
     append_submenu(label, section)
     prepend_submenu(label, section)
-```
+{% endhighlight %}
 在菜单中插入一个子菜单  
 *position: 位置*  
 *label: 区域名*  
 *section: 可以是一个 GMenu*
-``` python
+{% highlight python%}
     remove(postion)    # 删除选项
     set_label(label)   # 设置显示标签
-```
+{% endhighlight %}
 ###  2.代码分析
 
 以下是是想最上面图中的菜单的效果：
-``` python
+{% highlight python%}
     #!/usr/bin/env python
     # -*- coding: utf-8 -*-
     
@@ -166,21 +167,21 @@ Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可
     app = MyApplication()
     exit_status = app.run(sys.argv)
     sys.exit(exit_status)
-```
+{% endhighlight %}
 代码中我已经注释的很详细了，相信认真看都能看懂的！下面我就补充一下前面提到的 GSimpleAction 。
 
 GSimpleAction 继承自 GObject， 用于建立一个独立的动作，使用它可以连接你的回调函数。
 
 常用函数有：
-``` python
+{% highlight python%}
     action = Gio.SimpleAction.new("name", parameter_type)
-```
+{% endhighlight %}
 *新建一个动作*  
 *name: 动作名*  
 *parameter_type: 参数类型，可以为 None*
-``` python
+{% highlight python%}
     set_enabled(True)
-```
+{% endhighlight %}
 *设置是否启用*
 
 ### 3.总结

@@ -40,8 +40,8 @@ Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使
 
     gnome-shell--version
 
-** **来察看你所安装的版本，如图：**  
-![][3]**
+**来察看你所安装的版本，如图：**  
+![][3]
 
  [3]: http://i.imgur.com/tCRb1.png "安装Gnome3版本察看"
 
