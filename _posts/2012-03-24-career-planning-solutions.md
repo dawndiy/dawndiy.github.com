@@ -47,4 +47,4 @@ tags:
 
 最后附上一张不知道哪来的图,不过大部分是微软的技术,其他的自己参考一下吧!
 
-![职业规划](http://www.dawndiy.com/wp-content/uploads/2012/03/2010061617362643.jpg)
+![职业规划](/imgs/ms.jpg)

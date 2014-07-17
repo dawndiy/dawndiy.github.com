@@ -11,9 +11,9 @@ tags:
   - Ubuntu
   - Untiy
 ---
-# 
 
 Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使用的是Unity桌面，Unity项目发起于2010年，第一次应用在Ubuntu 11.04 上面，起初这个桌面颇受争议，但是时隔一年，现在已经非常稳定了。但是萝卜青菜各有所爱，对于热衷于Gnome的用户来说Ubuntu就不能使用Gnome吗？当然，Linux的世界里永远没有不能，而且说到底Unity也是基于Gnome的。现在Gnome3的时代，Gnome桌面也有了不一样的用户体验。
+
 
 下面DawnDIY来教大家如何安装Gnome桌面：
 
