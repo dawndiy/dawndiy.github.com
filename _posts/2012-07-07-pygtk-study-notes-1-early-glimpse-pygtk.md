@@ -1,5 +1,5 @@
 ---
-title: 'PyGtk学习笔记(1)&#8211;初窥PyGtk'
+title: 'PyGtk学习笔记(1)-初窥PyGtk'
 author: DawnDIY
 layout: post
 permalink: /archives/72
@@ -43,7 +43,7 @@ GObject是基类,它为PyGTK所以类提供通用的属性和函数。
 很简单的一个窗口，下面是实现它的完整代码：
 
 
-
+```python
     #!/usr/bin/python
     #-*- encoding:utf-8 -*-
     #建立一个窗口
@@ -67,6 +67,7 @@ GObject是基类,它为PyGTK所以类提供通用的属性和函数。
     if __name__ == "__main__":
     	pyapp = PyApp()
     	pyapp.main()
+```
 
 使用PyGtk当然要有一定的Python基础，把上述代码保存为pygtkwin.py，在控制台执行如下命令就能看到一个窗口了。
 
