@@ -6,3 +6,5 @@ timezone: Asia/Shanghai
 safe: true
 # 为相关文章生成索引
 lsi: false
+watch: true
+server: true
