@@ -173,9 +173,9 @@ Ubuntu 的 Unity 桌面使用了全局菜单，为应用程序增加了很多可
 GSimpleAction 继承自 GObject， 用于建立一个独立的动作，使用它可以连接你的回调函数。
 
 常用函数有：
-{% highlight python%}
+```python
     action = Gio.SimpleAction.new("name", parameter_type)
-{% endhighlight %}
+```
 *新建一个动作*  
 *name: 动作名*  
 *parameter_type: 参数类型，可以为 None*
