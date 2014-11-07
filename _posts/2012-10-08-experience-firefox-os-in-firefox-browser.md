@@ -9,7 +9,6 @@ tags:
   - Firefox
   - Firefox OS
 ---
-# 
 
 Firefox OS （原名 Boot to Gecko，即B2G）是 Mozilla 公司以[Gecko][1]浏览器引擎为核心，采用[HTML5][2]来开发的一款移动操作系统。目前该项目还在开发完善中，但是网上已经有很多和它相关的视频、图片、ROM等等资源啦，继 [Android][3] 之后又一款重量级的移动操作系统即将诞生。
 

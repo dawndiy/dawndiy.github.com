@@ -9,9 +9,6 @@ tags:
   - Ubuntu
   - Wallpaper
 ---
-# 
-
- 
 
 Ubuntu 12.10 越来越近了~近期 Ubuntu 12.10 默认壁纸也浮现出来了。
 

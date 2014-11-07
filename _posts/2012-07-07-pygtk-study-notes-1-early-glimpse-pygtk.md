@@ -10,7 +10,6 @@ tags:
   - PyGtk
   - Python
 ---
-# 
 
 之前一直在学习Python，Python确实是一门非常简练的编程语言。然而学习了一段时间后，用Python怎么做GUI程序呢，那这里有一个很好的GUI库可以使用，就是PyGtk。PyGtk是Gtk 的Python绑定版本，使用这个GUI可以方便的设计GUI程序。而且对比我之前用过的Java-Gnome，这个方便多了。所以要做GUI程序，值得学习一下PyGtk的使用，在此记录下自己的学习笔记分享给大家。
 

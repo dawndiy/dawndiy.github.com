@@ -11,7 +11,6 @@ tags:
   - Flash
   - Linux
 ---
-# 
 
 先强烈吐嘈一下：以后大家尽量用 Html5 来淘汰 Adobe Flash 吧，一直以来各种系统漏洞很多情况都是来自 Flash ，而且 Flash 也有着各种局限性，虽然现在 Html5 还不成熟，但它正走向成熟。尤其在 Linux 桌面系统中，Flash 也不进行更新了(只进行安全更新)，同时“号称”跨平台的 Adobe AIR 也不开发 Linux 版本了。我们只能用旧的…
 

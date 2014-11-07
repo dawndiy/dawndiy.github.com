@@ -14,7 +14,6 @@ tags:
   - PyGtk
 keywords: PyGObject, PyGtk, GMenu, GSimpleAction, 学习笔记
 ---
-# 
 
 有段时间没更新了，一直想着想重新改一下Bolg，所以没怎么写了。好~二话不说，现在继续。今天来讲一个新的控件，一看标题，对！又是菜单，但这次菜单和之前的[《PyGtk学习笔记(6)–菜单》][1]的菜单是不同，自从转向学习PyGObject了，会有很多GTK 3的特性，所以，这次的 GMenu 和以往的菜单不同。所以老规矩，看图吧。
 

@@ -9,7 +9,6 @@ tags:
   - Gnome
   - Linux
 ---
-# 
 
 ![GNOME 3.6][1]
 
