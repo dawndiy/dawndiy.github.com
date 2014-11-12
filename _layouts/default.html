@@ -1,7 +1,18 @@
 {% include top.html %}
 
 <body>
-  {{ content }}
-  {% include footer.html %}
+
+    {{ content }}
+    {% include footer.html %}
+
+    <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/ripples.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/material.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $.material.init();
+    });
+    </script>
 </body>
 </html>
