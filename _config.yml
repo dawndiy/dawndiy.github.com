@@ -6,4 +6,7 @@ timezone: Asia/Shanghai
 safe: false
 # 为相关文章生成索引
 lsi: false
-pygments: true
+highlighter: pygments
+# 分页
+paginate: 5
+paginate_path: "page:num"

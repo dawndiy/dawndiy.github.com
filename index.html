@@ -2,58 +2,34 @@
 layout: default
 title: 首页
 ---
-
-<header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="../" class="navbar-brand">一个人的世界</a>
-    </div>
-    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="../getting-started">首页</a>
-        </li>
-        <li>
-          <a href="../css">关于</a>
-        </li>
-        <li class="active">
-          <a href="../components">组件</a>
-        </li>
-        <li>
-          <a href="../javascript">JavaScript 插件</a>
-        </li>
-        <li>
-          <a href="../customize">定制</a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/dawndiy" target="_blank"><i class="fa fa-github fa-lg"></i></a></li>
-        <li><a href="http://weibo.com/dawndiy" target="_blank"><i class="fa fa-weibo fa-lg"></i></a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
+{% include header.html %}
 
 <div class="container">
-  {% for post in site.posts %}
     <div class="row">
-      <div class="col-md-8">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <a href="{{ post.url }}"><h3>{{ post.title }}</h3></a>
-            <small>{{ post.date | date: "%Y年%m月%d日" }} by {{ post.author }}</small>
-            <p>{{ post.excerpt }}</p>
-          </div>
+        <div class="col-sm-8">
+            {% for post in paginator.posts %}
+            <div class="well">
+                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                <small>{{ post.date | date: "%Y年%m月%d日" }} by {{ post.author }}</small>
+                <hr>
+                <p>{{ post.excerpt }}</p>
+                <div class="text-right">
+                    <a class="btn btn-flat btn-info" href="#">查看</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div>
+                {% if paginator.previous_page %}
+                <a class="btn btn-default navbar-left" href="{{ paginator.previous_page_path }}">&lt; 上一页</a>
+                {% endif %}
+                {% if paginator.next_page %}
+                <a class="btn btn-default navbar-right" href="{{ paginator.next_page_path }}">下一页 &gt;</a>
+                {% endif %}
+            </div>
         </div>
-      </div>
-      <div class="col-md-4"></div>
+        <div class="col-sm-4">
+            {% include sidebar.html %}
+        </div>
     </div>
-  {% endfor %}
 </div>
+
