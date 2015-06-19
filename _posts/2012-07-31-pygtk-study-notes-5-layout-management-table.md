@@ -2,10 +2,6 @@
 title: PyGtk学习笔记(5)–布局管理(Table)
 author: DawnDIY
 layout: post
-permalink: /archives/186
-categories:
-  - PyGtk
-  - Python
 tags:
   - PyGtk
   - Python
@@ -20,46 +16,52 @@ Table可以用来很好的管理行和列对齐和布局的UI中，比如《计�
 
 ### Table类的概要：
 
-    class gtk.Table(gtk.Container):
-        gtk.Table(rows=1, columns=1, homogeneous=False)
-    
-        def resize(rows, columns)
-    
-        def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
-    
-        def set_row_spacing(row, spacing)
-    
-        def get_row_spacing(row)
-    
-        def set_col_spacing(column, spacing)
-    
-        def get_col_spacing(column)
-    
-        def set_row_spacings(spacing)
-    
-        def get_default_row_spacing()
-    
-        def set_col_spacings(spacing)
-    
-        def get_default_col_spacing()
-    
-        def set_homogeneous(homogeneous)
-    
-        def get_homogeneous()
+```python
+class gtk.Table(gtk.Container):
+    gtk.Table(rows=1, columns=1, homogeneous=False)
 
-### 
+    def resize(rows, columns)
+
+    def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+
+    def set_row_spacing(row, spacing)
+
+    def get_row_spacing(row)
+
+    def set_col_spacing(column, spacing)
+
+    def get_col_spacing(column)
+
+    def set_row_spacings(spacing)
+
+    def get_default_row_spacing()
+
+    def set_col_spacings(spacing)
+
+    def get_default_col_spacing()
+
+    def set_homogeneous(homogeneous)
+
+    def get_homogeneous()
+```
+
+###
 
 ### Table的继承关系：
 
-    -- gobject.GObject
-       -- gtk.Object
-         -- gtk.Widget
-           -- gtk.Container
-             -- gtk.Table
+```
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Table
+```
 
 ###  构造方法：
 
-    gtk.Table(rows=1, columns=1, homogeneous=False)
+```python
+gtk.Table(rows=1, columns=1, homogeneous=False)
+```
 
 参数：
 
@@ -85,17 +87,19 @@ Table可以用来很好的管理行和列对齐和布局的UI中，比如《计�
 这里的rows和columns意思是行数和列数，但在布局的时候我们如果把它们理解成分割线的话这样更好理解。因为下面attach这个方法中的一些参数是通过起始和结束来确定一个子控件的位置的，所以我们把行列抽象理解成分割线的话更容易理解构建。比如 rows =2 , columns = 2 , 那么它的布局应该是这样的：
 
 0               1                 2  
-0 ———- ———-   
+0 ———- ———-
 |                  |                 |  
-1 ———- ———-   
+1 ———- ———-
 |                  |                 |  
-2 ———- ———- 
+2 ———- ———-
 
 ### 主要方法：
 
 **gtk.Table.attach**
 
-    def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+```python
+def attach(child, left_attach, right_attach, top_attach, bottom_attach, xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL, xpadding=0, ypadding=0)
+```
 
 **`child`** :
 
@@ -151,49 +155,51 @@ table单元格将扩展占据分配的所有空闲空间。
 
 上面都是不实在的东西，下面来看一个例子，有图有真相，先上图：
 
-[![][2]][2]
+[![][1]][1]
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/07/2012-07-31-163045的屏幕截图.png
+ [1]: http://i.imgur.com/f9HCiWB.png
 
 如图所示，你应该想到Table是怎么一个布局容器吧。接下来看一下完整代码：
 
-    #!/usr/bin/env python
-    # -*- coding: utf-8 -*
-    
-    # Table layout container
-    # PyGtk Study Notes By DawnDIY
-    # http://www.dawndiy.com
-    
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-    
-    class TableLC:
-    	def __init__(self):
-    		self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    		self.win.set_title("Table Layout Container")
-    		self.win.set_size_request(300,250)
-    		self.win.set_position(gtk.WIN_POS_CENTER)
-    
-    		table = gtk.Table(4, 3, True)	# 4行3列
-    		table.attach(gtk.Button("1"), 0, 1, 0, 1)
-    		table.attach(gtk.Button("2"), 1, 2, 0, 1)
-    		table.attach(gtk.Button("3"), 2, 3, 0, 1)
-    		table.attach(gtk.Button("4"), 0, 1, 1, 2)
-    		table.attach(gtk.Button("5"), 1, 2, 1, 2)
-    		table.attach(gtk.Button("6"), 2, 3, 1, 2)
-    		table.attach(gtk.Button("7"), 0, 1, 2, 3)
-    		table.attach(gtk.Button("8"), 1, 2, 2, 3)
-    		table.attach(gtk.Button("9"), 2, 3, 2, 3)
-    		table.attach(gtk.Button("0"), 1, 2, 3, 4)
-    
-    		self.win.add(table)
-    		self.win.connect("destroy", gtk.main_quit)
-    		self.win.show_all()
-    
-    if __name__ == "__main__":
-    	tab = TableLC()
-    	gtk.main()
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Table layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class TableLC:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Table Layout Container")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        table = gtk.Table(4, 3, True)	# 4行3列
+        table.attach(gtk.Button("1"), 0, 1, 0, 1)
+        table.attach(gtk.Button("2"), 1, 2, 0, 1)
+        table.attach(gtk.Button("3"), 2, 3, 0, 1)
+        table.attach(gtk.Button("4"), 0, 1, 1, 2)
+        table.attach(gtk.Button("5"), 1, 2, 1, 2)
+        table.attach(gtk.Button("6"), 2, 3, 1, 2)
+        table.attach(gtk.Button("7"), 0, 1, 2, 3)
+        table.attach(gtk.Button("8"), 1, 2, 2, 3)
+        table.attach(gtk.Button("9"), 2, 3, 2, 3)
+        table.attach(gtk.Button("0"), 1, 2, 3, 4)
+
+        self.win.add(table)
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    tab = TableLC()
+    gtk.main()
+```
 
 在这个例子中，我们主要看的还是Table中子控件的布局方式，结合前面介绍的 table.attach 方法，我们首先通过 gtk.Table(4, 3, True)来建立了一个 4行 3列 的 table 。  
 那么这些数字是怎么布局的呢？  
@@ -204,13 +210,15 @@ table单元格将扩展占据分配的所有空闲空间。
 
 如果把数字“0”的布局改成：
 
-    table.attach(gtk.Button("0"), 1, 3, 3, 4)
+```python
+table.attach(gtk.Button("0"), 1, 3, 3, 4)
+```
 
 效果如下：
 
-[![][3]][3]
+[![][2]][2]
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/07/2012-07-31-170305的屏幕截图.png
+ [2]: http://i.imgur.com/pWv06Re.png
 
 因为我将第二个参数和第三个参数改成了 1 , 3 。也就是说数字“0”是从第1列起始结束于第3列前。这样它就占据了2列的位置了。
 
@@ -223,22 +231,18 @@ table.attach 还有四个参数没有讲到，下面我们继续修改一下代�
 
 那么我们修改的局部代码为：
 
-    table.attach(gtk.Button("1"), 0, 1, 0, 1, gtk.EXPAND|gtk.FILL, gtk.EXPAND|gtk.FILL, 10, 5)
-    		table.attach(gtk.Button("2"), 1, 2, 0, 1, gtk.EXPAND, gtk.FILL)
-    		table.attach(gtk.Button("3"), 2, 3, 0, 1, gtk.SHRINK, gtk.SHRINK)
+```python
+table.attach(gtk.Button("1"), 0, 1, 0, 1, gtk.EXPAND|gtk.FILL, gtk.EXPAND|gtk.FILL, 10, 5)
+table.attach(gtk.Button("2"), 1, 2, 0, 1, gtk.EXPAND, gtk.FILL)
+table.attach(gtk.Button("3"), 2, 3, 0, 1, gtk.SHRINK, gtk.SHRINK)
+```
 
 效果：
 
-[![][4]][4]
+[![][3]][3]
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/07/2012-07-31-171421的屏幕截图.png
+ [3]: http://i.imgur.com/HbYafDA.png
 
 就是这样的。table.attach 后面几个参数，对于动态调整窗口时，控件的布局非常有用。认真参考上面我给出的 table.attach 的介绍，是能够理解的。
 
 OK，今天学到这里，使用这些布局已经能够构建很多UI了，下次学学别的，未完，待续…………..
-
- 
-
- 
-
- 

@@ -2,10 +2,6 @@
 title: PyGtk学习笔记(3)–布局管理(VBox, HBox)
 author: DawnDIY
 layout: post
-permalink: /archives/107
-categories:
-  - PyGtk
-  - Python
 tags:
   - HBox
   - PyGtk
@@ -29,67 +25,75 @@ HBox是一个水平布局容器。这个容器里的部件都是以水平排列�
 
 先来看一个VBox的示例，上图先：
 
-[![][2]][2]
+[![][1]][1]
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/07/2012-07-15-181439的屏幕截图.png
+ [1]: http://i.imgur.com/AqhP6nU.png
 
 从上面的图中可以看到，有两个按钮，一个大一个小，而且是竖直排列的。small和big按钮都是放在VBox中，然后在把VBox添加到主窗口中就行了，这个示例很简单，下面是完整代码：
 
-    #!/usr/bin/env python
-    # -*- coding: utf-8 -*
-    
-    # VBox layout container
-    # PyGtk Study Notes By DawnDIY
-    # http://www.dawndiy.com
-    
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-    
-    class VBoxLC:
-    	def __init__(self):
-    		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    		self.window.set_title("VBox Layout Container")
-    		self.window.set_size_request(300,250)
-    		self.window.set_position(gtk.WIN_POS_CENTER)
-    
-    		self.window.connect("destroy", gtk.main_quit)
-    
-    		vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
-    		btn1 = gtk.Button("small")
-    		btn2 = gtk.Button("Big")
-    		btn2.set_size_request(300,200)
-    
-    		vbox.add(btn1)
-    		vbox.add(btn2)
-    		self.window.add(vbox)
-    
-    		self.window.show_all()
-    
-    	def main(self):
-    		gtk.main()
-    
-    if __name__ == "__main__":
-    	vbox = VBoxLC()
-    	vbox.main()
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# VBox layout container
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class VBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("VBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        vbox = gtk.VBox(False, 5)    # 建立 VBox 布局容器，空间不均等分配，子部件间隔 5 像素
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(300,200)
+
+        vbox.add(btn1)
+        vbox.add(btn2)
+        self.window.add(vbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    vbox = VBoxLC()
+    vbox.main()
+```
 
 在分析代码之前我们先来看一下VBox类的概要：
 
-    class gtk.VBox(gtk.Box):
-        gtk.VBox(homogeneous=False, spacing=0)
+```python
+class gtk.VBox(gtk.Box):
+    gtk.VBox(homogeneous=False, spacing=0)
+```
 
 VBox的继承关系
 
-    -- gobject.GObject
-       -- gtk.Object
-         -- gtk.Widget
-           -- gtk.Container
-             -- gtk.Box
-               -- gtk.VBox
+```
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.VBox
+```
 
 构造函数：
 
-    gtk.VBox(homogeneous=False, spacing=0)
+```python
+gtk.VBox(homogeneous=False, spacing=0)
+```
 
 **`homogeneous`** :
 
@@ -109,65 +113,69 @@ VBox的继承关系
 
 接下来同样介绍一下HBox，它和VBox十分相似，不过它用来管理水平排列的布局，来看一个相同的示例，先上图：
 
-[![][3]][3]
+[![][2]][2]
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/07/2012-07-15-183711的屏幕截图.png
+ [2]: http://i.imgur.com/lhF8oen.png
 
 如上图，我们对比一下之前的图就很容易看出，HBox管理部件的水平排列布局，在很多应用程序的布局都是应用VBox和HBox配合使用来构建出丰富的UI来的。下面我们看一下完整代码，其实你很容易看出不同：
 
-    #!/usr/bin/env python
-    
-    # HBox layout container
-    # PyGtk Stady Notes By DawnDIY
-    # http://www.dawndiy.com
-    
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-    
-    class HBoxLC:
-    	def __init__(self):
-    		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    		self.window.set_title("HBox Layout Container")
-    		self.window.set_size_request(300,250)
-    		self.window.set_position(gtk.WIN_POS_CENTER)
-    
-    		self.window.connect("destroy", gtk.main_quit)
-    
-    		hbox = gtk.HBox(False, 5)
-    		btn1 = gtk.Button("small")
-    		btn2 = gtk.Button("Big")
-    		btn2.set_size_request(200,150)
-    
-    		hbox.add(btn1)
-    		hbox.add(btn2)
-    		self.window.add(hbox)
-    
-    		self.window.show_all()
-    
-    	def main(self):
-    		gtk.main()
-    
-    if __name__ == "__main__":
-    	hbox = HBoxLC()
-    	hbox.main()
+```python
+#!/usr/bin/env python
+
+# HBox layout container
+# PyGtk Stady Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class HBoxLC:
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("HBox Layout Container")
+        self.window.set_size_request(300,250)
+        self.window.set_position(gtk.WIN_POS_CENTER)
+
+        self.window.connect("destroy", gtk.main_quit)
+
+        hbox = gtk.HBox(False, 5)
+        btn1 = gtk.Button("small")
+        btn2 = gtk.Button("Big")
+        btn2.set_size_request(200,150)
+
+        hbox.add(btn1)
+        hbox.add(btn2)
+        self.window.add(hbox)
+
+        self.window.show_all()
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    hbox = HBoxLC()
+    hbox.main()
+```
 
 下面同样是HBox类的概要和继承关系：
 
-    class gtk.HBox(gtk.Box):
-        gtk.HBox(homogeneous=False, spacing=0)
+```python
+class gtk.HBox(gtk.Box):
+    gtk.HBox(homogeneous=False, spacing=0)
+```
 
-    -- gobject.GObject
-       -- gtk.Object
-         -- gtk.Widget
-           -- gtk.Container
-             -- gtk.Box
-               -- gtk.HBox
+```
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Box
+           -- gtk.HBox
+```
 
 ##  4.总结
 
 学习了一下VBox和HBox，非茶有用的两个布局管理部件，而且配合使用可以构建出非常复杂的UI，其实DawnDIY觉得VBox和HBox很容易让人想到HTML中的和标签，它们可以自由的相互嵌套来构建UI。所以你有好的设计，可以尝试一下用VBox和HBox把它设计出来吧。
 
 今天学到这里，待续。。。
-
- 

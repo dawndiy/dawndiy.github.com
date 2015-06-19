@@ -2,9 +2,6 @@
 title: Firefox 浏览器中体验 Firefox OS (多图)
 author: DawnDIY
 layout: post
-permalink: /archives/360
-categories:
-  - Firefox
 tags:
   - Firefox
   - Firefox OS

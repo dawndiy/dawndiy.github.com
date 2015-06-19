@@ -2,10 +2,6 @@
 title: Linux 下的 Chrome 中 Flash 中文显示方框解决办法
 author: DawnDIY
 layout: post
-permalink: /archives/415
-categories:
-  - Linux
-  - 解决Linux疑难杂症
 tags:
   - Chrome
   - Flash

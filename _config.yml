@@ -10,3 +10,13 @@ highlighter: pygments
 # 分页
 paginate: 5
 paginate_path: "page:num"
+
+markdown: redcarpet
+redcarpet:
+    extenstions: [
+        "fenced_code_blocks",
+        "tables",
+        "no_intra_emphasis",
+        "autolink"
+    ]
+

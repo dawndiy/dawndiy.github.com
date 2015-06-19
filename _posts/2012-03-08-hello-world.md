@@ -3,9 +3,6 @@ title: 世界，你好！
 author: DawnDIY
 date: 2012-03-08 00:00:00 +0800
 layout: post
-permalink: /archives/1
-categories:
-  - 个人日记
 tags:
   - Hello World
 ---

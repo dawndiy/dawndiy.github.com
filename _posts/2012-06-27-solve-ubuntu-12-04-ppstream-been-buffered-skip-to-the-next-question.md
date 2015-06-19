@@ -2,10 +2,6 @@
 title: 解决Ubuntu12.04下PPStream一直缓冲后跳到下一个问题
 author: DawnDIY
 layout: post
-permalink: /archives/52
-categories:
-  - Linux
-  - 解决Linux疑难杂症
 tags:
   - Linux
   - PPS
@@ -19,6 +15,8 @@ tags:
 
 原因是在Linux桌面系统中PPS调用的是系统的MPlayer用于播放解码，和windows版本的PPS调用windows media player同一个道理。然而在Ubuntu12.04中MPlayer升级到了1.0~rc4版本，之前在Ubuntu11.10中MPlayer是1.0~rc3的，而且PPS也是基于1.0~rc3的，那么要把MPlayer降级吗？不需要，后来发现只是少了一个包： libjpeg62
 
-    sudo apt-get install libjpeg62
+```bash
+sudo apt-get install libjpeg62
+```
 
 直接安装好后PPS就可以正常播放了！^_^

@@ -2,9 +2,6 @@
 title: Ubuntu 下搭建 Android 开发环境(图文)
 author: DawnDIY
 layout: post
-permalink: /archives/153
-categories:
-  - Android
 tags:
   - Android
   - Linux
@@ -18,7 +15,7 @@ tags:
 
 请看这里 > [《Linux 下安装配置 JDK7》][1]
 
- [1]: http://www.dawndiy.com/archives/155 "Linux 下安装配置 JDK7"
+ [1]: /2012/07/31/install-and-configurate-jdk7-in-linux.html "Linux 下安装配置 JDK7"
 
 ## 2.安装Eclipse
 
@@ -104,7 +101,9 @@ cd7176831087f53e46123dd91551be32
 
 下载好后当然是解压了，解压到您的工作目录，这个目录就是今后使用SDK的目录：
 
-    tar zvxf android-sdk_r20.0.1-linux.tgz
+```bash
+tar zvxf android-sdk_r20.0.1-linux.tgz
+```
 
 解压找到 tools 目录下的 android 后如图：
 
@@ -128,17 +127,23 @@ cd7176831087f53e46123dd91551be32
 
 首先配置环境变量，和配置 JDK 一样。运行一下代码来配置环境变量：
 
-    gedit ~/.bashrc
+```bash
+gedit ~/.bashrc
+```
 
 在文件的最末端添加下面内容：
 
-    # Android SDK
-    export ANDROID_SDK=/home/dawndiy/workspace/android/android-sdk-linux
-    export PATH=$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH
+```
+# Android SDK
+export ANDROID_SDK=/home/dawndiy/workspace/android/android-sdk-linux
+export PATH=$ANDROID_SDK/platform-tools:$ANDROID_SDK/tools:$PATH
+```
 
 当然， “ANDROID_SDK=” 后面的内容当然是你自己的 SDK 所在的目录啦，千万别照搬啊，上面的可是我电脑上的。修改好了以后记得保存，最后运行一下：
 
-    source ~/.bashrc
+```
+source ~/.bashrc
+```
 
  
 
@@ -148,9 +153,11 @@ cd7176831087f53e46123dd91551be32
 
 在之后的使用中我发现在控制台使用  adb 命令正常，但是有的时候需要 root 权限的时候我们再使用 sudo adb 的时候居然会提示 找不到 adb 命令。后来我找到了解决方法，这里说明一下：
 
-    cd /usr/bin
-    rm -rf adb
-    sudo ln -s /home/dawndiy/workspace/android/android-sdk-linux/platform-tools/adb
+```
+cd /usr/bin
+rm -rf adb
+sudo ln -s /home/dawndiy/workspace/android/android-sdk-linux/platform-tools/adb
+```
 
 这样就可以解决在 sudo 下也可以使用 adb 了，如果 fastboot 也有这样的情况，一样解决！
 

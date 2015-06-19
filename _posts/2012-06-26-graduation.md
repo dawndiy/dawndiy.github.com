@@ -2,9 +2,6 @@
 title: 毕业季
 author: DawnDIY
 layout: post
-permalink: /archives/17
-categories:
-  - 个人日记
 tags:
   - 大学
   - 毕业

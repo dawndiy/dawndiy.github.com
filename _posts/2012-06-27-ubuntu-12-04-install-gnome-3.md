@@ -2,9 +2,6 @@
 title: Ubuntu 12.04 安装 Gnome 3 桌面
 author: DawnDIY
 layout: post
-permalink: /archives/22
-categories:
-  - Linux
 tags:
   - Gnome
   - Linux
@@ -23,22 +20,19 @@ Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使
 
 如图：  
 ![][1]
-
  [1]: http://i.imgur.com/0mpS3.png "安装Gnome3"
-
-
-
  
 
 然后看到的就是安装的提示信息，选择Y进行安装。  
 如图：  
 ![][2]
-
  [2]: http://i.imgur.com/0sdvH.png "安装Gnome3提示信息"
 
 等待安装完成以后，可以输入
 
-    gnome-shell--version
+```bash
+gnome-shell--version
+```
 
 **来察看你所安装的版本，如图：**  
 ![][3]
@@ -62,7 +56,9 @@ Ubuntu，这个Linux发行版就不用我再介绍了，目前的Ubuntu默认使
 
  [7]: http://ubuntu-tweak.com/ "ubuntu-tweak"
 
-    sudo apt-get install gnome-tweak-tool
+```bash
+sudo apt-get install gnome-tweak-tool
+```
 
 如图：  
 ![][8]

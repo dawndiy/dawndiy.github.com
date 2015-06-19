@@ -6,12 +6,20 @@
     {% include footer.html %}
 
     <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/ripples.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/material.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/ripples.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js"></script>
+    <script src="/js/jquery.flatshadow.min.js"></script>
     <script>
     $(document).ready(function() {
-        $.material.init();
+      // 初始化 Material 效果
+      $.material.init();
+      // flat shadow
+      $(".flat-icon").flatshadow({
+        color: "#009688",
+        angle: "NE",
+        //fade: true,
+      });
     });
     </script>
 </body>

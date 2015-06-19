@@ -2,10 +2,6 @@
 title: PyGtk学习笔记(7)–工具栏
 author: DawnDIY
 layout: post
-permalink: /archives/336
-categories:
-  - PyGtk
-  - Python
 tags:
   - PyGtk
   - Python
@@ -16,9 +12,10 @@ tags:
 
 ## 一.介绍
 
-一个简单的 Toolbar 就是这样的，如下图：[![][2]][2]
+一个简单的 Toolbar 就是这样的，如下图：
 
- []: http://www.dawndiy.com/wp-content/uploads/2012/09/2012-09-20-004607的屏幕截图.png
+[![][1]][1]
+[1]: http://i.imgur.com/i4KsQZF.png
 
 上面的 **工具栏** 中包含了4个按钮和一个分隔符，并且倒数第二个按钮是灰色的，不可用状态。OK，了解了上面的 Toolbar 长什么样，接下来我们就来实现它。
 
@@ -28,86 +25,90 @@ tags:
 
 ### Toolbar的继承关系：
 
-    -- gobject.GObject
-       -- gtk.Object
-         -- gtk.Widget
-           -- gtk.Container
-             -- gtk.Toolbar
+```
+-- gobject.GObject
+   -- gtk.Object
+     -- gtk.Widget
+       -- gtk.Container
+         -- gtk.Toolbar
+```
 
 ### Toolbar类的概要：
 
-    class gtk.Toolbar(gtk.Container):
-        gtk.Toolbar()
-    
-        def insert(item, pos)
-    
-        def get_item_index(item)
-    
-        def get_n_items()
-    
-        def get_nth_item(n)
-    
-        def get_drop_index(x, y)
-    
-        def set_drop_highlight_item(tool_item, index)
-    
-        def set_show_arrow(show_arrow)
-    
-        def get_show_arrow()
-    
-        def get_relief_style()
-    
-        def append_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data=None)
-    
-        def prepend_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data)
-    
-        def insert_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
-    
-        def insert_stock(stock_id, tooltip_text, tooltip_private_text, callback, user_data, position)
-    
-        def append_space()
-    
-        def prepend_space()
-    
-        def insert_space(position)
-    
-        def remove_space(position)
-    
-        def append_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
-    
-        def prepend_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
-    
-        def insert_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
-    
-        def append_widget(widget, tooltip_text, tooltip_private_text)
-    
-        def prepend_widget(widget, tooltip_text, tooltip_private_text)
-    
-        def insert_widget(widget, tooltip_text, tooltip_private_text, position)
-    
-        def set_orientation(orientation)
-    
-        def set_style(style)
-    
-        def set_icon_size(icon_size)
-    
-        def set_tooltips(enable)
-    
-        def unset_style()
-    
-        def unset_icon_size()
-    
-        def get_orientation()
-    
-        def get_style()
-    
-        def get_icon_size()
-    
-        def get_tooltips()
+```python
+class gtk.Toolbar(gtk.Container):
+    gtk.Toolbar()
+
+    def insert(item, pos)
+
+    def get_item_index(item)
+
+    def get_n_items()
+
+    def get_nth_item(n)
+
+    def get_drop_index(x, y)
+
+    def set_drop_highlight_item(tool_item, index)
+
+    def set_show_arrow(show_arrow)
+
+    def get_show_arrow()
+
+    def get_relief_style()
+
+    def append_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data=None)
+
+    def prepend_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_item(text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def insert_stock(stock_id, tooltip_text, tooltip_private_text, callback, user_data, position)
+
+    def append_space()
+
+    def prepend_space()
+
+    def insert_space(position)
+
+    def remove_space(position)
+
+    def append_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def prepend_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data)
+
+    def insert_element(type, widget, text, tooltip_text, tooltip_private_text, icon, callback, user_data, position)
+
+    def append_widget(widget, tooltip_text, tooltip_private_text)
+
+    def prepend_widget(widget, tooltip_text, tooltip_private_text)
+
+    def insert_widget(widget, tooltip_text, tooltip_private_text, position)
+
+    def set_orientation(orientation)
+
+    def set_style(style)
+
+    def set_icon_size(icon_size)
+
+    def set_tooltips(enable)
+
+    def unset_style()
+
+    def unset_icon_size()
+
+    def get_orientation()
+
+    def get_style()
+
+    def get_icon_size()
+
+    def get_tooltips()
+```
 
 ###  构造方法：
 
-    gtk.Toolbar()
+`gtk.Toolbar()`
 
 *Returns* :
 
@@ -117,7 +118,7 @@ tags:
 
 ### gtk.Toolbar.insert
 
-    def insert(item, pos)
+`def insert(item, pos)`
 
   **`item`** :
 
@@ -134,7 +135,7 @@ tags:
 
 ### gtk.Toolbar.set_style
 
-    def set_style(style)
+`def set_style(style)`
 
 **`style`** :
 
@@ -144,7 +145,7 @@ tags:
 
 ### gtk.Toolbar.set\_icon\_size
 
-    def set_icon_size(icon_size)
+`def set_icon_size(icon_size)`
 
   **`icon_size`** :
 
@@ -163,63 +164,61 @@ tags:
 
 了解了上面的基本方法，我们就可以看实现前面的图的完整代码啦。
 
-    #!/usr/bin/env python
-    # -*- coding: utf-8 -*
-    
-    # Toolbar
-    # PyGtk Study Notes By DawnDIY
-    # http://www.dawndiy.com
-    
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
-    
-    class Toolbar:
-    	def __init__(self):
-    		self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    		self.win.set_title("Toolbar")
-    		self.win.set_size_request(300,250)
-    		self.win.set_position(gtk.WIN_POS_CENTER)
-    
-    		toolbar = gtk.Toolbar()
-    		#工具栏仅显示图标
-    		toolbar.set_style(gtk.TOOLBAR_ICONS)
-    
-    		#工具栏图标的尺寸
-    		toolbar.set_icon_size(gtk.ICON_SIZE_LARGE_TOOLBAR) 
-    
-    		#新建工具栏按钮
-    		newtb = gtk.ToolButton(gtk.STOCK_NEW)
-    		opentb = gtk.ToolButton(gtk.STOCK_OPEN)
-    		sep = gtk.SeparatorToolItem()  #工具栏的分隔符
-    		closetb = gtk.ToolButton(gtk.STOCK_CLOSE)
-    		exittb = gtk.ToolButton(gtk.STOCK_QUIT)
-    
-    		exittb.connect("clicked", gtk.main_quit)
-    
-    		#设置CLOSE按钮不可用
-    		closetb.set_sensitive(False)
-    
-    		#添加工具栏按钮
-    		toolbar.insert(newtb, 0)
-    		toolbar.insert(opentb, 1)
-    		toolbar.insert(sep, 2)
-    		toolbar.insert(closetb, 3)
-    		toolbar.insert(exittb, 4)
-    
-    		vbox = gtk.VBox()
-    		vbox.pack_start(toolbar, False, False, 0)
-    		self.win.add(vbox)
-    
-    		self.win.connect("destroy", gtk.main_quit)
-    		self.win.show_all()
-    
-    if __name__ == "__main__":
-    	toolbar = Toolbar()
-    	gtk.main()
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
+
+# Toolbar
+# PyGtk Study Notes By DawnDIY
+# http://www.dawndiy.com
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class Toolbar:
+    def __init__(self):
+        self.win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win.set_title("Toolbar")
+        self.win.set_size_request(300,250)
+        self.win.set_position(gtk.WIN_POS_CENTER)
+
+        toolbar = gtk.Toolbar()
+        #工具栏仅显示图标
+        toolbar.set_style(gtk.TOOLBAR_ICONS)
+
+        #工具栏图标的尺寸
+        toolbar.set_icon_size(gtk.ICON_SIZE_LARGE_TOOLBAR)
+
+        #新建工具栏按钮
+        newtb = gtk.ToolButton(gtk.STOCK_NEW)
+        opentb = gtk.ToolButton(gtk.STOCK_OPEN)
+        sep = gtk.SeparatorToolItem()  #工具栏的分隔符
+        closetb = gtk.ToolButton(gtk.STOCK_CLOSE)
+        exittb = gtk.ToolButton(gtk.STOCK_QUIT)
+
+        exittb.connect("clicked", gtk.main_quit)
+
+        #设置CLOSE按钮不可用
+        closetb.set_sensitive(False)
+
+        #添加工具栏按钮
+        toolbar.insert(newtb, 0)
+        toolbar.insert(opentb, 1)
+        toolbar.insert(sep, 2)
+        toolbar.insert(closetb, 3)
+        toolbar.insert(exittb, 4)
+
+        vbox = gtk.VBox()
+        vbox.pack_start(toolbar, False, False, 0)
+        self.win.add(vbox)
+
+        self.win.connect("destroy", gtk.main_quit)
+        self.win.show_all()
+
+if __name__ == "__main__":
+    toolbar = Toolbar()
+    gtk.main()
+```
 
 按照我在代码中给出的注释就很容易懂啦。然后动手改一改 icon_size 、style 等等，你会找到你想要的效果的！打完手工，待续。。。。。。
-
- 
-
- 

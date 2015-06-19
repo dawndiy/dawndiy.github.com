@@ -2,9 +2,6 @@
 title: 职业规划解决方案
 author: DawnDIY
 layout: post
-permalink: /archives/10
-categories:
-  - 个人日记
 tags:
   - 职业规划
 ---
@@ -47,4 +44,4 @@ tags:
 
 最后附上一张不知道哪来的图,不过大部分是微软的技术,其他的自己参考一下吧!
 
-![职业规划](/imgs/ms.jpg)
+![职业规划](http://i.imgur.com/4R73GHp.jpg)

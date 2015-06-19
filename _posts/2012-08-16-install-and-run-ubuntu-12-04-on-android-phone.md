@@ -2,9 +2,6 @@
 title: Android 手机上安装并运行 Ubuntu 12.04
 author: DawnDIY
 layout: post
-permalink: /archives/229
-categories:
-  - Android
 tags:
   - Android
   - Linux
@@ -81,13 +78,13 @@ Android 是基于Linux内核的开源操作系统，主要用在移动设备上�
  [12]: http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/12.04/small/ubuntu1204-v4-small.zip/download
  [13]: http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/12.04/core/ubuntu1204-v4-core.zip/download
  [14]: http://sourceforge.net/projects/linuxonandroid/files/Ubuntu/ubuntuV6-1-script.zip
- [15]: http://pan.baidu.com/share/link?shareid=83492&uk=2416019402 "脚本下载"
+ [15]: http://pan.baidu.com/share/link?shareid=83492&uk=2416019402
  [16]: http://sourceforge.net/projects/linuxonandroid/files/bootscript.sh/download
- [17]: http://sourceforge.net/projects/linuxonandroid/files/App/Complete Linux Installer v1.1.4.apk/download
+ [17]: http://sourceforge.net/projects/linuxonandroid/files/App/Complete%20Linux%20Installer%20v2-8.apk/download
 
 ## 四.开始安装
 
-首先您的手机需要 [chroot][18]，也就是能够获得root权限去操作，相当于越狱。不懂的可以去 Google 一下“[Android获取root权限][19]”。root是前提，所以先要把这个做好，不过现在很多ROM都做的很好，比如MIUI就有很好的权限管理。
+首先您的手机需要 [chroot][18]，需要root权限去操作，相当于越狱。不懂的可以去 Google 一下“[Android获取root权限][19]”。root是前提，所以先要把这个做好，不过现在很多ROM都做的很好，比如MIUI就有很好的权限管理。
 
  [18]: http://zh.wikipedia.org/wiki/Chroot
  [19]: https://www.google.com/search?hl=zh-CN&newwindow=1&client=ubuntu&hs=YgZ&channel=fs&q=Android获取root权限&oq=Android获取root权限&gs_l=serp.12..0.22005.22005.0.22938.1.1.0.0.0.0.210.210.2-1.1.0...0.0...1c.OT_GdyR88Do
@@ -261,8 +258,7 @@ Android 智能手机 装上了原生的 Ubuntu 12.04 ，这需要感谢 Zachary 
 
 说到底装上的还是原生的 Ubuntu ，但是还是挺期待 Canonical 专门为 Android 设备定制的 Ubuntu 系统，现在 Canonical 公司也已经在为 Android 设备打造专属的 Ubuntu 系统了，期待它能早日面世。相关信息可以查阅：http://www.ubuntu.com/devices/android
 
-**作者：[DawnDIY][1]  
-本文地址：**  
+**作者：[DawnDIY][1]**  
 **本文原创，如果转载请注明原文出处及原文地址，3Q**
 
  

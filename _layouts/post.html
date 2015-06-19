@@ -13,7 +13,7 @@
                 </div>
                 <div class="well">
                     <!-- 多说评论框 start -->
-                    <div class="ds-thread" data-thread-key="963f6d42c0d46119135d198c36274c02" data-title="{{ page.title }}" data-url="{{ page.url }}"></div>
+                    <div class="ds-thread" data-thread-key="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}"></div>
                     <!-- 多说评论框 end -->
                     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
                     <script type="text/javascript">
@@ -23,7 +23,7 @@
                             ds.type = 'text/javascript';ds.async = true;
                             ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
                             ds.charset = 'UTF-8';
-                            (document.getElementsByTagName('head')[0] 
+                            (document.getElementsByTagName('head')[0]
                              || document.getElementsByTagName('body')[0]).appendChild(ds);
                         })();
                         </script>
@@ -39,12 +39,19 @@
     {% include footer.html %}
 
     <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/ripples.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.1.5/js/material.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/ripples.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/js/material.min.js"></script>
+    <script src="/js/jquery.flatshadow.min.js"></script>
     <script>
     $(document).ready(function() {
-        $.material.init();
+      $.material.init();
+      // flat shadow
+      $(".flat-icon").flatshadow({
+        color: "#009688",
+        angle: "NE",
+        //fade: true,
+      });
     });
     </script>
 </body>
