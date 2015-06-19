@@ -1,3 +1,6 @@
+# 网站地址
+url: http://dawndiy.com
+
 # 文件字符编码
 encoding: UTF-8
 # 时区
@@ -19,4 +22,3 @@ redcarpet:
         "no_intra_emphasis",
         "autolink"
     ]
-
