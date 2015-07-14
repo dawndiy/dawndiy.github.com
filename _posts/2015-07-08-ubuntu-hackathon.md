@@ -7,7 +7,7 @@ tags: [ubuntu]
 ---
 
 ### 前言
-很早就知道["黑客松"(Hackathon)](https://zh.wikipedia.org/wiki/%E9%BB%91%E5%AE%A2%E6%9D%BE)，也关注过一些国内的 Hackathon 活动，只是一直都没有去尝试参与过。以前是没有美工前端，所以自己变成了个野生渣前端。最近很长时间都在关注 Ubuntu Touch 的进度，得知有在北京举办 Hackathon 活动，也就迅数报名了。好吧，我的第一次 Hackathon 献给 Ubuntu 了。
+很早就知道["黑客松"(Hackathon)](https://zh.wikipedia.org/wiki/%E9%BB%91%E5%AE%A2%E6%9D%BE)，也关注过一些国内的 Hackathon 活动，只是一直都没有去尝试参与过。以前是没有美工前端，所以自己变成了个野生渣前端。最近很长时间都在关注 Ubuntu Touch 的进度，得知有在北京举办 Hackathon 活动，也就迅速报名了。好吧，我的第一次 Hackathon 献给 Ubuntu 了。
 
 
 ### 准备
